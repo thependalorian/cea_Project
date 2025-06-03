@@ -113,6 +113,7 @@ export async function POST(req: Request) {
     console.log("Resume saved with ID:", resumeData.id);
     
     // Start the processing of the resume in the background
+    let processingStarted = false;
     try {
       // Call the Python backend to process the resume
       console.log("Calling Python backend to process resume");
@@ -129,13 +130,41 @@ export async function POST(req: Request) {
       });
       
       if (!backendResponse.ok) {
-        console.warn("Resume processing may have failed but upload succeeded:", 
+        console.warn("Resume processing may have failed:", 
           await backendResponse.text());
       } else {
-        console.log("Resume processing initiated successfully");
+        const processingResult = await backendResponse.json();
+        console.log("Resume processing initiated successfully:", processingResult);
+        processingStarted = true;
       }
     } catch (processingError) {
-      console.warn("Failed to start resume processing (but upload succeeded):", processingError);
+      console.warn("Failed to start resume processing:", processingError);
+    }
+    
+    // Add a delay to wait for processing to start
+    if (processingStarted) {
+      // Wait 2 seconds to give time for processing to start
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Check processing status
+      try {
+        const statusResponse = await fetch('http://localhost:8000/api/debug-resume', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            resume_id: resumeData.id
+          }),
+        });
+        
+        if (statusResponse.ok) {
+          const status = await statusResponse.json();
+          console.log("Resume processing status:", status);
+        }
+      } catch (statusError) {
+        console.warn("Failed to check resume processing status:", statusError);
+      }
     }
     
     return NextResponse.json({
@@ -143,6 +172,7 @@ export async function POST(req: Request) {
       userId: user.id,
       fileName: file.name,
       url: publicUrl,
+      processingStarted: processingStarted
     });
   } catch (error) {
     console.error("Error processing upload:", error);

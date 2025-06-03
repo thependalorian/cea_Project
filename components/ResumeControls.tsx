@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { Switch } from './ui/switch'
 import { Label } from './ui/label'
 import { Button } from './ui/button'
@@ -21,6 +21,9 @@ interface ResumeControlsProps {
   resumeData?: ResumeData | null
   setResumeData: (data: ResumeData) => void
 }
+
+// Key for caching resume status
+const RESUME_CACHE_KEY = 'cea-resume-status';
 
 export default function ResumeControls({
   onToggleRAG,
@@ -46,25 +49,245 @@ export default function ResumeControls({
   })
   const [error, setError] = useState<string | null>(null)
   const [socialDataMessage, setSocialDataMessage] = useState<string | null>(null)
+  const hasCheckedResume = useRef(false)
+  const isInitializing = useRef(true)
+  const authChecksCount = useRef(0)
 
-  // Get current user on component mount
+  // Try to get user data from localStorage first for immediate UI response
   useEffect(() => {
-    const getUser = async () => {
-      const { data } = await supabase.auth.getUser()
-      if (data?.user) {
-        setUser(data.user)
+    try {
+      const authData = localStorage.getItem('cea-supabase-auth')
+      if (authData) {
+        const parsedAuth = JSON.parse(authData)
+        console.log("📁 Found auth data in localStorage:", !!parsedAuth)
+        
+        // Extract user from the session if available
+        if (parsedAuth?.session?.user) {
+          console.log("📁 Using cached user data for initial state")
+          setUser(parsedAuth.session.user)
+          
+          // Try to also load cached resume data
+          const cachedResume = localStorage.getItem(`${RESUME_CACHE_KEY}-${parsedAuth.session.user.id}`)
+          if (cachedResume) {
+            try {
+              const parsedCache = JSON.parse(cachedResume)
+              console.log("📁 Found cached resume status:", parsedCache)
+              
+              // Check if cache is not too old (less than 1 hour)
+              const cacheTime = parsedCache.timestamp || 0
+              const now = Date.now()
+              const cacheAge = now - cacheTime
+              
+              if (cacheAge < 60 * 60 * 1000) { // 1 hour
+                setResumeStatus(parsedCache.status)
+                
+                // If user has a resume, update resumeData in parent component
+                if (parsedCache.status.hasResume) {
+                  console.log("📁 Using cached resume data")
+                  setResumeData({
+                    id: parsedCache.status.resumeId,
+                    file_name: parsedCache.status.fileName,
+                    user_id: parsedAuth.session.user.id
+                  })
+                }
+              }
+            } catch (e) {
+              console.error("📁 Error parsing cached resume data:", e)
+            }
+          }
+        }
+      } else {
+        console.log("📁 No auth data found in localStorage")
+      }
+    } catch (e) {
+      console.error("📁 Error reading auth data from localStorage:", e)
+    }
+  }, [setResumeData])
+
+  // Get current user and initialize state on component mount
+  useEffect(() => {
+    const initializeComponent = async () => {
+      try {
+        isInitializing.current = true
+        
+        // Get user authentication
+        console.log("📁 Checking auth via supabase.auth.getUser()")
+        const { data, error } = await supabase.auth.getUser()
+        
+        if (error) {
+          console.error("📁 Auth error:", error.message)
+        }
+        
+        if (data?.user) {
+          console.log("📁 Auth successful - user found:", data.user.id)
+          setUser(data.user)
+          
+          // Try to restore resume status from cache first
+          try {
+            const cachedResume = localStorage.getItem(`${RESUME_CACHE_KEY}-${data.user.id}`)
+            if (cachedResume) {
+              const parsedCache = JSON.parse(cachedResume)
+              console.log("📁 Found cached resume status:", parsedCache)
+              
+              // Check if cache is not too old (less than 1 hour)
+              const cacheTime = parsedCache.timestamp || 0
+              const now = Date.now()
+              const cacheAge = now - cacheTime
+              
+              if (cacheAge < 60 * 60 * 1000) { // 1 hour
+                setResumeStatus(parsedCache.status)
+                
+                // If user has a resume, update resumeData in parent component
+                if (parsedCache.status.hasResume) {
+                  console.log("📁 Using cached resume data")
+                  setResumeData({
+                    id: parsedCache.status.resumeId,
+                    file_name: parsedCache.status.fileName,
+                    user_id: data.user.id
+                  })
+                }
+              } else {
+                console.log("📁 Cached resume data too old, will refetch")
+              }
+            } else {
+              console.log("📁 No cached resume data found")
+            }
+          } catch (e) {
+            console.error("📁 Error reading cached resume data:", e)
+          }
+        } else {
+          console.log("📁 No user found in auth.getUser()")
+        }
+        
+        // Try to restore toggle state from localStorage
+        if (typeof window !== 'undefined') {
+          try {
+            const savedRagState = localStorage.getItem('ragEnabled')
+            const savedEnhancedSearchState = localStorage.getItem('enhancedSearchEnabled')
+            
+            console.log("📁 Restoring saved state:", { savedRagState, savedEnhancedSearchState })
+            
+            if (savedRagState === 'true') {
+              setRagEnabled(true)
+            }
+            
+            if (savedEnhancedSearchState === 'true') {
+              setEnhancedSearchEnabled(true)
+            }
+          } catch (e) {
+            console.error("📁 Error restoring state from localStorage:", e)
+          }
+        }
+      } finally {
+        isInitializing.current = false
       }
     }
     
-    getUser()
-  }, [supabase])
+    // Execute initialization
+    initializeComponent()
+    
+    // Also try the current session method
+    const checkSession = async () => {
+      try {
+        console.log("📁 Checking auth via supabase.auth.getSession()")
+        const { data: sessionData, error: sessionError } = await supabase.auth.getSession()
+        
+        if (sessionError) {
+          console.error("📁 Session error:", sessionError.message)
+        }
+        
+        if (sessionData?.session?.user) {
+          console.log("📁 Session found - user:", sessionData.session.user.id)
+          setUser(sessionData.session.user)
+        } else {
+          console.log("📁 No active session found")
+        }
+      } catch (e) {
+        console.error("📁 Error checking session:", e)
+      }
+    }
+    
+    checkSession()
+    
+    // Listen for auth state changes
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        console.log("📁 Auth state changed:", event)
+        
+        if (session?.user) {
+          console.log("📁 Auth update - user now available:", session.user.id)
+          setUser(session.user)
+        } else {
+          console.log("📁 Auth update - user signed out or unavailable")
+          setUser(null)
+          hasCheckedResume.current = false
+        }
+      }
+    )
+    
+    return () => {
+      console.log("📁 Cleaning up auth listener")
+      authListener?.subscription.unsubscribe()
+    }
+  }, [supabase, setResumeData])
+
+  // Additional check for auth in case other methods fail
+  useEffect(() => {
+    // Only try this a few times to avoid infinite loop
+    if (authChecksCount.current >= 3 || user) return
+    
+    const retryAuth = async () => {
+      authChecksCount.current += 1
+      console.log(`📁 Retry auth check #${authChecksCount.current}`)
+      
+      try {
+        const { data, error } = await supabase.auth.getUser()
+        
+        if (error) {
+          console.error("📁 Retry auth error:", error.message)
+        }
+        
+        if (data?.user) {
+          console.log("📁 Retry auth successful - user found:", data.user.id)
+          setUser(data.user)
+        } else {
+          console.log("📁 Retry auth - no user found")
+        }
+      } catch (e) {
+        console.error("📁 Error in retry auth check:", e)
+      }
+    }
+    
+    // Delay retry attempts
+    const timer = setTimeout(retryAuth, 1000 * authChecksCount.current)
+    
+    return () => clearTimeout(timer)
+  }, [supabase, user])
+
+  // Save state to localStorage when it changes
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !isInitializing.current) {
+      try {
+        localStorage.setItem('ragEnabled', ragEnabled.toString())
+        localStorage.setItem('enhancedSearchEnabled', enhancedSearchEnabled.toString())
+        console.log("📁 Saved state to localStorage:", { ragEnabled, enhancedSearchEnabled })
+      } catch (e) {
+        console.error("📁 Error saving state to localStorage:", e)
+      }
+    }
+  }, [ragEnabled, enhancedSearchEnabled])
 
   // Function to check if user has a resume
   const checkUserResume = useCallback(async () => {
-    if (!user?.id) return
+    if (!user?.id) {
+      console.log("📁 Cannot check resume - no user ID available")
+      return
+    }
     
+    console.log("📁 Checking resume for user:", user.id)
     setLoading(true)
     setError(null)
+    hasCheckedResume.current = true
     
     try {
       const response = await fetch('/api/check-user-resume', {
@@ -75,24 +298,45 @@ export default function ResumeControls({
         body: JSON.stringify({ user_id: user.id }),
       })
       
+      console.log("📁 Resume check response status:", response.status)
       const data = await response.json()
+      console.log("📁 Resume check data:", data)
       
       if (response.ok) {
-        setResumeStatus({
+        const newStatus = {
           hasResume: data.has_resume,
           resumeId: data.resume_id,
           fileName: data.file_name,
           hasSocialData: data.has_social_data,
           socialLinks: data.social_links || {}
-        })
+        }
+        
+        setResumeStatus(newStatus)
+        
+        // Cache the resume status for future page loads
+        try {
+          localStorage.setItem(
+            `${RESUME_CACHE_KEY}-${user.id}`, 
+            JSON.stringify({
+              status: newStatus,
+              timestamp: Date.now()
+            })
+          )
+          console.log("📁 Cached resume status")
+        } catch (e) {
+          console.error("📁 Error caching resume status:", e)
+        }
         
         // If user has a resume, update resumeData in parent component
         if (data.has_resume) {
+          console.log("📁 Resume found, updating parent component")
           setResumeData({
             id: data.resume_id,
             file_name: data.file_name,
             user_id: user.id
           })
+        } else {
+          console.log("📁 No resume found for user")
         }
         
         // Enable RAG if resume exists and was previously enabled
@@ -112,10 +356,10 @@ export default function ResumeControls({
         }
       } else {
         setError('Failed to check resume status')
-        console.error('Resume check error:', data)
+        console.error('📁 Resume check error:', data)
       }
     } catch (err) {
-      console.error('Error checking resume status:', err)
+      console.error('📁 Error checking resume status:', err)
       setError('Failed to check resume status')
     } finally {
       setLoading(false)
@@ -124,10 +368,52 @@ export default function ResumeControls({
 
   // Check if user has a resume when component mounts or user changes
   useEffect(() => {
-    if (user?.id) {
-      checkUserResume()
+    if (user?.id && !hasCheckedResume.current) {
+      console.log("📁 User ID detected, checking resume...")
+      // Add a small delay to ensure other state has been initialized
+      const timer = setTimeout(() => {
+        checkUserResume()
+      }, 200)
+      
+      return () => clearTimeout(timer)
+    } else if (!user?.id) {
+      console.log("📁 No user ID found")
+      hasCheckedResume.current = false
     }
   }, [user, checkUserResume])
+
+  // Force a resume check if needed after a delay (backup plan)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (user?.id && !resumeStatus.hasResume && !loading && !isInitializing.current) {
+        console.log("📁 Triggering backup resume check...")
+        checkUserResume()
+      }
+    }, 1500) // 1.5 second delay
+    
+    return () => clearTimeout(timer)
+  }, [user, resumeStatus.hasResume, loading, checkUserResume])
+
+  // Update toggle states when resume status changes
+  useEffect(() => {
+    if (isInitializing.current || !user?.id) return
+    
+    // If there's a resume, make sure RAG toggle is in the correct state
+    if (resumeStatus.hasResume && ragEnabled) {
+      onToggleRAG(true)
+    } else if (!resumeStatus.hasResume && ragEnabled) {
+      setRagEnabled(false)
+      onToggleRAG(false)
+    }
+    
+    // If there's social data, make sure enhanced search toggle is in correct state
+    if (resumeStatus.hasSocialData && enhancedSearchEnabled) {
+      onToggleEnhancedSearch(true)
+    } else if (!resumeStatus.hasSocialData && enhancedSearchEnabled) {
+      setEnhancedSearchEnabled(false)
+      onToggleEnhancedSearch(false)
+    }
+  }, [resumeStatus, ragEnabled, enhancedSearchEnabled, onToggleRAG, onToggleEnhancedSearch, user])
 
   // Handle RAG toggle
   const handleRagToggle = (checked: boolean) => {
@@ -136,15 +422,27 @@ export default function ResumeControls({
       return
     }
     
+    console.log("📁 RAG toggle changed:", checked)
     setRagEnabled(checked)
     onToggleRAG(checked)
+    
+    // Force update the state
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('ragEnabled', checked.toString())
+    }
   }
   
   // Handle Enhanced Search toggle
   const handleEnhancedSearchToggle = async (checked: boolean) => {
     if (!checked) {
+      console.log("📁 Enhanced search disabled")
       setEnhancedSearchEnabled(false)
       onToggleEnhancedSearch(false)
+      
+      // Force update the state
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('enhancedSearchEnabled', 'false')
+      }
       return
     }
     
@@ -153,13 +451,23 @@ export default function ResumeControls({
       return
     }
     
+    console.log("📁 Enhanced search enabling check:", {
+      hasSocialData: resumeStatus.hasSocialData
+    })
+    
     if (!resumeStatus.hasSocialData) {
       // Start the enhanced search process
       await triggerEnhancedSearch()
     } else {
       // Just enable the toggle if data already exists
+      console.log("📁 Enhanced search enabled (social data exists)")
       setEnhancedSearchEnabled(true)
       onToggleEnhancedSearch(true)
+      
+      // Force update the state
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('enhancedSearchEnabled', 'true')
+      }
     }
   }
   
@@ -188,10 +496,25 @@ export default function ResumeControls({
       
       if (response.ok && data.success) {
         // Update resume status
-        setResumeStatus(prev => ({
-          ...prev,
+        const updatedStatus = {
+          ...resumeStatus,
           hasSocialData: data.has_social_data
-        }))
+        }
+        
+        setResumeStatus(updatedStatus)
+        
+        // Update the cached resume status
+        try {
+          localStorage.setItem(
+            `${RESUME_CACHE_KEY}-${user.id}`, 
+            JSON.stringify({
+              status: updatedStatus,
+              timestamp: Date.now()
+            })
+          )
+        } catch (e) {
+          console.error("Error updating cached resume status:", e)
+        }
         
         // Enable enhanced search
         setEnhancedSearchEnabled(true)
