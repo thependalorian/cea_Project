@@ -41,3 +41,25 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .env\nnode_modules/\n.next/
+
+# Security - Prevent JWT tokens and secrets from being committed
+*.log
+server.log
+enhanced_server.log
+langgraph_output.log
+langgraph_tunnel_output.log
+
+# Database files with potential tokens
+**/database.ts
+**/test-database.js
+
+# JWT and token patterns
+*jwt*
+*token*
+
+# Environment files (should already be here)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
