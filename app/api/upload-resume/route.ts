@@ -1,32 +1,38 @@
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 
-export async function POST(req: Request) {
+export async function POST(request: NextRequest) {
   try {
-    // Regular client for user authentication
+    console.log("📁 POST /api/upload-resume - Starting resume upload process");
+    
     const supabase = await createClient();
     
-    // Get current user
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      console.error("Authentication error:", userError);
+    // Get authenticated user
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    
+    if (authError) {
+      console.error("❌ Authentication error:", authError);
+      return NextResponse.json(
+        { error: "Authentication failed", details: authError.message },
+        { status: 401 }
+      );
+    }
+
+    if (!user) {
+      console.log("❌ No authenticated user found");
       return NextResponse.json(
         { error: "Authentication required" },
         { status: 401 }
       );
     }
-    
-    console.log("Authenticated user:", user.id);
-    
-    // TEMPORARY: Use admin client to bypass RLS for troubleshooting
-    const adminClient = createAdminClient();
-    
-    // Get form data with the file
-    const formData = await req.formData();
-    const file = formData.get("file") as File;
-    const context = formData.get("context") as string;
+
+    console.log(`✅ Authenticated user: ${user.id}`);
+
+    // Get form data
+    const formData = await request.formData();
+    const file = formData.get('file') as File;
     
     if (!file) {
       return NextResponse.json(
@@ -34,90 +40,106 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-    
-    // Check file type
-    if (file.type !== "application/pdf") {
+
+    console.log(`📄 Processing file: ${file.name} (${file.size} bytes)`);
+
+    // Validate file type and size
+    const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    if (!validTypes.includes(file.type)) {
       return NextResponse.json(
-        { error: "Only PDF files are allowed" },
+        { error: "Invalid file type. Please upload PDF or Word documents." },
         { status: 400 }
       );
     }
-    
-    // Check file size (5MB limit)
-    if (file.size > 5 * 1024 * 1024) {
+
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    if (file.size > maxSize) {
       return NextResponse.json(
-        { error: "File size exceeds 5MB limit" },
+        { error: "File too large. Maximum size is 10MB." },
         { status: 400 }
       );
     }
-    
-    // Create a unique file name with user ID
-    const fileExt = file.name.split('.').pop();
-    const fileName = `${user.id}/${uuidv4()}.${fileExt}`;
-    const filePath = `resumes/${fileName}`;
-    
-    console.log("Uploading to path:", filePath);
-    
-    // TEMPORARY: Use admin client to bypass RLS for storage
-    const { error: uploadError } = await adminClient.storage
-      .from('user-documents')
+
+    // Generate unique filename
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const fileName = `resume_${user.id}_${timestamp}_${file.name}`;
+    const filePath = `resumes/${user.id}/${fileName}`;
+
+    // Upload file to Supabase Storage using authenticated client
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from('resumes')
       .upload(filePath, file, {
-        contentType: file.type,
-        upsert: true,
+        cacheControl: '3600',
+        upsert: false
       });
-    
+
     if (uploadError) {
-      console.error("Upload error:", uploadError);
+      console.error("❌ Storage upload error:", uploadError);
       return NextResponse.json(
-        { error: "Failed to upload file" },
+        { error: "Failed to upload file", details: uploadError.message },
         { status: 500 }
       );
     }
-    
-    // Get the public URL for the file
-    const { data: { publicUrl } } = adminClient.storage
-      .from('user-documents')
-      .getPublicUrl(filePath);
-    
-    // Create a user-friendly folder name for easier identification in backend processing
-    const userFolder = `user_${user.id}`;
-    const userFilePath = filePath.replace(user.id, userFolder);
-    
-    console.log("Attempting to insert into resumes table with user_id:", user.id);
-    
-    // TEMPORARY: Use admin client to bypass RLS for database
-    const { data: resumeData, error: resumeError } = await adminClient
+
+    console.log("✅ File uploaded to storage:", uploadData.path);
+
+    // Generate public URL for the uploaded file
+    const { data: { publicUrl } } = supabase.storage
+      .from('resumes')
+      .getPublicUrl(uploadData.path);
+
+    // Save resume record to database using authenticated client
+    const { data: resumeData, error: dbError } = await supabase
       .from('resumes')
       .insert({
         user_id: user.id,
-        file_path: userFilePath, // Use the user-friendly path format
         file_name: file.name,
+        file_path: uploadData.path,
         file_size: file.size,
-        file_type: file.type,
-        context: context || 'general',
+        upload_status: 'uploaded',
+        mime_type: file.type
       })
       .select()
       .single();
-    
-    if (resumeError) {
-      console.error("Resume metadata error:", resumeError);
-      // If metadata storage fails, we should delete the uploaded file
-      await adminClient.storage.from('user-documents').remove([filePath]);
+
+    if (dbError) {
+      console.error("❌ Database error:", dbError);
+      
+      // Clean up uploaded file if database insert failed
+      await supabase.storage
+        .from('resumes')
+        .remove([uploadData.path]);
       
       return NextResponse.json(
-        { error: "Failed to store resume metadata", details: resumeError },
+        { error: "Failed to save resume record", details: dbError.message },
         { status: 500 }
       );
     }
-    
-    console.log("Resume saved with ID:", resumeData.id);
-    
+
+    console.log("✅ Resume record saved:", resumeData.id);
+
+    // Log audit action
+    await supabase
+      .from('audit_logs')
+      .insert({
+        user_id: user.id,
+        table_name: 'resumes',
+        action_type: 'create',
+        record_id: resumeData.id,
+        new_values: {
+          file_name: file.name,
+          file_size: file.size,
+          upload_status: 'uploaded'
+        },
+        details: { action: 'resume_upload' }
+      });
+
     // Start the processing of the resume in the background
     let processingStarted = false;
     try {
-      // Call the Python backend to process the resume
-      console.log("Calling Python backend to process resume");
-      const backendResponse = await fetch('http://localhost:8000/api/process-resume', {
+      // Call v1 proxy route to process the resume
+      console.log("Calling v1 proxy route to process resume");
+      const backendResponse = await fetch('/api/v1/process-resume', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -125,7 +147,7 @@ export async function POST(req: Request) {
         body: JSON.stringify({
           file_url: publicUrl,
           file_id: resumeData.id,
-          context: context || 'general'
+          context: 'general'
         }),
       });
       
@@ -146,9 +168,9 @@ export async function POST(req: Request) {
       // Wait 2 seconds to give time for processing to start
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      // Check processing status
+      // Check processing status using v1 proxy route
       try {
-        const statusResponse = await fetch('http://localhost:8000/api/debug-resume', {
+        const statusResponse = await fetch('/api/v1/debug-resume', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

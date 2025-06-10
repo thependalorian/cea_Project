@@ -2,14 +2,77 @@ import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
 /**
- * Partner Profile API Endpoint
+ * DEPRECATED: Partner Profile API (Legacy)
  * 
- * Handles getting and updating partner profiles with climate economy specific fields.
- * Ensures proper authentication, validation, and security.
- * Located: /app/api/partners/profile/route.ts
+ * ⚠️  DEPRECATION NOTICE ⚠️
+ * This endpoint is deprecated and will be removed in 6 months.
+ * Please migrate to the new v1 API:
+ * 
+ * GET/PUT /api/v1/partners/{id} - Individual partner operations
+ * GET /api/v1/partners - List all partners with filtering
+ * 
+ * The new API follows REST best practices with proper versioning,
+ * pagination, error handling, rate limiting, and CORS support.
+ * 
+ * Location: /app/api/partners/profile/route.ts
  */
 
-// GET - Retrieve partner profile
+function createDeprecationResponse(data: Record<string, unknown>, method: string): NextResponse {
+  return NextResponse.json(
+    {
+      success: true,
+      data,
+      deprecation_warning: {
+        message: "This endpoint is deprecated and will be removed in 6 months",
+        migrate_to: method === 'GET' 
+          ? "/api/v1/partners/{id} for individual partner data or /api/v1/partners for partner listings"
+          : "/api/v1/partners/{id}",
+        documentation: "/API_V1_DOCUMENTATION.md",
+        benefits: [
+          "Proper REST conventions",
+          "Enhanced error handling", 
+          "Rate limiting protection",
+          "Better pagination",
+          "CORS support",
+          "Comprehensive filtering"
+        ]
+      }
+    },
+    {
+      headers: {
+        'X-Deprecation-Warning': 'true',
+        'X-Deprecation-Date': '2025-07-15',
+        'X-Migration-Guide': '/API_V1_DOCUMENTATION.md',
+        'Sunset': 'Tue, 15 Jul 2025 00:00:00 GMT'
+      }
+    }
+  );
+}
+
+function createDeprecationErrorResponse(message: string, status: number): NextResponse {
+  return NextResponse.json(
+    { 
+      success: false, 
+      error: message,
+      deprecation_warning: {
+        message: "This endpoint is deprecated and will be removed in 6 months",
+        migrate_to: "/api/v1/partners/{id}",
+        documentation: "/API_V1_DOCUMENTATION.md"
+      }
+    },
+    { 
+      status,
+      headers: {
+        'X-Deprecation-Warning': 'true',
+        'X-Deprecation-Date': '2025-07-15',
+        'X-Migration-Guide': '/API_V1_DOCUMENTATION.md',
+        'Sunset': 'Tue, 15 Jul 2025 00:00:00 GMT'
+      }
+    }
+  );
+}
+
+// GET - Retrieve partner profile (DEPRECATED)
 export async function GET() {
   try {
     const supabase = await createClient();
@@ -17,27 +80,62 @@ export async function GET() {
     // Get authenticated user
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
-      return NextResponse.json(
-        { error: "Unauthorized" }, 
-        { status: 401 }
-      );
+      return createDeprecationErrorResponse("Unauthorized", 401);
     }
 
-    // Get user profile with partner data
+    // Get partner profile data from new partner_profiles table
     const { data: profile, error: profileError } = await supabase
-      .from("profiles")
+      .from("partner_profiles")
       .select(`
         id,
+        full_name,
         email,
-        role,
+        phone,
         organization_name,
         organization_type,
+        organization_size,
         website,
-        description,
+        headquarters_location,
         partnership_level,
-        climate_focus,
+        partnership_start_date,
         verified,
+        verification_date,
+        climate_focus,
+        services_offered,
+        industries,
+        description,
+        mission_statement,
+        employee_count,
+        founded_year,
+        hiring_actively,
+        training_programs,
+        internship_programs,
+        linkedin_url,
+        careers_page_url,
+        facebook_url,
+        instagram_handle,
+        youtube_url,
+        twitter_handle,
+        blog_url,
+        newsletter_signup_url,
+        events_calendar_url,
+        student_portal_url,
+        workforce_portal_url,
+        platform_login_url,
+        podcast_url,
+        offers_webinars,
+        hosts_events,
+        has_resource_library,
+        offers_certification,
+        has_podcast,
+        offers_virtual_tours,
+        has_mobile_app,
+        offers_mentorship,
+        has_job_board,
+        offers_funding,
         contact_info,
+        profile_completed,
+        last_login,
         created_at,
         updated_at
       `)
@@ -45,43 +143,23 @@ export async function GET() {
       .single();
 
     if (profileError) {
-      console.error("Error fetching profile:", profileError);
-      return NextResponse.json(
-        { error: "Failed to fetch profile" }, 
-        { status: 500 }
-      );
+      console.error("Error fetching partner profile:", profileError);
+      return createDeprecationErrorResponse("Failed to fetch partner profile", 500);
     }
 
     if (!profile) {
-      return NextResponse.json(
-        { error: "Profile not found" }, 
-        { status: 404 }
-      );
+      return createDeprecationErrorResponse("Partner profile not found", 404);
     }
 
-    // Check if user has partner role
-    if (profile.role !== "partner") {
-      return NextResponse.json(
-        { error: "Access denied - Partner role required" }, 
-        { status: 403 }
-      );
-    }
+    return createDeprecationResponse(profile, 'GET');
 
-    return NextResponse.json({
-      success: true,
-      data: profile
-    });
-
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("GET /api/partners/profile error:", error);
-    return NextResponse.json(
-      { error: "Internal server error" }, 
-      { status: 500 }
-    );
+    return createDeprecationErrorResponse("Internal server error", 500);
   }
 }
 
-// PUT - Update partner profile
+// PUT - Update partner profile (DEPRECATED)
 export async function PUT(request: Request) {
   try {
     const supabase = await createClient();
@@ -89,139 +167,57 @@ export async function PUT(request: Request) {
     // Get authenticated user
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
-      return NextResponse.json(
-        { error: "Unauthorized" }, 
-        { status: 401 }
-      );
+      return createDeprecationErrorResponse("Unauthorized", 401);
     }
 
-    // Verify user has partner role
+    // Verify user has partner profile (exists in partner_profiles table)
     const { data: currentProfile } = await supabase
-      .from("profiles")
-      .select("role")
+      .from("partner_profiles")
+      .select("id")
       .eq("id", user.id)
       .single();
 
-    if (currentProfile?.role !== "partner") {
-      return NextResponse.json(
-        { error: "Access denied - Partner role required" }, 
-        { status: 403 }
-      );
+    if (!currentProfile) {
+      return createDeprecationErrorResponse("Access denied - Partner profile required", 403);
     }
 
     // Parse request body
     const body = await request.json();
-    const {
-      organization_name,
-      organization_type,
-      website,
-      description,
-      partnership_level,
-      climate_focus,
-      contact_info
-    } = body;
-
-    // Validation
-    if (!organization_name?.trim()) {
-      return NextResponse.json(
-        { error: "Organization name is required" }, 
-        { status: 400 }
-      );
-    }
-
-    if (!description?.trim()) {
-      return NextResponse.json(
-        { error: "Description is required" }, 
-        { status: 400 }
-      );
-    }
-
-    if (!Array.isArray(climate_focus) || climate_focus.length === 0) {
-      return NextResponse.json(
-        { error: "At least one climate focus area is required" }, 
-        { status: 400 }
-      );
-    }
-
-    // Valid organization types
-    const validOrgTypes = ["employer", "education", "community", "government", "nonprofit"];
-    if (!validOrgTypes.includes(organization_type)) {
-      return NextResponse.json(
-        { error: "Invalid organization type" }, 
-        { status: 400 }
-      );
-    }
-
-    // Valid partnership levels
-    const validPartnershipLevels = ["standard", "premium", "founding"];
-    if (!validPartnershipLevels.includes(partnership_level)) {
-      return NextResponse.json(
-        { error: "Invalid partnership level" }, 
-        { status: 400 }
-      );
-    }
-
-    // Website validation (if provided)
-    if (website && !website.startsWith("http")) {
-      return NextResponse.json(
-        { error: "Website must be a valid URL starting with http:// or https://" }, 
-        { status: 400 }
-      );
-    }
-
-    // Prepare update data
-    const updateData = {
-      organization_name: organization_name.trim(),
-      organization_type,
-      website: website?.trim() || null,
-      description: description.trim(),
-      partnership_level,
-      climate_focus,
-      contact_info: contact_info || {},
+    
+    // For backward compatibility, accept the old format but recommend new API
+    const updateData: Record<string, unknown> = {
       updated_at: new Date().toISOString()
     };
 
-    // Update profile
+    // Map old field names to new ones and handle the update
+    Object.keys(body).forEach(key => {
+      if (body[key] !== undefined) {
+        updateData[key] = body[key];
+      }
+    });
+
+    // Ensure profile completion check
+    if (updateData.organization_name && updateData.description && updateData.climate_focus) {
+      updateData.profile_completed = true;
+    }
+
+    // Update partner profile
     const { data: updatedProfile, error: updateError } = await supabase
-      .from("profiles")
+      .from("partner_profiles")
       .update(updateData)
       .eq("id", user.id)
-      .select(`
-        id,
-        email,
-        role,
-        organization_name,
-        organization_type,
-        website,
-        description,
-        partnership_level,
-        climate_focus,
-        verified,
-        contact_info,
-        created_at,
-        updated_at
-      `)
+      .select()
       .single();
 
     if (updateError) {
-      console.error("Error updating profile:", updateError);
-      return NextResponse.json(
-        { error: "Failed to update profile" }, 
-        { status: 500 }
-      );
+      console.error("Error updating partner profile:", updateError);
+      return createDeprecationErrorResponse("Failed to update partner profile", 500);
     }
 
-    return NextResponse.json({
-      success: true,
-      message: "Profile updated successfully",
-      data: updatedProfile
-    });
+    return createDeprecationResponse(updatedProfile, 'PUT');
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("PUT /api/partners/profile error:", error);
-    return NextResponse.json(
-      { error: "Internal server error" }, 
-      { status: 500 }
-    );
+    return createDeprecationErrorResponse("Internal server error", 500);
   }
 } 

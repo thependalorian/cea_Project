@@ -1,0 +1,17 @@
+{
+  "python_version": "3.11",
+  "dependencies": [
+    "./backend"
+  ],
+  "graphs": {
+    "climate_supervisor": "./backend/api/workflows/climate_supervisor_workflow.py:climate_supervisor_graph",
+    "climate_agent": "./backend/api/workflows/climate_workflow.py:climate_graph",
+    "resume_agent": "./backend/api/workflows/resume_workflow.py:resume_graph", 
+    "career_agent": "./backend/api/workflows/career_workflow.py:career_graph",
+    "interactive_chat": "./backend/api/chat/interactive_chat.py:chat_graph"
+  },
+  "env": "./backend/.env",
+  "http": {
+    "app": "./backend/webapp.py:app"
+  }
+} 

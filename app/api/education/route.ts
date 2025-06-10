@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from '@/lib/supabase/server';
 
 /**
  * Education Programs API Endpoint - Climate Economy Training & Education
@@ -15,13 +15,37 @@ import { createClient } from '@supabase/supabase-js';
  * Location: /app/api/education/route.ts
  */
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+interface EducationProgram {
+  id: string;
+  program_name: string;
+  description: string;
+  program_type: string;
+  duration?: string;
+  format?: string;
+  cost?: string;
+  prerequisites?: string;
+  climate_focus?: string[];
+  skills_taught?: string[];
+  certification_offered?: boolean;
+  application_deadline?: string;
+  start_date?: string;
+  end_date?: string;
+  contact_info?: Record<string, unknown>;
+  application_url?: string;
+  created_at: string;
+  updated_at: string;
+  partner_id: string;
+  profiles?: {
+    organization_name?: string;
+    organization_type?: string;
+    website?: string;
+    climate_focus?: string[];
+  }[];
+}
 
 export async function GET(request: NextRequest) {
   try {
+    const supabase = await createClient();
     const searchParams = request.nextUrl.searchParams;
     
     let query = supabase
@@ -126,42 +150,48 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Format response
-    const formattedPrograms = (programs || []).map((program: any) => ({
-      id: program.id,
-      program_name: program.program_name,
-      description: program.description,
-      program_type: program.program_type,
-      duration: program.duration,
-      format: program.format,
-      cost: program.cost,
-      prerequisites: program.prerequisites,
-      climate_focus: program.climate_focus,
-      skills_taught: program.skills_taught,
-      certification_offered: program.certification_offered,
-      application_deadline: program.application_deadline,
-      start_date: program.start_date,
-      end_date: program.end_date,
-      contact_info: program.contact_info,
-      application_url: program.application_url,
-      created_at: program.created_at,
-      updated_at: program.updated_at,
-      partner: {
-        id: program.partner_id,
-        name: program.profiles?.organization_name,
-        type: program.profiles?.organization_type,
-        website: program.profiles?.website,
-        climate_focus: program.profiles?.climate_focus
-      },
-      // Additional computed fields
-      is_accepting_applications: !program.application_deadline || 
-        new Date(program.application_deadline) > new Date(),
-      is_upcoming: !program.start_date || 
-        new Date(program.start_date) > new Date(),
-      is_ongoing: program.start_date && program.end_date &&
-        new Date(program.start_date) <= new Date() && 
-        new Date(program.end_date) >= new Date()
-    }));
+    // Format response with proper typing
+    const formattedPrograms = (programs || []).map((program: EducationProgram) => {
+      const partnerProfile = Array.isArray(program.profiles) && program.profiles.length > 0 
+        ? program.profiles[0] 
+        : undefined;
+
+      return {
+        id: program.id,
+        program_name: program.program_name,
+        description: program.description,
+        program_type: program.program_type,
+        duration: program.duration,
+        format: program.format,
+        cost: program.cost,
+        prerequisites: program.prerequisites,
+        climate_focus: program.climate_focus,
+        skills_taught: program.skills_taught,
+        certification_offered: program.certification_offered,
+        application_deadline: program.application_deadline,
+        start_date: program.start_date,
+        end_date: program.end_date,
+        contact_info: program.contact_info,
+        application_url: program.application_url,
+        created_at: program.created_at,
+        updated_at: program.updated_at,
+        partner: {
+          id: program.partner_id,
+          name: partnerProfile?.organization_name,
+          type: partnerProfile?.organization_type,
+          website: partnerProfile?.website,
+          climate_focus: partnerProfile?.climate_focus
+        },
+        // Additional computed fields
+        is_accepting_applications: !program.application_deadline || 
+          new Date(program.application_deadline) > new Date(),
+        is_upcoming: !program.start_date || 
+          new Date(program.start_date) > new Date(),
+        is_ongoing: program.start_date && program.end_date &&
+          new Date(program.start_date) <= new Date() && 
+          new Date(program.end_date) >= new Date()
+      };
+    });
 
     return NextResponse.json({
       success: true,
@@ -189,13 +219,41 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const supabase = await createClient();
+    
+    // Authentication check for partner users
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return NextResponse.json(
+        { error: "Authentication required" },
+        { status: 401 }
+      );
+    }
+
+    // Verify user is a partner
+    const { data: partnerProfile } = await supabase
+      .from('partner_profiles')
+      .select('id, organization_name, status, verified')
+      .eq('user_id', user.id)
+      .single();
+
+    if (!partnerProfile) {
+      return NextResponse.json(
+        { error: "Partner access required" },
+        { status: 403 }
+      );
+    }
+
+    if (partnerProfile.status !== 'active' || !partnerProfile.verified) {
+      return NextResponse.json(
+        { error: "Active, verified partner status required" },
+        { status: 403 }
+      );
+    }
+
     const body = await request.json();
     
-    // TODO: Add authentication check for partner users
-    // For now, we'll accept any valid program data
-    
     const {
-      partner_id,
       program_name,
       description,
       program_type,
@@ -214,15 +272,15 @@ export async function POST(request: NextRequest) {
     } = body;
 
     // Validate required fields
-    if (!partner_id || !program_name || !description) {
+    if (!program_name || !description) {
       return NextResponse.json(
-        { error: 'partner_id, program_name, and description are required' },
+        { error: 'program_name and description are required' },
         { status: 400 }
       );
     }
 
     const programData = {
-      partner_id,
+      partner_id: partnerProfile.id,
       program_name,
       description,
       program_type: program_type || 'certificate',
@@ -262,26 +320,31 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Log audit action
+    await supabase
+      .from('audit_logs')
+      .insert({
+        user_id: user.id,
+        table_name: 'education_programs',
+        action_type: 'create',
+        record_id: newProgram.id,
+        new_values: programData,
+        details: { 
+          action: 'education_program_create',
+          partner_id: partnerProfile.id 
+        }
+      });
+
     return NextResponse.json({
       success: true,
-      program: {
-        ...newProgram,
-        partner: {
-          id: newProgram.partner_id,
-          name: newProgram.profiles?.organization_name,
-          type: newProgram.profiles?.organization_type,
-          website: newProgram.profiles?.website
-        }
-      }
-    }, { status: 201 });
+      program: newProgram,
+      message: "Education program created successfully"
+    });
 
   } catch (error) {
-    console.error('Education API POST error:', error);
+    console.error('POST education error:', error);
     return NextResponse.json(
-      { 
-        error: 'Internal server error',
-        message: error instanceof Error ? error.message : 'Unknown error'
-      },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
@@ -289,17 +352,53 @@ export async function POST(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { id, ...updateData } = body;
-
-    if (!id) {
+    const supabase = await createClient();
+    
+    // Authentication check - ensure user owns this education program
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
       return NextResponse.json(
-        { error: 'Program ID is required' },
+        { error: "Authentication required" },
+        { status: 401 }
+      );
+    }
+
+    const { searchParams } = new URL(request.url);
+    const programId = searchParams.get('id');
+    
+    if (!programId) {
+      return NextResponse.json(
+        { error: "Program ID is required" },
         { status: 400 }
       );
     }
 
-    // TODO: Add authentication check - ensure user owns this education program
+    // Verify user owns this program
+    const { data: existingProgram } = await supabase
+      .from('education_programs')
+      .select(`
+        *,
+        partner_profiles!education_programs_partner_id_fkey (
+          user_id,
+          status,
+          verified
+        )
+      `)
+      .eq('id', programId)
+      .single();
+
+    if (!existingProgram || 
+        existingProgram.partner_profiles.user_id !== user.id ||
+        existingProgram.partner_profiles.status !== 'active' ||
+        !existingProgram.partner_profiles.verified) {
+      return NextResponse.json(
+        { error: "Unauthorized or program not found" },
+        { status: 403 }
+      );
+    }
+
+    const body = await request.json();
+    const { ...updateData } = body;
 
     const { data: updatedProgram, error } = await supabase
       .from('education_programs')
@@ -307,7 +406,7 @@ export async function PUT(request: NextRequest) {
         ...updateData,
         updated_at: new Date().toISOString()
       })
-      .eq('id', id)
+      .eq('id', programId)
       .select(`
         *,
         profiles!inner(
@@ -326,26 +425,32 @@ export async function PUT(request: NextRequest) {
       );
     }
 
+    // Log audit action
+    await supabase
+      .from('audit_logs')
+      .insert({
+        user_id: user.id,
+        table_name: 'education_programs',
+        action_type: 'update',
+        record_id: programId,
+        old_values: existingProgram,
+        new_values: updateData,
+        details: { 
+          action: 'education_program_update',
+          partner_id: existingProgram.partner_id 
+        }
+      });
+
     return NextResponse.json({
       success: true,
-      program: {
-        ...updatedProgram,
-        partner: {
-          id: updatedProgram.partner_id,
-          name: updatedProgram.profiles?.organization_name,
-          type: updatedProgram.profiles?.organization_type,
-          website: updatedProgram.profiles?.website
-        }
-      }
+      program: updatedProgram,
+      message: "Education program updated successfully"
     });
 
   } catch (error) {
-    console.error('Education API PUT error:', error);
+    console.error('PUT education error:', error);
     return NextResponse.json(
-      { 
-        error: 'Internal server error',
-        message: error instanceof Error ? error.message : 'Unknown error'
-      },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
@@ -353,22 +458,55 @@ export async function PUT(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const searchParams = request.nextUrl.searchParams;
-    const id = searchParams.get('id');
-
-    if (!id) {
+    const supabase = await createClient();
+    
+    // Authentication check - ensure user owns this education program
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
       return NextResponse.json(
-        { error: 'Program ID is required' },
+        { error: "Authentication required" },
+        { status: 401 }
+      );
+    }
+
+    const { searchParams } = new URL(request.url);
+    const programId = searchParams.get('id');
+    
+    if (!programId) {
+      return NextResponse.json(
+        { error: "Program ID is required" },
         { status: 400 }
       );
     }
 
-    // TODO: Add authentication check - ensure user owns this education program
+    // Verify user owns this program
+    const { data: existingProgram } = await supabase
+      .from('education_programs')
+      .select(`
+        *,
+        partner_profiles!education_programs_partner_id_fkey (
+          user_id,
+          status,
+          verified
+        )
+      `)
+      .eq('id', programId)
+      .single();
+
+    if (!existingProgram || 
+        existingProgram.partner_profiles.user_id !== user.id ||
+        existingProgram.partner_profiles.status !== 'active' ||
+        !existingProgram.partner_profiles.verified) {
+      return NextResponse.json(
+        { error: "Unauthorized or program not found" },
+        { status: 403 }
+      );
+    }
 
     const { error } = await supabase
       .from('education_programs')
       .delete()
-      .eq('id', id);
+      .eq('id', programId);
 
     if (error) {
       console.error('Education program deletion error:', error);
@@ -378,18 +516,30 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
+    // Log audit action
+    await supabase
+      .from('audit_logs')
+      .insert({
+        user_id: user.id,
+        table_name: 'education_programs',
+        action_type: 'delete',
+        record_id: programId,
+        old_values: existingProgram,
+        details: { 
+          action: 'education_program_delete',
+          partner_id: existingProgram.partner_id 
+        }
+      });
+
     return NextResponse.json({
       success: true,
-      message: 'Education program deleted successfully'
+      message: "Education program deleted successfully"
     });
 
   } catch (error) {
-    console.error('Education API DELETE error:', error);
+    console.error('DELETE education error:', error);
     return NextResponse.json(
-      { 
-        error: 'Internal server error',
-        message: error instanceof Error ? error.message : 'Unknown error'
-      },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }

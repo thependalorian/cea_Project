@@ -1,0 +1,156 @@
+{
+  "test_metadata": {
+    "test_user_id": "30eedd6a-0771-444e-90d2-7520c1eb03f0",
+    "test_timestamp": "2025-06-07T09:25:13.585823",
+    "total_agents_tested": 5,
+    "total_queries_tested": 13
+  },
+  "user_context": {
+    "user_id": "30eedd6a-0771-444e-90d2-7520c1eb03f0",
+    "profile": null,
+    "resume": null,
+    "job_seeker": null
+  },
+  "knowledge_resources": {
+    "knowledge_resources_table": {
+      "success": true,
+      "count": 4,
+      "sample_domains": [
+        "policy",
+        "workforce"
+      ]
+    },
+    "job_postings_table": {
+      "success": false,
+      "error": "{'message': 'relation \"public.job_postings\" does not exist', 'code': '42P01', 'hint': None, 'details': None}"
+    },
+    "training_programs_table": {
+      "success": false,
+      "error": "{'message': 'relation \"public.training_programs\" does not exist', 'code': '42P01', 'hint': None, 'details': None}"
+    }
+  },
+  "agent_results": {
+    "supervisor": {
+      "test_1": {
+        "agent_type": "supervisor",
+        "query": "I'm looking for climate career opportunities in Massachusetts",
+        "response_time_seconds": 0.012376,
+        "response_length": 1720,
+        "has_content": true,
+        "has_metadata": true,
+        "agent_persona": "Pendo",
+        "tools_used": [],
+        "sources": [],
+        "knowledge_resources_accessed": "partner_resources",
+        "personalization_score": 3,
+        "success": true,
+        "error": null,
+        "response_preview": "\n\n**\ud83c\udfaf Pendo - Massachusetts Climate Economy Routing Coordinator (CEA.md Enhanced)**\n\n*Addressing the information gap crisis affecting 39% of clean energy workers*\n*Connecting you to the 38,100 clean energy jobs needed by 2030*\n*Gateway Cities Focus: Brockton, Fall River/New Bedford, Lowell/Lawrence*..."
+      }
+    },
+    "jasmine": {
+      "test_1": {
+        "agent_type": "jasmine",
+        "query": "I need help with my resume for clean energy jobs",
+        "response_time_seconds": 1.7e-05,
+        "success": false,
+        "error": "cannot import name 'MAResourceAnalystAgent' from 'core.agents.base' (/Users/georgenekwaya/Downloads/climate-economy-assistant-clean/cea_project/backend/core/agents/base.py)",
+        "response_preview": null
+      },
+      "test_2": {
+        "agent_type": "jasmine",
+        "query": "What skills do I need for solar energy careers?",
+        "response_time_seconds": 4e-06,
+        "success": false,
+        "error": "cannot import name 'MAResourceAnalystAgent' from 'core.agents.base' (/Users/georgenekwaya/Downloads/climate-economy-assistant-clean/cea_project/backend/core/agents/base.py)",
+        "response_preview": null
+      },
+      "test_3": {
+        "agent_type": "jasmine",
+        "query": "What training programs are available for wind energy?",
+        "response_time_seconds": 3e-06,
+        "success": false,
+        "error": "cannot import name 'MAResourceAnalystAgent' from 'core.agents.base' (/Users/georgenekwaya/Downloads/climate-economy-assistant-clean/cea_project/backend/core/agents/base.py)",
+        "response_preview": null
+      }
+    },
+    "marcus": {
+      "test_1": {
+        "agent_type": "marcus",
+        "query": "I'm a Navy veteran transitioning to renewable energy",
+        "response_time_seconds": 3e-06,
+        "success": false,
+        "error": "cannot import name 'VeteranSpecialistAgent' from 'core.agents.base' (/Users/georgenekwaya/Downloads/climate-economy-assistant-clean/cea_project/backend/core/agents/base.py)",
+        "response_preview": null
+      },
+      "test_2": {
+        "agent_type": "marcus",
+        "query": "How can I use my military logistics experience in clean energy?",
+        "response_time_seconds": 3e-06,
+        "success": false,
+        "error": "cannot import name 'VeteranSpecialistAgent' from 'core.agents.base' (/Users/georgenekwaya/Downloads/climate-economy-assistant-clean/cea_project/backend/core/agents/base.py)",
+        "response_preview": null
+      },
+      "test_3": {
+        "agent_type": "marcus",
+        "query": "What veteran programs exist for clean energy careers?",
+        "response_time_seconds": 2e-06,
+        "success": false,
+        "error": "cannot import name 'VeteranSpecialistAgent' from 'core.agents.base' (/Users/georgenekwaya/Downloads/climate-economy-assistant-clean/cea_project/backend/core/agents/base.py)",
+        "response_preview": null
+      }
+    },
+    "liv": {
+      "test_1": {
+        "agent_type": "liv",
+        "query": "I have engineering credentials from Tel Aviv and want to work in Massachusetts",
+        "response_time_seconds": 4e-06,
+        "success": false,
+        "error": "cannot import name 'InternationalSpecialistAgent' from 'core.agents.base' (/Users/georgenekwaya/Downloads/climate-economy-assistant-clean/cea_project/backend/core/agents/base.py)",
+        "response_preview": null
+      },
+      "test_2": {
+        "agent_type": "liv",
+        "query": "How do I get my foreign engineering degree recognized?",
+        "response_time_seconds": 3e-06,
+        "success": false,
+        "error": "cannot import name 'InternationalSpecialistAgent' from 'core.agents.base' (/Users/georgenekwaya/Downloads/climate-economy-assistant-clean/cea_project/backend/core/agents/base.py)",
+        "response_preview": null
+      },
+      "test_3": {
+        "agent_type": "liv",
+        "query": "What visa options exist for international clean energy professionals?",
+        "response_time_seconds": 3e-06,
+        "success": false,
+        "error": "cannot import name 'InternationalSpecialistAgent' from 'core.agents.base' (/Users/georgenekwaya/Downloads/climate-economy-assistant-clean/cea_project/backend/core/agents/base.py)",
+        "response_preview": null
+      }
+    },
+    "miguel": {
+      "test_1": {
+        "agent_type": "miguel",
+        "query": "I want to work on environmental justice in Gateway Cities",
+        "response_time_seconds": 3e-06,
+        "success": false,
+        "error": "cannot import name 'EnvironmentalJusticeSpecialistAgent' from 'core.agents.base' (/Users/georgenekwaya/Downloads/climate-economy-assistant-clean/cea_project/backend/core/agents/base.py)",
+        "response_preview": null
+      },
+      "test_2": {
+        "agent_type": "miguel",
+        "query": "How can I organize my community around clean energy equity?",
+        "response_time_seconds": 3e-06,
+        "success": false,
+        "error": "cannot import name 'EnvironmentalJusticeSpecialistAgent' from 'core.agents.base' (/Users/georgenekwaya/Downloads/climate-economy-assistant-clean/cea_project/backend/core/agents/base.py)",
+        "response_preview": null
+      },
+      "test_3": {
+        "agent_type": "miguel",
+        "query": "What environmental justice policies affect clean energy in Massachusetts?",
+        "response_time_seconds": 3e-06,
+        "success": false,
+        "error": "cannot import name 'EnvironmentalJusticeSpecialistAgent' from 'core.agents.base' (/Users/georgenekwaya/Downloads/climate-economy-assistant-clean/cea_project/backend/core/agents/base.py)",
+        "response_preview": null
+      }
+    }
+  }
+}

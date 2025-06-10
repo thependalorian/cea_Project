@@ -1,0 +1,273 @@
+{
+  "test_metadata": {
+    "test_user_id": "30eedd6a-0771-444e-90d2-7520c1eb03f0",
+    "test_timestamp": "2025-06-09T01:14:04.629250",
+    "total_agents_tested": 5,
+    "total_queries_tested": 13
+  },
+  "user_context": {
+    "user_id": "30eedd6a-0771-444e-90d2-7520c1eb03f0",
+    "profile": null,
+    "resume": null,
+    "job_seeker": null
+  },
+  "knowledge_resources": {
+    "knowledge_resources_table": {
+      "success": true,
+      "count": 5,
+      "sample_domains": [
+        "policy",
+        "platform_administration",
+        "workforce"
+      ]
+    },
+    "job_postings_table": {
+      "success": false,
+      "error": "{'message': 'relation \"public.job_postings\" does not exist', 'code': '42P01', 'hint': None, 'details': None}"
+    },
+    "training_programs_table": {
+      "success": false,
+      "error": "{'message': 'relation \"public.training_programs\" does not exist', 'code': '42P01', 'hint': None, 'details': None}"
+    }
+  },
+  "agent_results": {
+    "supervisor": {
+      "test_1": {
+        "agent_type": "supervisor",
+        "query": "I'm looking for climate career opportunities in Massachusetts",
+        "response_time_seconds": 0.135789,
+        "response_length": 3834,
+        "has_content": true,
+        "has_metadata": true,
+        "agent_persona": "Pendo",
+        "tools_used": [],
+        "sources": [],
+        "knowledge_resources_accessed": "training_resources, partner_resources",
+        "personalization_score": 2,
+        "success": true,
+        "error": null,
+        "response_preview": "\n\n**\ud83c\udfaf Pendo - Massachusetts Climate Economy Enhanced Career Navigation Coordinator (CEA.md Enhanced)**\n\n*Addressing the information gap crisis affecting 39% of clean energy workers*\n*Connecting you to the 38,100 clean energy jobs needed by 2030*\n*Gateway Cities Focus: Brockton, Fall River/New Bedfor..."
+      }
+    },
+    "jasmine": {
+      "test_1": {
+        "agent_type": "jasmine",
+        "query": "I need help with my resume for clean energy jobs",
+        "response_time_seconds": 17.986037,
+        "response_length": 3689,
+        "has_content": true,
+        "has_metadata": true,
+        "agent_persona": "Jasmine",
+        "tools_used": [
+          "search_resources",
+          "match_jobs_for_profile",
+          "recommend_upskilling"
+        ],
+        "sources": [],
+        "knowledge_resources_accessed": "training_resources, partner_resources, funding_resources, resource_search",
+        "personalization_score": 3,
+        "success": true,
+        "error": null,
+        "response_preview": "\ud83c\udf43 **Jasmine - Massachusetts Climate Economy Resource Analysis**\nBased on your inquiry about: \"I need help with my resume for clean energy jobs\"\n\n**Recommended Training:**\n\nBased on your interest in renewable energy, sustainability, clean technology with flexible hybrid options:\n\n\u2022 **Clean Energy Cer..."
+      },
+      "test_2": {
+        "agent_type": "jasmine",
+        "query": "What skills do I need for solar energy careers?",
+        "response_time_seconds": 16.724951,
+        "response_length": 4105,
+        "has_content": true,
+        "has_metadata": true,
+        "agent_persona": "Jasmine",
+        "tools_used": [
+          "search_resources",
+          "match_jobs_for_profile",
+          "recommend_upskilling"
+        ],
+        "sources": [],
+        "knowledge_resources_accessed": "training_resources, job_resources, partner_resources, funding_resources, resource_search",
+        "personalization_score": 3,
+        "success": true,
+        "error": null,
+        "response_preview": "\ud83c\udf43 **Jasmine - Massachusetts Climate Economy Resource Analysis**\nBased on your inquiry about: \"What skills do I need for solar energy careers?\"\n\n**Recommended Training:**\n\nBased on your interest in renewable energy, sustainability, clean technology with flexible hybrid options:\n\n\u2022 **Clean Energy Cert..."
+      },
+      "test_3": {
+        "agent_type": "jasmine",
+        "query": "What training programs are available for wind energy?",
+        "response_time_seconds": 18.235318,
+        "response_length": 3951,
+        "has_content": true,
+        "has_metadata": true,
+        "agent_persona": "Jasmine",
+        "tools_used": [
+          "search_resources",
+          "match_jobs_for_profile",
+          "recommend_upskilling"
+        ],
+        "sources": [],
+        "knowledge_resources_accessed": "training_resources, partner_resources, funding_resources, resource_search",
+        "personalization_score": 3,
+        "success": true,
+        "error": null,
+        "response_preview": "\ud83c\udf43 **Jasmine - Massachusetts Climate Economy Resource Analysis**\nBased on your inquiry about: \"What training programs are available for wind energy?\"\n\n**Recommended Training:**\n\nBased on your interest in renewable energy, sustainability, clean technology with flexible hybrid options:\n\n\u2022 **Clean Energ..."
+      }
+    },
+    "marcus": {
+      "test_1": {
+        "agent_type": "marcus",
+        "query": "I'm a Navy veteran transitioning to renewable energy",
+        "response_time_seconds": 0.284006,
+        "response_length": 4697,
+        "has_content": true,
+        "has_metadata": true,
+        "agent_persona": "Marcus",
+        "tools_used": [
+          "skill_translation"
+        ],
+        "sources": [],
+        "knowledge_resources_accessed": "training_resources, partner_resources, funding_resources",
+        "personalization_score": 2,
+        "success": true,
+        "error": null,
+        "response_preview": "\n**\ud83c\udf96\ufe0f Marcus - Massachusetts Climate Economy Veteran Career Analysis (CEA.md Enhanced)**\n\n**\ud83c\udf96\ufe0f Marcus - Veterans Climate Career Navigation (CEA.md Enhanced)**\nAddressing the 60% employer hiring difficulty through specialized military-to-climate career pathways.\nFocus: 38,100 clean energy jobs pipeli..."
+      },
+      "test_2": {
+        "agent_type": "marcus",
+        "query": "How can I use my military logistics experience in clean energy?",
+        "response_time_seconds": 0.206708,
+        "response_length": 4697,
+        "has_content": true,
+        "has_metadata": true,
+        "agent_persona": "Marcus",
+        "tools_used": [
+          "skill_translation"
+        ],
+        "sources": [],
+        "knowledge_resources_accessed": "training_resources, partner_resources, funding_resources",
+        "personalization_score": 2,
+        "success": true,
+        "error": null,
+        "response_preview": "\n**\ud83c\udf96\ufe0f Marcus - Massachusetts Climate Economy Veteran Career Analysis (CEA.md Enhanced)**\n\n**\ud83c\udf96\ufe0f Marcus - Veterans Climate Career Navigation (CEA.md Enhanced)**\nAddressing the 60% employer hiring difficulty through specialized military-to-climate career pathways.\nFocus: 38,100 clean energy jobs pipeli..."
+      },
+      "test_3": {
+        "agent_type": "marcus",
+        "query": "What veteran programs exist for clean energy careers?",
+        "response_time_seconds": 0.18172,
+        "response_length": 4697,
+        "has_content": true,
+        "has_metadata": true,
+        "agent_persona": "Marcus",
+        "tools_used": [
+          "skill_translation"
+        ],
+        "sources": [],
+        "knowledge_resources_accessed": "training_resources, partner_resources, funding_resources",
+        "personalization_score": 2,
+        "success": true,
+        "error": null,
+        "response_preview": "\n**\ud83c\udf96\ufe0f Marcus - Massachusetts Climate Economy Veteran Career Analysis (CEA.md Enhanced)**\n\n**\ud83c\udf96\ufe0f Marcus - Veterans Climate Career Navigation (CEA.md Enhanced)**\nAddressing the 60% employer hiring difficulty through specialized military-to-climate career pathways.\nFocus: 38,100 clean energy jobs pipeli..."
+      }
+    },
+    "liv": {
+      "test_1": {
+        "agent_type": "liv",
+        "query": "I have engineering credentials from Tel Aviv and want to work in Massachusetts",
+        "response_time_seconds": 0.070219,
+        "response_length": 5005,
+        "has_content": true,
+        "has_metadata": true,
+        "agent_persona": "Liv",
+        "tools_used": [
+          "credential_evaluation"
+        ],
+        "sources": [],
+        "knowledge_resources_accessed": "training_resources, partner_resources, funding_resources",
+        "personalization_score": 3,
+        "success": true,
+        "error": null,
+        "response_preview": "\n**\ud83c\udf0d Liv - Massachusetts Climate Economy International Professional Analysis (CEA.md Enhanced)**\n\n**\ud83c\udf0d Liv - International Professionals Climate Career Navigation (CEA.md Enhanced)**\nAddressing the 60% employer hiring difficulty through international credential recognition.\nFocus: 38,100 clean energy..."
+      },
+      "test_2": {
+        "agent_type": "liv",
+        "query": "How do I get my foreign engineering degree recognized?",
+        "response_time_seconds": 0.064318,
+        "response_length": 4276,
+        "has_content": true,
+        "has_metadata": true,
+        "agent_persona": "Liv",
+        "tools_used": [],
+        "sources": [],
+        "knowledge_resources_accessed": "training_resources, partner_resources, funding_resources",
+        "personalization_score": 2,
+        "success": true,
+        "error": null,
+        "response_preview": "\n**\ud83c\udf0d Liv - Massachusetts Climate Economy International Professional Analysis (CEA.md Enhanced)**\n\n**\ud83c\udf0d Liv - International Professionals Climate Career Navigation (CEA.md Enhanced)**\nAddressing the 60% employer hiring difficulty through international credential recognition.\nFocus: 38,100 clean energy..."
+      },
+      "test_3": {
+        "agent_type": "liv",
+        "query": "What visa options exist for international clean energy professionals?",
+        "response_time_seconds": 0.155764,
+        "response_length": 4276,
+        "has_content": true,
+        "has_metadata": true,
+        "agent_persona": "Liv",
+        "tools_used": [],
+        "sources": [],
+        "knowledge_resources_accessed": "training_resources, partner_resources, funding_resources",
+        "personalization_score": 2,
+        "success": true,
+        "error": null,
+        "response_preview": "\n**\ud83c\udf0d Liv - Massachusetts Climate Economy International Professional Analysis (CEA.md Enhanced)**\n\n**\ud83c\udf0d Liv - International Professionals Climate Career Navigation (CEA.md Enhanced)**\nAddressing the 60% employer hiring difficulty through international credential recognition.\nFocus: 38,100 clean energy..."
+      }
+    },
+    "miguel": {
+      "test_1": {
+        "agent_type": "miguel",
+        "query": "I want to work on environmental justice in Gateway Cities",
+        "response_time_seconds": 0.07135,
+        "response_length": 293,
+        "has_content": true,
+        "has_metadata": true,
+        "agent_persona": "Miguel",
+        "tools_used": [],
+        "sources": [],
+        "knowledge_resources_accessed": "none_detected",
+        "personalization_score": 1,
+        "success": true,
+        "error": null,
+        "response_preview": "I'm Miguel, your expert environmental justice specialist. I encountered a technical issue, but I'm here to help you connect climate career opportunities with community empowerment and anti-displacement strategies. Let's work together on both your individual advancement and community building."
+      },
+      "test_2": {
+        "agent_type": "miguel",
+        "query": "How can I organize my community around clean energy equity?",
+        "response_time_seconds": 0.125869,
+        "response_length": 293,
+        "has_content": true,
+        "has_metadata": true,
+        "agent_persona": "Miguel",
+        "tools_used": [],
+        "sources": [],
+        "knowledge_resources_accessed": "none_detected",
+        "personalization_score": 1,
+        "success": true,
+        "error": null,
+        "response_preview": "I'm Miguel, your expert environmental justice specialist. I encountered a technical issue, but I'm here to help you connect climate career opportunities with community empowerment and anti-displacement strategies. Let's work together on both your individual advancement and community building."
+      },
+      "test_3": {
+        "agent_type": "miguel",
+        "query": "What environmental justice policies affect clean energy in Massachusetts?",
+        "response_time_seconds": 0.185743,
+        "response_length": 293,
+        "has_content": true,
+        "has_metadata": true,
+        "agent_persona": "Miguel",
+        "tools_used": [],
+        "sources": [],
+        "knowledge_resources_accessed": "none_detected",
+        "personalization_score": 1,
+        "success": true,
+        "error": null,
+        "response_preview": "I'm Miguel, your expert environmental justice specialist. I encountered a technical issue, but I'm here to help you connect climate career opportunities with community empowerment and anti-displacement strategies. Let's work together on both your individual advancement and community building."
+      }
+    }
+  }
+}

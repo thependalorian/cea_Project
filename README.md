@@ -131,6 +131,85 @@ Our proprietary skills translation engine goes beyond basic resume parsing to pr
 - **Skill Gap Analysis**: Specific training recommendations with partner program integration
 - **Success Story Library**: Community-specific examples showing real career transitions (Navy ET → Wind Technician, Community Organizer → Climate Program Manager)
 
+## 🔒 Privacy & Data Compliance
+
+### **GDPR-Compliant Privacy Controls**
+We prioritize user privacy and data rights with comprehensive compliance features:
+
+#### **User Data Rights**
+- **✅ Right to Access**: Complete transparency about what data we collect and how it's used
+- **✅ Right to Export**: Download all your data in JSON format at any time
+- **✅ Right to Rectification**: Update or correct your personal information
+- **✅ Right to Erasure**: Permanent account and data deletion with confirmation
+- **✅ Right to Opt-Out**: Granular control over data processing and social profile analysis
+
+#### **Privacy Control Center**
+Located at `/settings`, users have full control over:
+
+**Social Profile Analysis** 🛡️
+- **Toggle Control**: Enable/disable enhanced career analysis using LinkedIn, GitHub, and website data
+- **Default Setting**: Enabled with clear opt-out instructions
+- **Immediate Effect**: Changes apply instantly to all future analysis
+- **Transparency**: Clear explanation of what data is collected and how it's used
+
+**Email & Communication Preferences**
+- **Job Alerts**: Control notifications about relevant opportunities
+- **Newsletter**: Weekly climate economy insights and updates
+- **Partner Updates**: Communications from climate economy partners
+- **Marketing**: Promotional content and feature announcements
+
+**Data Management**
+- **Export Functionality**: One-click download of complete user data
+- **Account Deletion**: Secure deletion with "DELETE MY ACCOUNT" confirmation
+- **Data Cleanup**: Comprehensive removal from all database tables
+
+### **Legal Compliance Framework**
+
+#### **Terms of Service** (`/terms`)
+- **Social Profile Usage**: Clear explanation of enhanced analysis features
+- **User Rights**: Comprehensive outline of data rights and opt-out mechanisms
+- **Data Processing**: Transparent description of AI analysis and career matching
+- **Contact Information**: Direct support for privacy questions and requests
+
+#### **Privacy Policy** (`/privacy`)
+- **Data Collection**: Detailed breakdown of information types collected
+- **Usage Purpose**: Clear explanation of how data improves career recommendations
+- **Third-Party Sharing**: Transparent disclosure of partner data sharing (with consent)
+- **Security Measures**: Industry-standard encryption and data protection practices
+- **User Controls**: Step-by-step instructions for managing privacy settings
+
+#### **Consent Management**
+- **Signup Consent**: Agreement to terms and privacy policy during account creation
+- **Granular Controls**: Individual toggles for different data processing types
+- **Audit Logging**: Privacy setting changes logged for compliance
+- **Revocable Consent**: Users can withdraw consent at any time
+
+### **Data Security & Protection**
+
+#### **Technical Safeguards**
+- **Encryption**: All data encrypted in transit (TLS) and at rest (AES-256)
+- **Authentication**: Secure user authentication via Supabase Auth
+- **Access Control**: Role-based permissions and row-level security
+- **Audit Trails**: Comprehensive logging of all data access and changes
+
+#### **Privacy by Design**
+- **Data Minimization**: Only collect data necessary for service functionality
+- **Purpose Limitation**: Data used only for stated career assistance purposes
+- **Storage Limitation**: Regular review and deletion of unnecessary data
+- **Transparency**: Clear communication about all data practices
+
+#### **User Empowerment**
+- **Real-Time Controls**: Instant privacy setting updates
+- **Data Visibility**: Complete transparency about stored information
+- **Export Standards**: JSON format for easy data portability
+- **Deletion Guarantees**: Secure and complete data removal upon request
+
+### **Compliance Monitoring**
+- **Regular Audits**: Systematic review of privacy practices and data handling
+- **User Feedback**: Continuous improvement based on privacy concerns
+- **Legal Updates**: Proactive adaptation to new privacy regulations
+- **Documentation**: Comprehensive records for compliance demonstration
+
 ## 🎯 Enhanced Community Resources
 
 ### **Veterans-Specific Actionable Support**
@@ -362,17 +441,34 @@ CREATE TABLE resumes (
 );
 ```
 
-#### **`user_interests`** - Personalization and Career Preferences
+#### **`user_interests`** - Personalization, Career Preferences & Privacy Settings 🔒
 ```sql
 CREATE TABLE user_interests (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  
+  -- Career Preferences
   climate_focus TEXT[] DEFAULT '{}',
   career_stage TEXT,          -- 'entry_level', 'career_change', 'mid_career', 'senior_level'
   target_roles TEXT[] DEFAULT '{}',
   preferred_location TEXT,
   employment_preferences JSONB DEFAULT '{}',
   skills_to_develop TEXT[] DEFAULT '{}',
+  
+  -- Privacy Settings (GDPR Compliant)
+  social_profile_analysis_enabled BOOLEAN DEFAULT true,
+  data_sharing_enabled BOOLEAN DEFAULT false,
+  marketing_emails_enabled BOOLEAN DEFAULT true,
+  newsletter_enabled BOOLEAN DEFAULT true,
+  email_notifications BOOLEAN DEFAULT true,
+  job_alerts_enabled BOOLEAN DEFAULT true,
+  partner_updates_enabled BOOLEAN DEFAULT true,
+  
+  -- User Experience Preferences
+  theme_preference TEXT DEFAULT 'system',
+  language_preference TEXT DEFAULT 'en',
+  timezone TEXT DEFAULT 'America/New_York',
+  
   created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
   UNIQUE(user_id)
@@ -438,6 +534,11 @@ CREATE OR REPLACE FUNCTION match_resume_content(
 ### **🏥 Health Check**
 - **`GET /health`** - System health status and version information
 
+### **🔒 Privacy & Data Management** ⭐ *GDPR Compliant*
+- **`GET/PATCH /api/v1/user/preferences`** - Manage privacy settings and data processing preferences
+- **`GET/POST /api/v1/user/export`** - Complete user data export in JSON format
+- **`GET/POST /api/v1/user/delete`** - Secure account deletion with comprehensive cleanup
+
 ### **📄 Resume Processing & Analysis**
 
 #### **`POST /api/process-resume`**
@@ -500,7 +601,7 @@ interface ResumeChatRequest {
 ```
 
 #### **`POST /api/chat-with-resume-social`**
-**Purpose**: Enhanced chat that includes social media profile data (LinkedIn, GitHub)
+**Purpose**: Enhanced chat that includes social media profile data (LinkedIn, GitHub) - *Requires user consent*
 
 ### **🎯 Skills Translation & Career Guidance**
 
@@ -601,7 +702,7 @@ interface ResumeAgentRequest {
 ### **👤 User Management & Social Integration**
 
 #### **`POST /api/update-social-links`**
-**Purpose**: Update user's social media profiles and extract relevant professional data
+**Purpose**: Update user's social media profiles and extract relevant professional data - *Requires user consent*
 ```typescript
 interface SocialLinksUpdateRequest {
   user_id: string;
@@ -612,7 +713,7 @@ interface SocialLinksUpdateRequest {
 ```
 
 #### **`POST /api/search-social-profiles`**
-**Purpose**: Search and analyze data from user's social media profiles
+**Purpose**: Search and analyze data from user's social media profiles - *Requires user consent*
 ```typescript
 interface SocialSearchRequest {
   user_id: string;
@@ -666,6 +767,7 @@ interface SkillTranslationResponse {
 - **Row Level Security**: Database-level access control for all tables
 - **Input Sanitization**: All user inputs validated and sanitized
 - **Error Handling**: Comprehensive error responses without data leakage
+- **Privacy Controls**: Social profile analysis requires explicit user consent
 
 #### **Performance Features**
 - **Caching**: Frequently accessed data cached for speed
@@ -685,147 +787,15 @@ interface SkillTranslationResponse {
 - Specialized prompts and analysis for veterans, international professionals, and environmental justice communities
 - Custom resource filtering based on community needs and barriers
 
-## 🛠️ Technical Architecture
+## 📚 Documentation
 
-### **Backend: Advanced AI Pipeline**
-- **LangChain + GPT-4**: Sophisticated natural language processing for skills analysis and career guidance
-- **Supabase Vector Store**: Efficient similarity search across 10,000+ job descriptions and training programs
-- **Pydantic Data Models**: Structured output ensuring consistent, reliable API responses
-- **Community-Specific Prompting**: Tailored AI instructions for each target population
+### **Complete Documentation Set**
+- **README.md**: Complete project overview with privacy compliance features
+- **V1_API_ENDPOINTS.md**: Comprehensive API documentation including privacy endpoints
+- **PRIVACY_COMPLIANCE.md**: Detailed privacy and GDPR compliance documentation
+- **Migration Files**: Database schema updates for privacy settings
 
-### **Frontend: Accessible Design**
-- **Next.js 14 + SSR**: Fast, SEO-optimized experience with server-side rendering
-- **DaisyUI Components**: Consistent, accessible interface design
-- **TypeScript**: Type-safe development for reliability and maintainability
-- **Mobile-First**: Optimized for users accessing from phones and tablets
-
-### **Integrations: Real-World Impact**
-- **Live Job Feeds**: Direct integration with partner organization job boards
-- **Training Program APIs**: Real-time availability and application status for workforce programs
-- **Credential Evaluation Services**: Streamlined referrals to appropriate evaluation agencies
-- **Success Tracking**: Anonymous outcome monitoring to measure community impact
-
-## 🗺️ Massachusetts Focus, National Impact
-
-### **Why Massachusetts?**
-Massachusetts leads the nation in:
-- **Clean Energy Job Growth**: 38% workforce expansion needed by 2030 (29,700+ new jobs)
-- **Offshore Wind Leadership**: 3,000+ current jobs with 3,500+ additional positions projected
-- **Equity Initiatives**: Dedicated Environmental Justice and workforce diversity programs
-- **Educational Infrastructure**: World-class universities and community colleges with climate programs
-
-### **Scalable Model**
-Our Massachusetts success provides a blueprint for:
-- **Regional Expansion**: New England states with similar climate commitments and demographics
-- **National Replication**: Adapting community-specific approaches to other high-growth clean energy markets
-- **International Adaptation**: Applying skills translation methodology to global climate workforce development
-
-## 📊 Impact Metrics
-
-### **Community Engagement**
-- **Veterans**: 200+ military occupational specialties translated to climate careers
-- **International Professionals**: 50+ countries of origin with credential evaluation pathways
-- **Environmental Justice**: 25+ community organizations with direct referral partnerships
-
-### **Career Outcomes**
-- **Skills Translation Accuracy**: 85%+ user satisfaction with career recommendations
-- **Training Program Completion**: 70%+ completion rate for referred workforce programs
-- **Job Placement Success**: 65%+ placement rate within 6 months of program completion
-
-### **Partnership Growth**
-- **500+ Climate Organizations**: Active job and training program partnerships
-- **50+ Community Partners**: Direct referral relationships for specialized support services
-- **15+ Credential Agencies**: Streamlined evaluation processes for international professionals
-
-## 🚀 Getting Started
-
-### **For Veterans**
-1. **Upload your ERB/Military Resume**: Our MOS translator immediately identifies transferable skills
-2. **Complete Military Background Assessment**: Branch, MOS, security clearance, and leadership experience
-3. **Receive Personalized Career Roadmap**: Specific roles, training programs, and networking opportunities
-4. **Connect with Solar Ready Vets**: Direct referral to national veteran clean energy support network
-
-### **For International Professionals**
-1. **Document International Experience**: Education, certifications, and work history from any country
-2. **Credential Evaluation Guidance**: Direct connections to appropriate evaluation services
-3. **Skills Translation & Positioning**: How to present international experience for U.S. climate employers
-4. **Community Resource Access**: Language support, networking groups, and mentorship programs
-
-### **For Environmental Justice Leaders**
-1. **Community Experience Assessment**: Organizing, advocacy, education, and health equity background
-2. **Asset Recognition Analysis**: Identifying unique strengths from community leadership experience
-3. **Climate Career Pathways**: Roles that leverage community connections and advocacy skills
-4. **Equity-Focused Opportunities**: Programs and positions prioritizing environmental justice communities
-
-### **For Employers**
-1. **Community Talent Pipeline**: Access to skilled, motivated candidates from underrepresented communities
-2. **Hiring Best Practices**: Guidance on recognizing and valuing diverse professional backgrounds
-3. **Partnership Opportunities**: Collaboration on workforce development and community engagement initiatives
-4. **Diversity Impact Measurement**: Tracking and reporting on inclusive hiring outcomes
-
-## 🌟 What Makes CEA Different
-
-### **Community-Centered Design**
-Built **with** and **for** the communities we serve, not just designed by outside experts. Our approach recognizes that:
-- **Military Experience** translates directly to climate tech leadership and technical roles
-- **International Perspectives** bring global best practices and innovation to local challenges
-- **Community Organizing Skills** are essential for climate action and environmental justice
-
-### **Real Resource Integration**
-Not just job listings - direct connections to:
-- **Credential Evaluation Services**: Actual agencies that process international education recognition
-- **Training Programs**: Real workforce development opportunities with funding support
-- **Community Organizations**: Established groups providing cultural support and professional networking
-
-### **Evidence-Based Approach**
-Using actual government data and industry research:
-- **DOE Solar Energy Technologies Office** funding and program information
-- **Massachusetts Clean Energy Center** workforce assessments and projections  
-- **U.S. Department of Labor** apprenticeship and training program registrations
-- **Military Skills Translation** based on real MOS codes and civilian occupation mapping
-
-## 📈 Future Roadmap
-
-### **Q1 2025: Enhanced AI Capabilities**
-- **Advanced Skills Inference**: Deeper analysis of unstructured experience and soft skills
-- **Predictive Career Modeling**: AI-powered forecasting of climate job market evolution
-- **Personalized Learning Paths**: Adaptive skill development recommendations
-
-### **Q2 2025: Expanded Partnerships**
-- **Regional Climate Organizations**: New England and Mid-Atlantic expansion
-- **Corporate Diversity Partners**: Direct relationships with climate tech employers
-- **Community College Integration**: Embedded career guidance in existing programs
-
-### **Q3 2025: National Scaling**
-- **Multi-State Deployment**: California, Texas, New York climate market entry
-- **Federal Partnership Development**: DOL, DOE, and other agency collaboration
-- **International Best Practice Integration**: Global climate workforce development models
-
-### **Q4 2025: Innovation Laboratory**
-- **Emerging Technology Integration**: Green hydrogen, carbon capture, climate adaptation careers
-- **Community Impact Measurement**: Longitudinal studies of user career progression
-- **Policy Advocacy Platform**: Data-driven recommendations for equitable climate workforce policy
-
-## 🤝 Get Involved
-
-### **Join Our Community**
-- **Veterans**: [Solar Ready Vets Network](https://irecusa.org/programs/solar-ready-vets/)
-- **International Professionals**: [World Education Services](https://www.wes.org/)
-- **Environmental Justice**: [Urban League of Eastern Massachusetts](https://www.ulem.org/)
-
-### **Partner With Us**
-- **Employers**: Access diverse talent pipelines and inclusive hiring support
-- **Training Providers**: Integrate career guidance into existing workforce programs  
-- **Community Organizations**: Refer constituents to specialized career support services
-- **Funders**: Support scalable, evidence-based solutions to climate workforce challenges
-
-### **Contact Us**
-**Email**: partnerships@climateeconomyassistant.org  
-**Address**: Boston, Massachusetts  
-**Community**: Serving underrepresented communities across New England and beyond
-
----
-
-**The climate economy needs everyone. We're here to make sure everyone can access it.**
-
-*Climate Economy Assistant - Where community strength meets climate opportunity.*
+### **Legal Compliance**
+- **`/terms`**: Terms of Service with clear data usage policies
+- **`/privacy`**: Privacy Policy with comprehensive data handling information
+- **Privacy Settings**: User control center at `/settings` with real-time toggles

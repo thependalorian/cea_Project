@@ -1,0 +1,26 @@
+{
+  "python_version": "3.11",
+  "dependencies": [
+    ".",
+    "langchain_openai",
+    "langchain_community", 
+    "langchain_core",
+    "langgraph",
+    "langgraph-sdk",
+    "supabase",
+    "fastapi",
+    "uvicorn[standard]",
+    "python-multipart",
+    "redis",
+    "pydantic>=2.0",
+    "httpx"
+  ],
+  "graphs": {
+    "climate_agent": "./api/workflows/climate_workflow.py:climate_graph",
+    "resume_agent": "./api/workflows/resume_workflow.py:resume_graph", 
+    "career_agent": "./api/workflows/career_workflow.py:career_graph",
+    "interactive_chat": "./api/chat/interactive_chat.py:chat_graph",
+    "climate_supervisor": "./api/workflows/climate_supervisor_workflow.py:climate_supervisor_graph"
+  },
+  "env": "./.env"
+} 

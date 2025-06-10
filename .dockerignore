@@ -1,0 +1,188 @@
+# Climate Economy Assistant - Docker Ignore Configuration
+# Optimized for security and build performance
+# Updated for Next.js 14.0.4, TypeScript, and Redis integration
+
+# === Version Control ===
+.git
+.gitignore
+.gitattributes
+.github/
+
+# === Docker files (except production overrides) ===
+Dockerfile*
+docker-compose*.yml
+docker-compose*.yaml
+.dockerignore
+!docker-compose.prod.yaml
+
+# === Environment files ===
+.env*
+!.env.example
+!.env.docker
+
+# === Dependencies ===
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+.venv/
+venv/
+env/
+
+# === Build artifacts ===
+.next/
+dist/
+build/
+*.egg-info/
+.eggs/
+.swc/
+coverage/
+.nyc_output
+tsconfig.tsbuildinfo
+
+# === IDE and Editor files ===
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+.qodo/
+
+# === Testing ===
+.coverage
+htmlcov/
+.tox/
+.pytest_cache/
+__tests__/
+*.test.js
+*.test.ts
+*.test.tsx
+*.spec.js
+*.spec.ts
+*.spec.tsx
+test_*.py
+*_test.py
+
+# === Logs ===
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# === Runtime files ===
+.pid
+*.pid
+*.seed
+*.pid.lock
+
+# === Temporary files ===
+.tmp/
+tmp/
+temp/
+.sass-cache/
+
+# === Documentation and Markdown ===
+README*.md
+docs/
+*.md
+!package.json
+DEPLOYMENT.md
+V1_API_ENDPOINTS.md
+PRIVACY_COMPLIANCE.md
+FULLSTACK_TEST_*.md
+BACKEND_SYNTAX_FIXES.md
+ENHANCEMENT_SUMMARY.md
+SEED_SCRIPT_DOCUMENTATION.md
+MODERN_TUTORIALS_REDESIGN.md
+README_PROTECTED_PAGES.md
+
+# === Development tools ===
+.eslintcache
+.stylelintcache
+.prettierrc*
+.editorconfig
+eslint.config.mjs
+.eslintrc.*
+
+# === OS generated files ===
+.DS_Store?
+ehthumbs.db
+Icon?
+
+# === Large media files ===
+*.mov
+*.mp4
+*.mp3
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+!public/**
+
+# === Backup files ===
+*.bak
+*.backup
+*.old
+package.json.bak
+
+# === Database files ===
+*.sqlite
+*.db
+*.sql
+migrations/
+supabase/
+
+# === Local development ===
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# === Monitoring ===
+monitoring/grafana/data/
+monitoring/prometheus/data/
+data/
+
+# === Scripts and configs ===
+scripts/
+run_*.sh
+test_*.py
+*_test_results*.json
+enhanced_*.json
+*.ipynb
+
+# === Backend specific ===
+backend/test_*.py
+backend/*_test_results*.json
+backend/ENHANCED_*.md
+backend/LANGGRAPH_*.md
+backend/FINAL_*.md
+backend/COMPREHENSIVE_*.md
+backend/EXCEPTIONAL_*.md
+backend/cea.md
+backend/create_*.py
+backend/run_*.py
+
+# === TypeScript build files ===
+*.tsbuildinfo
+next-env.d.ts
+
+# === Package manager files ===
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# === Security ===
+*.pem
+*.key
+*.cert
+*.crt 

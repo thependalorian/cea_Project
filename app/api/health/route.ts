@@ -1,9 +1,12 @@
 import { NextResponse } from 'next/server';
 
+// Python backend URL
+const BACKEND_URL = process.env.PYTHON_BACKEND_URL || 'http://localhost:8000';
+
 export async function GET() {
   try {
-    // Check Python backend health
-    const response = await fetch('http://localhost:8000/health', {
+    // Check Python backend health on correct port 8000
+    const response = await fetch(`${BACKEND_URL}/health`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

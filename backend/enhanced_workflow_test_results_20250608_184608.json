@@ -1,0 +1,950 @@
+{
+  "test_execution": {
+    "start_time": 1749422768.591315,
+    "end_time": 1749422768.693164,
+    "total_duration": 0.10184907913208008,
+    "timestamp": "2025-06-08T18:46:08.693165"
+  },
+  "test_suites": {
+    "frontend_backend_routing": {
+      "routing_tests": [
+        {
+          "scenario": "Chat Interface General Query",
+          "frontend_format": {
+            "query": "I want to transition to clean energy careers",
+            "user_id": "30eedd6a-0771-444e-90d2-7520c1eb03f0",
+            "context": {
+              "source": "chat_interface",
+              "timestamp": "2025-06-08T18:46:08.593346"
+            },
+            "stream": false
+          },
+          "response": {
+            "content": "\n\n**\ud83c\udfaf Pendo - Massachusetts Climate Economy Enhanced Routing Coordinator (CEA.md Enhanced)**\n\n*Addressing the information gap crisis affecting 39% of clean energy workers*\n*Connecting you to the 38,100 clean energy jobs needed by 2030*\n*Gateway Cities Focus: Brockton, Fall River/New Bedford, Lowell/Lawrence*\n\n\n**\ud83e\udde0 Enhanced Intelligence Analysis Complete**\n- Intelligence Level: 17.8/10.0\n- Primary Identity: Career Transition\n- Confidence Level: 0.3 if identities else 0.8\n\n**\ud83c\udfaf Perfect Match Identified!**\nBased on your message, I'm connecting you with **Jasmine**, who can provide exceptional specialized guidance for your career transition background.\n\n**\ud83d\udd04 Routing to Jasmine:**\nJasmine will provide:\n\u2022 Enhanced intelligence-driven analysis of your background and goals\n\u2022 Sophisticated tool selection for your specific needs\n\u2022 Memory retention for personalized follow-up guidance\n\u2022 Direct connection to the 38,100 clean energy jobs pipeline\n\u2022 Comprehensive barrier analysis and solution strategies\n\n**\u23f1\ufe0f What to Expect (Enhanced Support):**\n\u2022 Intelligent skills analysis with psychological awareness\n\u2022 Context-aware opportunity matching\n\u2022 Progressive training recommendations\n\u2022 Gateway Cities connections and resources\n\u2022 90-day action plan with milestone tracking\n\u2022 Case-based learning from successful similar transitions\n\n\n**\ud83d\udea7 Barrier Assessment & Solutions (CEA.md Informed):**\n\n**Common Information Barriers:**\n\u2022 **39% of clean energy workers** lack basic career information\n\u2022 **47% of women** face additional information access challenges\n\u2022 **50% of Black respondents** report insufficient career guidance\n\u2022 **Geographic barriers** in Gateway Cities limit job awareness\n\n**ACT Partner Solutions:**\n\u2022 **MassHire Career Centers:** Job coaching with wraparound services\n\u2022 **Community Colleges:** Certificate programs with employer partnerships\n\u2022 **Digital Access:** Technology lending and digital literacy programs\n\u2022 **Transportation:** Shuttle services and transit assistance programs\n\u2022 **Childcare:** Family-friendly employer connections and support services\n\u2022 **Language Support:** Multilingual resources and ESL programs\n\n\n**Intelligence Enhancement:** Your interaction is being processed with advanced cognitive capabilities for exceptional results.\n\n*Transferring you to Jasmine with enhanced context now...*\n",
+            "metadata": {
+              "agent_type": "pendo_supervisor",
+              "agent_name": "Pendo",
+              "routing_decision": "jasmine_resume_specialist",
+              "specialist_assigned": "Jasmine",
+              "intelligence_level": 17.8,
+              "identities_detected": 1,
+              "psychological_state": {
+                "transition_anxiety": 0.0,
+                "confidence_level": 0.5,
+                "motivation_level": 0.5,
+                "support_needs": []
+              },
+              "cea_mission": "Address 39% clean energy worker information gap through specialized guidance"
+            }
+          },
+          "response_time": 0.001207113265991211,
+          "validation": {
+            "valid": true,
+            "issues": [],
+            "agent_detected": "jasmine_resume_specialist",
+            "tools_count": 0
+          },
+          "status": "PASSED"
+        },
+        {
+          "scenario": "Resume Upload Analysis",
+          "frontend_format": {
+            "query": "Please analyze my uploaded resume for climate opportunities",
+            "user_id": "30eedd6a-0771-444e-90d2-7520c1eb03f0",
+            "context": {
+              "source": "resume_upload",
+              "has_file": true,
+              "timestamp": "2025-06-08T18:46:08.592687"
+            },
+            "stream": false
+          },
+          "response": {
+            "content": "\n\n**\ud83c\udfaf Pendo - Massachusetts Climate Economy Enhanced Career Navigation Coordinator (CEA.md Enhanced)**\n\n*Addressing the information gap crisis affecting 39% of clean energy workers*\n*Connecting you to the 38,100 clean energy jobs needed by 2030*\n*Gateway Cities Focus: Brockton, Fall River/New Bedford, Lowell/Lawrence*\n\n\nWelcome to the Massachusetts Climate Economy Assistant! I'm Pendo, your Enhanced Lead Program Manager.\n\n**\ud83e\udde0 Intelligence Analysis:** Processed your query with 16.9/10.0 intelligence level\n\n**\ud83c\udfaf Quick Assessment Questions:**\nTo ensure exceptional guidance tailored to your specific needs:\n\n1. **Career Background:** What's your current profession or most recent work experience?\n2. **Location Preference:** Are you interested in opportunities in Brockton, Fall River/New Bedford, or Lowell/Lawrence?\n3. **Transition Goals:** What draws you to clean energy careers specifically?\n4. **Timeframe:** What's your target timeline for making this transition?\n5. **Biggest Concerns:** What barriers or challenges are you most worried about?\n\n**\ud83c\udf1f Our Enhanced Specialist Team:**\n\u2022 **Marcus** - Military veterans with sophisticated transition support\n\u2022 **Liv** - International professionals with credential recognition expertise  \n\u2022 **Miguel** - Environmental justice advocates with community-centered approach\n\u2022 **Jasmine** - Career pathway optimization with skills analysis\n\n\n**\ud83d\udea7 Barrier Assessment & Solutions (CEA.md Informed):**\n\n**Common Information Barriers:**\n\u2022 **39% of clean energy workers** lack basic career information\n\u2022 **47% of women** face additional information access challenges\n\u2022 **50% of Black respondents** report insufficient career guidance\n\u2022 **Geographic barriers** in Gateway Cities limit job awareness\n\n**ACT Partner Solutions:**\n\u2022 **MassHire Career Centers:** Job coaching with wraparound services\n\u2022 **Community Colleges:** Certificate programs with employer partnerships\n\u2022 **Digital Access:** Technology lending and digital literacy programs\n\u2022 **Transportation:** Shuttle services and transit assistance programs\n\u2022 **Childcare:** Family-friendly employer connections and support services\n\u2022 **Language Support:** Multilingual resources and ESL programs\n\n\n\n**\ud83e\udd1d ACT Partner Network Resources (CEA.md Validated):**\n\n**Workforce Development Partners:**\n\u2022 **MassHire Career Centers:** Available in all Gateway Cities with wraparound services\n\u2022 **Bristol Community College:** Certificate programs in Fall River/New Bedford area\n\u2022 **UMass Lowell:** Professional development and workforce training programs\n\n**Employer Partners:**\n\u2022 **Greentown Labs:** Climate tech startup opportunities and innovation networking\n\u2022 **SouthCoast Wind:** Offshore wind engineering and marine operations\n\u2022 **Abode Energy Management:** Technical roles and energy efficiency projects\n\u2022 **Nexamp:** Data science and analytics positions in clean energy\n\u2022 **HomeWorks Energy:** Customer service and multilingual outreach roles\n\n**Training and Certification:**\n\u2022 NABCEP Solar Installation Professional certification\n\u2022 BPI Building Analyst Professional certification  \n\u2022 OSHA safety training and compliance certification\n\u2022 EPA environmental monitoring and remediation training\n\n**Contact Information:**\n\u2022 **MassHire Career Centers:** (877) 872-2804 - Available in all Gateway Cities\n\u2022 **Bristol Community College:** (508) 678-2811 - Fall River/New Bedford\n\u2022 **UMass Lowell:** (978) 934-4000 - Lowell area workforce development\n\n\n**\ud83d\udcac Enhanced Support Promise:**\nWith our new intelligence capabilities, we provide:\n- Multi-identity recognition for complex backgrounds\n- Psychological awareness and emotional support\n- Intersectional barrier analysis  \n- Coordinated specialist approach when needed\n- Memory retention for personalized follow-up\n\nLet me know more details, and I'll ensure you receive exceptional, coordinated support!\n",
+            "metadata": {
+              "agent_type": "pendo_supervisor",
+              "agent_name": "Pendo",
+              "routing_needed": true,
+              "specialists_available": {
+                "marcus_veteran_specialist": "Military veterans transitioning to clean energy careers",
+                "liv_international_specialist": "International professionals navigating credential recognition",
+                "miguel_environmental_justice_specialist": "Environmental justice advocates and community organizers",
+                "jasmine_resume_specialist": "Resume analysis and career pathway optimization"
+              },
+              "intelligence_level": 16.9,
+              "psychological_assessment": {
+                "transition_anxiety": 0.0,
+                "confidence_level": 0.5,
+                "motivation_level": 0.5,
+                "support_needs": []
+              },
+              "cea_mission": "Address 39% clean energy worker information gap through specialized guidance"
+            }
+          },
+          "response_time": 7.414817810058594e-05,
+          "validation": {
+            "valid": true,
+            "issues": [],
+            "agent_detected": null,
+            "tools_count": 0
+          },
+          "status": "PASSED"
+        },
+        {
+          "scenario": "Veteran Career Transition",
+          "frontend_format": {
+            "query": "I'm a former Marine looking for renewable energy jobs",
+            "user_id": "30eedd6a-0771-444e-90d2-7520c1eb03f0",
+            "context": {
+              "source": "chat_interface",
+              "timestamp": "2025-06-08T18:46:08.593346"
+            },
+            "stream": false
+          },
+          "response": {
+            "content": "\n\n**\ud83c\udfaf Pendo - Massachusetts Climate Economy Enhanced Career Navigation Coordinator (CEA.md Enhanced)**\n\n*Addressing the information gap crisis affecting 39% of clean energy workers*\n*Connecting you to the 38,100 clean energy jobs needed by 2030*\n*Gateway Cities Focus: Brockton, Fall River/New Bedford, Lowell/Lawrence*\n\n\nWelcome to the Massachusetts Climate Economy Assistant! I'm Pendo, your Enhanced Lead Program Manager.\n\n**\ud83e\udde0 Intelligence Analysis:** Processed your query with 16.9/10.0 intelligence level\n\n**\ud83c\udfaf Quick Assessment Questions:**\nTo ensure exceptional guidance tailored to your specific needs:\n\n1. **Career Background:** What's your current profession or most recent work experience?\n2. **Location Preference:** Are you interested in opportunities in Brockton, Fall River/New Bedford, or Lowell/Lawrence?\n3. **Transition Goals:** What draws you to clean energy careers specifically?\n4. **Timeframe:** What's your target timeline for making this transition?\n5. **Biggest Concerns:** What barriers or challenges are you most worried about?\n\n**\ud83c\udf1f Our Enhanced Specialist Team:**\n\u2022 **Marcus** - Military veterans with sophisticated transition support\n\u2022 **Liv** - International professionals with credential recognition expertise  \n\u2022 **Miguel** - Environmental justice advocates with community-centered approach\n\u2022 **Jasmine** - Career pathway optimization with skills analysis\n\n\n**\ud83d\udea7 Barrier Assessment & Solutions (CEA.md Informed):**\n\n**Common Information Barriers:**\n\u2022 **39% of clean energy workers** lack basic career information\n\u2022 **47% of women** face additional information access challenges\n\u2022 **50% of Black respondents** report insufficient career guidance\n\u2022 **Geographic barriers** in Gateway Cities limit job awareness\n\n**ACT Partner Solutions:**\n\u2022 **MassHire Career Centers:** Job coaching with wraparound services\n\u2022 **Community Colleges:** Certificate programs with employer partnerships\n\u2022 **Digital Access:** Technology lending and digital literacy programs\n\u2022 **Transportation:** Shuttle services and transit assistance programs\n\u2022 **Childcare:** Family-friendly employer connections and support services\n\u2022 **Language Support:** Multilingual resources and ESL programs\n\n\n\n**\ud83e\udd1d ACT Partner Network Resources (CEA.md Validated):**\n\n**Workforce Development Partners:**\n\u2022 **MassHire Career Centers:** Available in all Gateway Cities with wraparound services\n\u2022 **Bristol Community College:** Certificate programs in Fall River/New Bedford area\n\u2022 **UMass Lowell:** Professional development and workforce training programs\n\n**Employer Partners:**\n\u2022 **Greentown Labs:** Climate tech startup opportunities and innovation networking\n\u2022 **SouthCoast Wind:** Offshore wind engineering and marine operations\n\u2022 **Abode Energy Management:** Technical roles and energy efficiency projects\n\u2022 **Nexamp:** Data science and analytics positions in clean energy\n\u2022 **HomeWorks Energy:** Customer service and multilingual outreach roles\n\n**Training and Certification:**\n\u2022 NABCEP Solar Installation Professional certification\n\u2022 BPI Building Analyst Professional certification  \n\u2022 OSHA safety training and compliance certification\n\u2022 EPA environmental monitoring and remediation training\n\n**Contact Information:**\n\u2022 **MassHire Career Centers:** (877) 872-2804 - Available in all Gateway Cities\n\u2022 **Bristol Community College:** (508) 678-2811 - Fall River/New Bedford\n\u2022 **UMass Lowell:** (978) 934-4000 - Lowell area workforce development\n\n\n**\ud83d\udcac Enhanced Support Promise:**\nWith our new intelligence capabilities, we provide:\n- Multi-identity recognition for complex backgrounds\n- Psychological awareness and emotional support\n- Intersectional barrier analysis  \n- Coordinated specialist approach when needed\n- Memory retention for personalized follow-up\n\nLet me know more details, and I'll ensure you receive exceptional, coordinated support!\n",
+            "metadata": {
+              "agent_type": "pendo_supervisor",
+              "agent_name": "Pendo",
+              "routing_needed": true,
+              "specialists_available": {
+                "marcus_veteran_specialist": "Military veterans transitioning to clean energy careers",
+                "liv_international_specialist": "International professionals navigating credential recognition",
+                "miguel_environmental_justice_specialist": "Environmental justice advocates and community organizers",
+                "jasmine_resume_specialist": "Resume analysis and career pathway optimization"
+              },
+              "intelligence_level": 16.9,
+              "psychological_assessment": {
+                "transition_anxiety": 0.0,
+                "confidence_level": 0.5,
+                "motivation_level": 0.5,
+                "support_needs": []
+              },
+              "cea_mission": "Address 39% clean energy worker information gap through specialized guidance"
+            }
+          },
+          "response_time": 7.128715515136719e-05,
+          "validation": {
+            "valid": true,
+            "issues": [],
+            "agent_detected": null,
+            "tools_count": 0
+          },
+          "status": "PASSED"
+        },
+        {
+          "scenario": "International Professional",
+          "frontend_format": {
+            "query": "I moved from India and want to work in solar energy",
+            "user_id": "30eedd6a-0771-444e-90d2-7520c1eb03f0",
+            "context": {
+              "source": "chat_interface",
+              "timestamp": "2025-06-08T18:46:08.593346"
+            },
+            "stream": false
+          },
+          "response": {
+            "content": "\n\n**\ud83c\udfaf Pendo - Massachusetts Climate Economy Enhanced Routing Coordinator (CEA.md Enhanced)**\n\n*Addressing the information gap crisis affecting 39% of clean energy workers*\n*Connecting you to the 38,100 clean energy jobs needed by 2030*\n*Gateway Cities Focus: Brockton, Fall River/New Bedford, Lowell/Lawrence*\n\n\n**\ud83e\udde0 Enhanced Intelligence Analysis Complete**\n- Intelligence Level: 17.9/10.0\n- Primary Identity: International\n- Confidence Level: 0.5 if identities else 0.8\n\n**\ud83c\udfaf Perfect Match Identified!**\nBased on your message, I'm connecting you with **Liv**, who can provide exceptional specialized guidance for your international background.\n\n**\ud83d\udd04 Routing to Liv:**\nLiv will provide:\n\u2022 Enhanced intelligence-driven analysis of your background and goals\n\u2022 Sophisticated tool selection for your specific needs\n\u2022 Memory retention for personalized follow-up guidance\n\u2022 Direct connection to the 38,100 clean energy jobs pipeline\n\u2022 Comprehensive barrier analysis and solution strategies\n\n**\u23f1\ufe0f What to Expect (Enhanced Support):**\n\u2022 Intelligent skills analysis with psychological awareness\n\u2022 Context-aware opportunity matching\n\u2022 Progressive training recommendations\n\u2022 Gateway Cities connections and resources\n\u2022 90-day action plan with milestone tracking\n\u2022 Case-based learning from successful similar transitions\n\n\n**\ud83d\udea7 Barrier Assessment & Solutions (CEA.md Informed):**\n\n**Common Information Barriers:**\n\u2022 **39% of clean energy workers** lack basic career information\n\u2022 **47% of women** face additional information access challenges\n\u2022 **50% of Black respondents** report insufficient career guidance\n\u2022 **Geographic barriers** in Gateway Cities limit job awareness\n\n**ACT Partner Solutions:**\n\u2022 **MassHire Career Centers:** Job coaching with wraparound services\n\u2022 **Community Colleges:** Certificate programs with employer partnerships\n\u2022 **Digital Access:** Technology lending and digital literacy programs\n\u2022 **Transportation:** Shuttle services and transit assistance programs\n\u2022 **Childcare:** Family-friendly employer connections and support services\n\u2022 **Language Support:** Multilingual resources and ESL programs\n\n\n**Intelligence Enhancement:** Your interaction is being processed with advanced cognitive capabilities for exceptional results.\n\n*Transferring you to Liv with enhanced context now...*\n",
+            "metadata": {
+              "agent_type": "pendo_supervisor",
+              "agent_name": "Pendo",
+              "routing_decision": "liv_international_specialist",
+              "specialist_assigned": "Liv",
+              "intelligence_level": 17.9,
+              "identities_detected": 1,
+              "psychological_state": {
+                "transition_anxiety": 0.0,
+                "confidence_level": 0.5,
+                "motivation_level": 0.5,
+                "support_needs": []
+              },
+              "cea_mission": "Address 39% clean energy worker information gap through specialized guidance"
+            }
+          },
+          "response_time": 0.0001652240753173828,
+          "validation": {
+            "valid": true,
+            "issues": [],
+            "agent_detected": "liv_international_specialist",
+            "tools_count": 0
+          },
+          "status": "PASSED"
+        }
+      ],
+      "overall_success_rate": 1.0
+    },
+    "tool_call_workflows": {
+      "workflow_tests": [
+        {
+          "workflow": "Resume Processing Workflow",
+          "query": "Analyze my resume for renewable energy career opportunities",
+          "response": {
+            "content": "\n\n**\ud83c\udfaf Pendo - Massachusetts Climate Economy Enhanced Career Navigation Coordinator (CEA.md Enhanced)**\n\n*Addressing the information gap crisis affecting 39% of clean energy workers*\n*Connecting you to the 38,100 clean energy jobs needed by 2030*\n*Gateway Cities Focus: Brockton, Fall River/New Bedford, Lowell/Lawrence*\n\n\nWelcome to the Massachusetts Climate Economy Assistant! I'm Pendo, your Enhanced Lead Program Manager.\n\n**\ud83e\udde0 Intelligence Analysis:** Processed your query with 16.9/10.0 intelligence level\n\n**\ud83c\udfaf Quick Assessment Questions:**\nTo ensure exceptional guidance tailored to your specific needs:\n\n1. **Career Background:** What's your current profession or most recent work experience?\n2. **Location Preference:** Are you interested in opportunities in Brockton, Fall River/New Bedford, or Lowell/Lawrence?\n3. **Transition Goals:** What draws you to clean energy careers specifically?\n4. **Timeframe:** What's your target timeline for making this transition?\n5. **Biggest Concerns:** What barriers or challenges are you most worried about?\n\n**\ud83c\udf1f Our Enhanced Specialist Team:**\n\u2022 **Marcus** - Military veterans with sophisticated transition support\n\u2022 **Liv** - International professionals with credential recognition expertise  \n\u2022 **Miguel** - Environmental justice advocates with community-centered approach\n\u2022 **Jasmine** - Career pathway optimization with skills analysis\n\n\n**\ud83d\udea7 Barrier Assessment & Solutions (CEA.md Informed):**\n\n**Common Information Barriers:**\n\u2022 **39% of clean energy workers** lack basic career information\n\u2022 **47% of women** face additional information access challenges\n\u2022 **50% of Black respondents** report insufficient career guidance\n\u2022 **Geographic barriers** in Gateway Cities limit job awareness\n\n**ACT Partner Solutions:**\n\u2022 **MassHire Career Centers:** Job coaching with wraparound services\n\u2022 **Community Colleges:** Certificate programs with employer partnerships\n\u2022 **Digital Access:** Technology lending and digital literacy programs\n\u2022 **Transportation:** Shuttle services and transit assistance programs\n\u2022 **Childcare:** Family-friendly employer connections and support services\n\u2022 **Language Support:** Multilingual resources and ESL programs\n\n\n\n**\ud83e\udd1d ACT Partner Network Resources (CEA.md Validated):**\n\n**Workforce Development Partners:**\n\u2022 **MassHire Career Centers:** Available in all Gateway Cities with wraparound services\n\u2022 **Bristol Community College:** Certificate programs in Fall River/New Bedford area\n\u2022 **UMass Lowell:** Professional development and workforce training programs\n\n**Employer Partners:**\n\u2022 **Greentown Labs:** Climate tech startup opportunities and innovation networking\n\u2022 **SouthCoast Wind:** Offshore wind engineering and marine operations\n\u2022 **Abode Energy Management:** Technical roles and energy efficiency projects\n\u2022 **Nexamp:** Data science and analytics positions in clean energy\n\u2022 **HomeWorks Energy:** Customer service and multilingual outreach roles\n\n**Training and Certification:**\n\u2022 NABCEP Solar Installation Professional certification\n\u2022 BPI Building Analyst Professional certification  \n\u2022 OSHA safety training and compliance certification\n\u2022 EPA environmental monitoring and remediation training\n\n**Contact Information:**\n\u2022 **MassHire Career Centers:** (877) 872-2804 - Available in all Gateway Cities\n\u2022 **Bristol Community College:** (508) 678-2811 - Fall River/New Bedford\n\u2022 **UMass Lowell:** (978) 934-4000 - Lowell area workforce development\n\n\n**\ud83d\udcac Enhanced Support Promise:**\nWith our new intelligence capabilities, we provide:\n- Multi-identity recognition for complex backgrounds\n- Psychological awareness and emotional support\n- Intersectional barrier analysis  \n- Coordinated specialist approach when needed\n- Memory retention for personalized follow-up\n\nLet me know more details, and I'll ensure you receive exceptional, coordinated support!\n",
+            "metadata": {
+              "agent_type": "pendo_supervisor",
+              "agent_name": "Pendo",
+              "routing_needed": true,
+              "specialists_available": {
+                "marcus_veteran_specialist": "Military veterans transitioning to clean energy careers",
+                "liv_international_specialist": "International professionals navigating credential recognition",
+                "miguel_environmental_justice_specialist": "Environmental justice advocates and community organizers",
+                "jasmine_resume_specialist": "Resume analysis and career pathway optimization"
+              },
+              "intelligence_level": 16.9,
+              "psychological_assessment": {
+                "transition_anxiety": 0.0,
+                "confidence_level": 0.5,
+                "motivation_level": 0.5,
+                "support_needs": []
+              },
+              "cea_mission": "Address 39% clean energy worker information gap through specialized guidance"
+            }
+          },
+          "execution_time": 8.225440979003906e-05,
+          "validation": {
+            "valid": false,
+            "issues": [
+              "No tools_called metadata found",
+              "Low validation score: 0.56"
+            ],
+            "tools_executed": 0,
+            "validation_score": 0.5555555555555555
+          },
+          "status": "FAILED"
+        },
+        {
+          "workflow": "Skills Translation Workflow",
+          "query": "How do my marketing skills translate to clean energy work?",
+          "response": {
+            "content": "\n\n**\ud83c\udfaf Pendo - Massachusetts Climate Economy Enhanced Career Navigation Coordinator (CEA.md Enhanced)**\n\n*Addressing the information gap crisis affecting 39% of clean energy workers*\n*Connecting you to the 38,100 clean energy jobs needed by 2030*\n*Gateway Cities Focus: Brockton, Fall River/New Bedford, Lowell/Lawrence*\n\n\nWelcome to the Massachusetts Climate Economy Assistant! I'm Pendo, your Enhanced Lead Program Manager.\n\n**\ud83e\udde0 Intelligence Analysis:** Processed your query with 16.9/10.0 intelligence level\n\n**\ud83c\udfaf Quick Assessment Questions:**\nTo ensure exceptional guidance tailored to your specific needs:\n\n1. **Career Background:** What's your current profession or most recent work experience?\n2. **Location Preference:** Are you interested in opportunities in Brockton, Fall River/New Bedford, or Lowell/Lawrence?\n3. **Transition Goals:** What draws you to clean energy careers specifically?\n4. **Timeframe:** What's your target timeline for making this transition?\n5. **Biggest Concerns:** What barriers or challenges are you most worried about?\n\n**\ud83c\udf1f Our Enhanced Specialist Team:**\n\u2022 **Marcus** - Military veterans with sophisticated transition support\n\u2022 **Liv** - International professionals with credential recognition expertise  \n\u2022 **Miguel** - Environmental justice advocates with community-centered approach\n\u2022 **Jasmine** - Career pathway optimization with skills analysis\n\n\n**\ud83d\udea7 Barrier Assessment & Solutions (CEA.md Informed):**\n\n**Common Information Barriers:**\n\u2022 **39% of clean energy workers** lack basic career information\n\u2022 **47% of women** face additional information access challenges\n\u2022 **50% of Black respondents** report insufficient career guidance\n\u2022 **Geographic barriers** in Gateway Cities limit job awareness\n\n**ACT Partner Solutions:**\n\u2022 **MassHire Career Centers:** Job coaching with wraparound services\n\u2022 **Community Colleges:** Certificate programs with employer partnerships\n\u2022 **Digital Access:** Technology lending and digital literacy programs\n\u2022 **Transportation:** Shuttle services and transit assistance programs\n\u2022 **Childcare:** Family-friendly employer connections and support services\n\u2022 **Language Support:** Multilingual resources and ESL programs\n\n\n\n**\ud83e\udd1d ACT Partner Network Resources (CEA.md Validated):**\n\n**Workforce Development Partners:**\n\u2022 **MassHire Career Centers:** Available in all Gateway Cities with wraparound services\n\u2022 **Bristol Community College:** Certificate programs in Fall River/New Bedford area\n\u2022 **UMass Lowell:** Professional development and workforce training programs\n\n**Employer Partners:**\n\u2022 **Greentown Labs:** Climate tech startup opportunities and innovation networking\n\u2022 **SouthCoast Wind:** Offshore wind engineering and marine operations\n\u2022 **Abode Energy Management:** Technical roles and energy efficiency projects\n\u2022 **Nexamp:** Data science and analytics positions in clean energy\n\u2022 **HomeWorks Energy:** Customer service and multilingual outreach roles\n\n**Training and Certification:**\n\u2022 NABCEP Solar Installation Professional certification\n\u2022 BPI Building Analyst Professional certification  \n\u2022 OSHA safety training and compliance certification\n\u2022 EPA environmental monitoring and remediation training\n\n**Contact Information:**\n\u2022 **MassHire Career Centers:** (877) 872-2804 - Available in all Gateway Cities\n\u2022 **Bristol Community College:** (508) 678-2811 - Fall River/New Bedford\n\u2022 **UMass Lowell:** (978) 934-4000 - Lowell area workforce development\n\n\n**\ud83d\udcac Enhanced Support Promise:**\nWith our new intelligence capabilities, we provide:\n- Multi-identity recognition for complex backgrounds\n- Psychological awareness and emotional support\n- Intersectional barrier analysis  \n- Coordinated specialist approach when needed\n- Memory retention for personalized follow-up\n\nLet me know more details, and I'll ensure you receive exceptional, coordinated support!\n",
+            "metadata": {
+              "agent_type": "pendo_supervisor",
+              "agent_name": "Pendo",
+              "routing_needed": true,
+              "specialists_available": {
+                "marcus_veteran_specialist": "Military veterans transitioning to clean energy careers",
+                "liv_international_specialist": "International professionals navigating credential recognition",
+                "miguel_environmental_justice_specialist": "Environmental justice advocates and community organizers",
+                "jasmine_resume_specialist": "Resume analysis and career pathway optimization"
+              },
+              "intelligence_level": 16.9,
+              "psychological_assessment": {
+                "transition_anxiety": 0.0,
+                "confidence_level": 0.5,
+                "motivation_level": 0.5,
+                "support_needs": []
+              },
+              "cea_mission": "Address 39% clean energy worker information gap through specialized guidance"
+            }
+          },
+          "execution_time": 8.678436279296875e-05,
+          "validation": {
+            "valid": false,
+            "issues": [
+              "No tools_called metadata found",
+              "Low validation score: 0.33"
+            ],
+            "tools_executed": 0,
+            "validation_score": 0.3333333333333333
+          },
+          "status": "FAILED"
+        },
+        {
+          "workflow": "Job Search Workflow",
+          "query": "Find me solar installer jobs in Massachusetts",
+          "response": {
+            "content": "\n\n**\ud83c\udfaf Pendo - Massachusetts Climate Economy Enhanced Career Navigation Coordinator (CEA.md Enhanced)**\n\n*Addressing the information gap crisis affecting 39% of clean energy workers*\n*Connecting you to the 38,100 clean energy jobs needed by 2030*\n*Gateway Cities Focus: Brockton, Fall River/New Bedford, Lowell/Lawrence*\n\n\nWelcome to the Massachusetts Climate Economy Assistant! I'm Pendo, your Enhanced Lead Program Manager.\n\n**\ud83e\udde0 Intelligence Analysis:** Processed your query with 16.9/10.0 intelligence level\n\n**\ud83c\udfaf Quick Assessment Questions:**\nTo ensure exceptional guidance tailored to your specific needs:\n\n1. **Career Background:** What's your current profession or most recent work experience?\n2. **Location Preference:** Are you interested in opportunities in Brockton, Fall River/New Bedford, or Lowell/Lawrence?\n3. **Transition Goals:** What draws you to clean energy careers specifically?\n4. **Timeframe:** What's your target timeline for making this transition?\n5. **Biggest Concerns:** What barriers or challenges are you most worried about?\n\n**\ud83c\udf1f Our Enhanced Specialist Team:**\n\u2022 **Marcus** - Military veterans with sophisticated transition support\n\u2022 **Liv** - International professionals with credential recognition expertise  \n\u2022 **Miguel** - Environmental justice advocates with community-centered approach\n\u2022 **Jasmine** - Career pathway optimization with skills analysis\n\n\n**\ud83d\udea7 Barrier Assessment & Solutions (CEA.md Informed):**\n\n**Common Information Barriers:**\n\u2022 **39% of clean energy workers** lack basic career information\n\u2022 **47% of women** face additional information access challenges\n\u2022 **50% of Black respondents** report insufficient career guidance\n\u2022 **Geographic barriers** in Gateway Cities limit job awareness\n\n**ACT Partner Solutions:**\n\u2022 **MassHire Career Centers:** Job coaching with wraparound services\n\u2022 **Community Colleges:** Certificate programs with employer partnerships\n\u2022 **Digital Access:** Technology lending and digital literacy programs\n\u2022 **Transportation:** Shuttle services and transit assistance programs\n\u2022 **Childcare:** Family-friendly employer connections and support services\n\u2022 **Language Support:** Multilingual resources and ESL programs\n\n\n\n**\ud83e\udd1d ACT Partner Network Resources (CEA.md Validated):**\n\n**Workforce Development Partners:**\n\u2022 **MassHire Career Centers:** Available in all Gateway Cities with wraparound services\n\u2022 **Bristol Community College:** Certificate programs in Fall River/New Bedford area\n\u2022 **UMass Lowell:** Professional development and workforce training programs\n\n**Employer Partners:**\n\u2022 **Greentown Labs:** Climate tech startup opportunities and innovation networking\n\u2022 **SouthCoast Wind:** Offshore wind engineering and marine operations\n\u2022 **Abode Energy Management:** Technical roles and energy efficiency projects\n\u2022 **Nexamp:** Data science and analytics positions in clean energy\n\u2022 **HomeWorks Energy:** Customer service and multilingual outreach roles\n\n**Training and Certification:**\n\u2022 NABCEP Solar Installation Professional certification\n\u2022 BPI Building Analyst Professional certification  \n\u2022 OSHA safety training and compliance certification\n\u2022 EPA environmental monitoring and remediation training\n\n**Contact Information:**\n\u2022 **MassHire Career Centers:** (877) 872-2804 - Available in all Gateway Cities\n\u2022 **Bristol Community College:** (508) 678-2811 - Fall River/New Bedford\n\u2022 **UMass Lowell:** (978) 934-4000 - Lowell area workforce development\n\n\n**\ud83d\udcac Enhanced Support Promise:**\nWith our new intelligence capabilities, we provide:\n- Multi-identity recognition for complex backgrounds\n- Psychological awareness and emotional support\n- Intersectional barrier analysis  \n- Coordinated specialist approach when needed\n- Memory retention for personalized follow-up\n\nLet me know more details, and I'll ensure you receive exceptional, coordinated support!\n",
+            "metadata": {
+              "agent_type": "pendo_supervisor",
+              "agent_name": "Pendo",
+              "routing_needed": true,
+              "specialists_available": {
+                "marcus_veteran_specialist": "Military veterans transitioning to clean energy careers",
+                "liv_international_specialist": "International professionals navigating credential recognition",
+                "miguel_environmental_justice_specialist": "Environmental justice advocates and community organizers",
+                "jasmine_resume_specialist": "Resume analysis and career pathway optimization"
+              },
+              "intelligence_level": 16.9,
+              "psychological_assessment": {
+                "transition_anxiety": 0.0,
+                "confidence_level": 0.5,
+                "motivation_level": 0.5,
+                "support_needs": []
+              },
+              "cea_mission": "Address 39% clean energy worker information gap through specialized guidance"
+            }
+          },
+          "execution_time": 0.0003750324249267578,
+          "validation": {
+            "valid": false,
+            "issues": [
+              "No tools_called metadata found",
+              "Low validation score: 0.33"
+            ],
+            "tools_executed": 0,
+            "validation_score": 0.3333333333333333
+          },
+          "status": "FAILED"
+        },
+        {
+          "workflow": "Training Program Workflow",
+          "query": "What training programs are available for wind energy careers?",
+          "response": {
+            "content": "\n\n**\ud83c\udfaf Pendo - Massachusetts Climate Economy Enhanced Career Navigation Coordinator (CEA.md Enhanced)**\n\n*Addressing the information gap crisis affecting 39% of clean energy workers*\n*Connecting you to the 38,100 clean energy jobs needed by 2030*\n*Gateway Cities Focus: Brockton, Fall River/New Bedford, Lowell/Lawrence*\n\n\nWelcome to the Massachusetts Climate Economy Assistant! I'm Pendo, your Enhanced Lead Program Manager.\n\n**\ud83e\udde0 Intelligence Analysis:** Processed your query with 16.9/10.0 intelligence level\n\n**\ud83c\udfaf Quick Assessment Questions:**\nTo ensure exceptional guidance tailored to your specific needs:\n\n1. **Career Background:** What's your current profession or most recent work experience?\n2. **Location Preference:** Are you interested in opportunities in Brockton, Fall River/New Bedford, or Lowell/Lawrence?\n3. **Transition Goals:** What draws you to clean energy careers specifically?\n4. **Timeframe:** What's your target timeline for making this transition?\n5. **Biggest Concerns:** What barriers or challenges are you most worried about?\n\n**\ud83c\udf1f Our Enhanced Specialist Team:**\n\u2022 **Marcus** - Military veterans with sophisticated transition support\n\u2022 **Liv** - International professionals with credential recognition expertise  \n\u2022 **Miguel** - Environmental justice advocates with community-centered approach\n\u2022 **Jasmine** - Career pathway optimization with skills analysis\n\n\n**\ud83d\udea7 Barrier Assessment & Solutions (CEA.md Informed):**\n\n**Common Information Barriers:**\n\u2022 **39% of clean energy workers** lack basic career information\n\u2022 **47% of women** face additional information access challenges\n\u2022 **50% of Black respondents** report insufficient career guidance\n\u2022 **Geographic barriers** in Gateway Cities limit job awareness\n\n**ACT Partner Solutions:**\n\u2022 **MassHire Career Centers:** Job coaching with wraparound services\n\u2022 **Community Colleges:** Certificate programs with employer partnerships\n\u2022 **Digital Access:** Technology lending and digital literacy programs\n\u2022 **Transportation:** Shuttle services and transit assistance programs\n\u2022 **Childcare:** Family-friendly employer connections and support services\n\u2022 **Language Support:** Multilingual resources and ESL programs\n\n\n\n**\ud83e\udd1d ACT Partner Network Resources (CEA.md Validated):**\n\n**Workforce Development Partners:**\n\u2022 **MassHire Career Centers:** Available in all Gateway Cities with wraparound services\n\u2022 **Bristol Community College:** Certificate programs in Fall River/New Bedford area\n\u2022 **UMass Lowell:** Professional development and workforce training programs\n\n**Employer Partners:**\n\u2022 **Greentown Labs:** Climate tech startup opportunities and innovation networking\n\u2022 **SouthCoast Wind:** Offshore wind engineering and marine operations\n\u2022 **Abode Energy Management:** Technical roles and energy efficiency projects\n\u2022 **Nexamp:** Data science and analytics positions in clean energy\n\u2022 **HomeWorks Energy:** Customer service and multilingual outreach roles\n\n**Training and Certification:**\n\u2022 NABCEP Solar Installation Professional certification\n\u2022 BPI Building Analyst Professional certification  \n\u2022 OSHA safety training and compliance certification\n\u2022 EPA environmental monitoring and remediation training\n\n**Contact Information:**\n\u2022 **MassHire Career Centers:** (877) 872-2804 - Available in all Gateway Cities\n\u2022 **Bristol Community College:** (508) 678-2811 - Fall River/New Bedford\n\u2022 **UMass Lowell:** (978) 934-4000 - Lowell area workforce development\n\n\n**\ud83d\udcac Enhanced Support Promise:**\nWith our new intelligence capabilities, we provide:\n- Multi-identity recognition for complex backgrounds\n- Psychological awareness and emotional support\n- Intersectional barrier analysis  \n- Coordinated specialist approach when needed\n- Memory retention for personalized follow-up\n\nLet me know more details, and I'll ensure you receive exceptional, coordinated support!\n",
+            "metadata": {
+              "agent_type": "pendo_supervisor",
+              "agent_name": "Pendo",
+              "routing_needed": true,
+              "specialists_available": {
+                "marcus_veteran_specialist": "Military veterans transitioning to clean energy careers",
+                "liv_international_specialist": "International professionals navigating credential recognition",
+                "miguel_environmental_justice_specialist": "Environmental justice advocates and community organizers",
+                "jasmine_resume_specialist": "Resume analysis and career pathway optimization"
+              },
+              "intelligence_level": 16.9,
+              "psychological_assessment": {
+                "transition_anxiety": 0.0,
+                "confidence_level": 0.5,
+                "motivation_level": 0.5,
+                "support_needs": []
+              },
+              "cea_mission": "Address 39% clean energy worker information gap through specialized guidance"
+            }
+          },
+          "execution_time": 0.0002961158752441406,
+          "validation": {
+            "valid": false,
+            "issues": [
+              "No tools_called metadata found",
+              "Low validation score: 0.33"
+            ],
+            "tools_executed": 0,
+            "validation_score": 0.3333333333333333
+          },
+          "status": "FAILED"
+        }
+      ],
+      "average_execution_time": 0.00021004676818847656,
+      "tool_success_rate": 0.0
+    },
+    "persona_consistency": {
+      "persona_tests": [
+        {
+          "agent": "jasmine_resume_specialist",
+          "responses": [
+            {
+              "content": "\n\n**\ud83c\udfaf Pendo - Massachusetts Climate Economy Enhanced Career Navigation Coordinator (CEA.md Enhanced)**\n\n*Addressing the information gap crisis affecting 39% of clean energy workers*\n*Connecting you to the 38,100 clean energy jobs needed by 2030*\n*Gateway Cities Focus: Brockton, Fall River/New Bedford, Lowell/Lawrence*\n\n\nWelcome to the Massachusetts Climate Economy Assistant! I'm Pendo, your Enhanced Lead Program Manager.\n\n**\ud83e\udde0 Intelligence Analysis:** Processed your query with 16.9/10.0 intelligence level\n\n**\ud83c\udfaf Quick Assessment Questions:**\nTo ensure exceptional guidance tailored to your specific needs:\n\n1. **Career Background:** What's your current profession or most recent work experience?\n2. **Location Preference:** Are you interested in opportunities in Brockton, Fall River/New Bedford, or Lowell/Lawrence?\n3. **Transition Goals:** What draws you to clean energy careers specifically?\n4. **Timeframe:** What's your target timeline for making this transition?\n5. **Biggest Concerns:** What barriers or challenges are you most worried about?\n\n**\ud83c\udf1f Our Enhanced Specialist Team:**\n\u2022 **Marcus** - Military veterans with sophisticated transition support\n\u2022 **Liv** - International professionals with credential recognition expertise  \n\u2022 **Miguel** - Environmental justice advocates with community-centered approach\n\u2022 **Jasmine** - Career pathway optimization with skills analysis\n\n\n**\ud83d\udea7 Barrier Assessment & Solutions (CEA.md Informed):**\n\n**Common Information Barriers:**\n\u2022 **39% of clean energy workers** lack basic career information\n\u2022 **47% of women** face additional information access challenges\n\u2022 **50% of Black respondents** report insufficient career guidance\n\u2022 **Geographic barriers** in Gateway Cities limit job awareness\n\n**ACT Partner Solutions:**\n\u2022 **MassHire Career Centers:** Job coaching with wraparound services\n\u2022 **Community Colleges:** Certificate programs with employer partnerships\n\u2022 **Digital Access:** Technology lending and digital literacy programs\n\u2022 **Transportation:** Shuttle services and transit assistance programs\n\u2022 **Childcare:** Family-friendly employer connections and support services\n\u2022 **Language Support:** Multilingual resources and ESL programs\n\n\n\n**\ud83e\udd1d ACT Partner Network Resources (CEA.md Validated):**\n\n**Workforce Development Partners:**\n\u2022 **MassHire Career Centers:** Available in all Gateway Cities with wraparound services\n\u2022 **Bristol Community College:** Certificate programs in Fall River/New Bedford area\n\u2022 **UMass Lowell:** Professional development and workforce training programs\n\n**Employer Partners:**\n\u2022 **Greentown Labs:** Climate tech startup opportunities and innovation networking\n\u2022 **SouthCoast Wind:** Offshore wind engineering and marine operations\n\u2022 **Abode Energy Management:** Technical roles and energy efficiency projects\n\u2022 **Nexamp:** Data science and analytics positions in clean energy\n\u2022 **HomeWorks Energy:** Customer service and multilingual outreach roles\n\n**Training and Certification:**\n\u2022 NABCEP Solar Installation Professional certification\n\u2022 BPI Building Analyst Professional certification  \n\u2022 OSHA safety training and compliance certification\n\u2022 EPA environmental monitoring and remediation training\n\n**Contact Information:**\n\u2022 **MassHire Career Centers:** (877) 872-2804 - Available in all Gateway Cities\n\u2022 **Bristol Community College:** (508) 678-2811 - Fall River/New Bedford\n\u2022 **UMass Lowell:** (978) 934-4000 - Lowell area workforce development\n\n\n**\ud83d\udcac Enhanced Support Promise:**\nWith our new intelligence capabilities, we provide:\n- Multi-identity recognition for complex backgrounds\n- Psychological awareness and emotional support\n- Intersectional barrier analysis  \n- Coordinated specialist approach when needed\n- Memory retention for personalized follow-up\n\nLet me know more details, and I'll ensure you receive exceptional, coordinated support!\n",
+              "metadata": {
+                "agent_type": "pendo_supervisor",
+                "agent_name": "Pendo",
+                "routing_needed": true,
+                "specialists_available": {
+                  "marcus_veteran_specialist": "Military veterans transitioning to clean energy careers",
+                  "liv_international_specialist": "International professionals navigating credential recognition",
+                  "miguel_environmental_justice_specialist": "Environmental justice advocates and community organizers",
+                  "jasmine_resume_specialist": "Resume analysis and career pathway optimization"
+                },
+                "intelligence_level": 16.9,
+                "psychological_assessment": {
+                  "transition_anxiety": 0.3,
+                  "confidence_level": 0.5,
+                  "motivation_level": 0.5,
+                  "support_needs": [
+                    "emotional_support"
+                  ]
+                },
+                "cea_mission": "Address 39% clean energy worker information gap through specialized guidance"
+              }
+            },
+            {
+              "content": "\n\n**\ud83c\udfaf Pendo - Massachusetts Climate Economy Enhanced Career Navigation Coordinator (CEA.md Enhanced)**\n\n*Addressing the information gap crisis affecting 39% of clean energy workers*\n*Connecting you to the 38,100 clean energy jobs needed by 2030*\n*Gateway Cities Focus: Brockton, Fall River/New Bedford, Lowell/Lawrence*\n\n\nWelcome to the Massachusetts Climate Economy Assistant! I'm Pendo, your Enhanced Lead Program Manager.\n\n**\ud83e\udde0 Intelligence Analysis:** Processed your query with 16.9/10.0 intelligence level\n\n**\ud83c\udfaf Quick Assessment Questions:**\nTo ensure exceptional guidance tailored to your specific needs:\n\n1. **Career Background:** What's your current profession or most recent work experience?\n2. **Location Preference:** Are you interested in opportunities in Brockton, Fall River/New Bedford, or Lowell/Lawrence?\n3. **Transition Goals:** What draws you to clean energy careers specifically?\n4. **Timeframe:** What's your target timeline for making this transition?\n5. **Biggest Concerns:** What barriers or challenges are you most worried about?\n\n**\ud83c\udf1f Our Enhanced Specialist Team:**\n\u2022 **Marcus** - Military veterans with sophisticated transition support\n\u2022 **Liv** - International professionals with credential recognition expertise  \n\u2022 **Miguel** - Environmental justice advocates with community-centered approach\n\u2022 **Jasmine** - Career pathway optimization with skills analysis\n\n\n**\ud83d\udea7 Barrier Assessment & Solutions (CEA.md Informed):**\n\n**Common Information Barriers:**\n\u2022 **39% of clean energy workers** lack basic career information\n\u2022 **47% of women** face additional information access challenges\n\u2022 **50% of Black respondents** report insufficient career guidance\n\u2022 **Geographic barriers** in Gateway Cities limit job awareness\n\n**ACT Partner Solutions:**\n\u2022 **MassHire Career Centers:** Job coaching with wraparound services\n\u2022 **Community Colleges:** Certificate programs with employer partnerships\n\u2022 **Digital Access:** Technology lending and digital literacy programs\n\u2022 **Transportation:** Shuttle services and transit assistance programs\n\u2022 **Childcare:** Family-friendly employer connections and support services\n\u2022 **Language Support:** Multilingual resources and ESL programs\n\n\n\n**\ud83e\udd1d ACT Partner Network Resources (CEA.md Validated):**\n\n**Workforce Development Partners:**\n\u2022 **MassHire Career Centers:** Available in all Gateway Cities with wraparound services\n\u2022 **Bristol Community College:** Certificate programs in Fall River/New Bedford area\n\u2022 **UMass Lowell:** Professional development and workforce training programs\n\n**Employer Partners:**\n\u2022 **Greentown Labs:** Climate tech startup opportunities and innovation networking\n\u2022 **SouthCoast Wind:** Offshore wind engineering and marine operations\n\u2022 **Abode Energy Management:** Technical roles and energy efficiency projects\n\u2022 **Nexamp:** Data science and analytics positions in clean energy\n\u2022 **HomeWorks Energy:** Customer service and multilingual outreach roles\n\n**Training and Certification:**\n\u2022 NABCEP Solar Installation Professional certification\n\u2022 BPI Building Analyst Professional certification  \n\u2022 OSHA safety training and compliance certification\n\u2022 EPA environmental monitoring and remediation training\n\n**Contact Information:**\n\u2022 **MassHire Career Centers:** (877) 872-2804 - Available in all Gateway Cities\n\u2022 **Bristol Community College:** (508) 678-2811 - Fall River/New Bedford\n\u2022 **UMass Lowell:** (978) 934-4000 - Lowell area workforce development\n\n\n**\ud83d\udcac Enhanced Support Promise:**\nWith our new intelligence capabilities, we provide:\n- Multi-identity recognition for complex backgrounds\n- Psychological awareness and emotional support\n- Intersectional barrier analysis  \n- Coordinated specialist approach when needed\n- Memory retention for personalized follow-up\n\nLet me know more details, and I'll ensure you receive exceptional, coordinated support!\n",
+              "metadata": {
+                "agent_type": "pendo_supervisor",
+                "agent_name": "Pendo",
+                "routing_needed": true,
+                "specialists_available": {
+                  "marcus_veteran_specialist": "Military veterans transitioning to clean energy careers",
+                  "liv_international_specialist": "International professionals navigating credential recognition",
+                  "miguel_environmental_justice_specialist": "Environmental justice advocates and community organizers",
+                  "jasmine_resume_specialist": "Resume analysis and career pathway optimization"
+                },
+                "intelligence_level": 16.9,
+                "psychological_assessment": {
+                  "transition_anxiety": 0.0,
+                  "confidence_level": 0.5,
+                  "motivation_level": 0.5,
+                  "support_needs": []
+                },
+                "cea_mission": "Address 39% clean energy worker information gap through specialized guidance"
+              }
+            },
+            {
+              "content": "\n\n**\ud83c\udfaf Pendo - Massachusetts Climate Economy Enhanced Career Navigation Coordinator (CEA.md Enhanced)**\n\n*Addressing the information gap crisis affecting 39% of clean energy workers*\n*Connecting you to the 38,100 clean energy jobs needed by 2030*\n*Gateway Cities Focus: Brockton, Fall River/New Bedford, Lowell/Lawrence*\n\n\nWelcome to the Massachusetts Climate Economy Assistant! I'm Pendo, your Enhanced Lead Program Manager.\n\n**\ud83e\udde0 Intelligence Analysis:** Processed your query with 16.9/10.0 intelligence level\n\n**\ud83c\udfaf Quick Assessment Questions:**\nTo ensure exceptional guidance tailored to your specific needs:\n\n1. **Career Background:** What's your current profession or most recent work experience?\n2. **Location Preference:** Are you interested in opportunities in Brockton, Fall River/New Bedford, or Lowell/Lawrence?\n3. **Transition Goals:** What draws you to clean energy careers specifically?\n4. **Timeframe:** What's your target timeline for making this transition?\n5. **Biggest Concerns:** What barriers or challenges are you most worried about?\n\n**\ud83c\udf1f Our Enhanced Specialist Team:**\n\u2022 **Marcus** - Military veterans with sophisticated transition support\n\u2022 **Liv** - International professionals with credential recognition expertise  \n\u2022 **Miguel** - Environmental justice advocates with community-centered approach\n\u2022 **Jasmine** - Career pathway optimization with skills analysis\n\n\n**\ud83d\udea7 Barrier Assessment & Solutions (CEA.md Informed):**\n\n**Common Information Barriers:**\n\u2022 **39% of clean energy workers** lack basic career information\n\u2022 **47% of women** face additional information access challenges\n\u2022 **50% of Black respondents** report insufficient career guidance\n\u2022 **Geographic barriers** in Gateway Cities limit job awareness\n\n**ACT Partner Solutions:**\n\u2022 **MassHire Career Centers:** Job coaching with wraparound services\n\u2022 **Community Colleges:** Certificate programs with employer partnerships\n\u2022 **Digital Access:** Technology lending and digital literacy programs\n\u2022 **Transportation:** Shuttle services and transit assistance programs\n\u2022 **Childcare:** Family-friendly employer connections and support services\n\u2022 **Language Support:** Multilingual resources and ESL programs\n\n\n\n**\ud83e\udd1d ACT Partner Network Resources (CEA.md Validated):**\n\n**Workforce Development Partners:**\n\u2022 **MassHire Career Centers:** Available in all Gateway Cities with wraparound services\n\u2022 **Bristol Community College:** Certificate programs in Fall River/New Bedford area\n\u2022 **UMass Lowell:** Professional development and workforce training programs\n\n**Employer Partners:**\n\u2022 **Greentown Labs:** Climate tech startup opportunities and innovation networking\n\u2022 **SouthCoast Wind:** Offshore wind engineering and marine operations\n\u2022 **Abode Energy Management:** Technical roles and energy efficiency projects\n\u2022 **Nexamp:** Data science and analytics positions in clean energy\n\u2022 **HomeWorks Energy:** Customer service and multilingual outreach roles\n\n**Training and Certification:**\n\u2022 NABCEP Solar Installation Professional certification\n\u2022 BPI Building Analyst Professional certification  \n\u2022 OSHA safety training and compliance certification\n\u2022 EPA environmental monitoring and remediation training\n\n**Contact Information:**\n\u2022 **MassHire Career Centers:** (877) 872-2804 - Available in all Gateway Cities\n\u2022 **Bristol Community College:** (508) 678-2811 - Fall River/New Bedford\n\u2022 **UMass Lowell:** (978) 934-4000 - Lowell area workforce development\n\n\n**\ud83d\udcac Enhanced Support Promise:**\nWith our new intelligence capabilities, we provide:\n- Multi-identity recognition for complex backgrounds\n- Psychological awareness and emotional support\n- Intersectional barrier analysis  \n- Coordinated specialist approach when needed\n- Memory retention for personalized follow-up\n\nLet me know more details, and I'll ensure you receive exceptional, coordinated support!\n",
+              "metadata": {
+                "agent_type": "pendo_supervisor",
+                "agent_name": "Pendo",
+                "routing_needed": true,
+                "specialists_available": {
+                  "marcus_veteran_specialist": "Military veterans transitioning to clean energy careers",
+                  "liv_international_specialist": "International professionals navigating credential recognition",
+                  "miguel_environmental_justice_specialist": "Environmental justice advocates and community organizers",
+                  "jasmine_resume_specialist": "Resume analysis and career pathway optimization"
+                },
+                "intelligence_level": 16.9,
+                "psychological_assessment": {
+                  "transition_anxiety": 0.0,
+                  "confidence_level": 0.5,
+                  "motivation_level": 0.5,
+                  "support_needs": []
+                },
+                "cea_mission": "Address 39% clean energy worker information gap through specialized guidance"
+              }
+            }
+          ],
+          "analysis": {
+            "consistent": true,
+            "consistency_score": 0.9166666666666666,
+            "traits_found": [
+              "professional",
+              "supportive",
+              "specific"
+            ],
+            "issues": []
+          },
+          "consistency_score": 0.9166666666666666,
+          "status": "PASSED"
+        },
+        {
+          "agent": "marcus_veteran_specialist",
+          "responses": [
+            {
+              "content": "\n\n**\ud83c\udfaf Pendo - Massachusetts Climate Economy Enhanced Routing Coordinator (CEA.md Enhanced)**\n\n*Addressing the information gap crisis affecting 39% of clean energy workers*\n*Connecting you to the 38,100 clean energy jobs needed by 2030*\n*Gateway Cities Focus: Brockton, Fall River/New Bedford, Lowell/Lawrence*\n\n\n**\ud83e\udde0 Enhanced Intelligence Analysis Complete**\n- Intelligence Level: 18.8/10.0\n- Primary Identity: Veteran\n- Confidence Level: 0.5 if identities else 0.8\n\n**\ud83c\udfaf Perfect Match Identified!**\nBased on your message, I'm connecting you with **Marcus**, who can provide exceptional specialized guidance for your veteran background.\n\n**\ud83d\udd04 Routing to Marcus:**\nMarcus will provide:\n\u2022 Enhanced intelligence-driven analysis of your background and goals\n\u2022 Sophisticated tool selection for your specific needs\n\u2022 Memory retention for personalized follow-up guidance\n\u2022 Direct connection to the 38,100 clean energy jobs pipeline\n\u2022 Comprehensive barrier analysis and solution strategies\n\n**\u23f1\ufe0f What to Expect (Enhanced Support):**\n\u2022 Intelligent skills analysis with psychological awareness\n\u2022 Context-aware opportunity matching\n\u2022 Progressive training recommendations\n\u2022 Gateway Cities connections and resources\n\u2022 90-day action plan with milestone tracking\n\u2022 Case-based learning from successful similar transitions\n\n\n**\ud83d\udea7 Barrier Assessment & Solutions (CEA.md Informed):**\n\n**Common Information Barriers:**\n\u2022 **39% of clean energy workers** lack basic career information\n\u2022 **47% of women** face additional information access challenges\n\u2022 **50% of Black respondents** report insufficient career guidance\n\u2022 **Geographic barriers** in Gateway Cities limit job awareness\n\n**ACT Partner Solutions:**\n\u2022 **MassHire Career Centers:** Job coaching with wraparound services\n\u2022 **Community Colleges:** Certificate programs with employer partnerships\n\u2022 **Digital Access:** Technology lending and digital literacy programs\n\u2022 **Transportation:** Shuttle services and transit assistance programs\n\u2022 **Childcare:** Family-friendly employer connections and support services\n\u2022 **Language Support:** Multilingual resources and ESL programs\n\n\n**Intelligence Enhancement:** Your interaction is being processed with advanced cognitive capabilities for exceptional results.\n\n*Transferring you to Marcus with enhanced context now...*\n",
+              "metadata": {
+                "agent_type": "pendo_supervisor",
+                "agent_name": "Pendo",
+                "routing_decision": "marcus_veteran_specialist",
+                "specialist_assigned": "Marcus",
+                "intelligence_level": 18.8,
+                "identities_detected": 2,
+                "psychological_state": {
+                  "transition_anxiety": 0.0,
+                  "confidence_level": 0.5,
+                  "motivation_level": 0.5,
+                  "support_needs": []
+                },
+                "cea_mission": "Address 39% clean energy worker information gap through specialized guidance"
+              }
+            },
+            {
+              "content": "\n\n**\ud83c\udfaf Pendo - Massachusetts Climate Economy Enhanced Routing Coordinator (CEA.md Enhanced)**\n\n*Addressing the information gap crisis affecting 39% of clean energy workers*\n*Connecting you to the 38,100 clean energy jobs needed by 2030*\n*Gateway Cities Focus: Brockton, Fall River/New Bedford, Lowell/Lawrence*\n\n\n**\ud83e\udde0 Enhanced Intelligence Analysis Complete**\n- Intelligence Level: 17.9/10.0\n- Primary Identity: Veteran\n- Confidence Level: 0.5 if identities else 0.8\n\n**\ud83c\udfaf Perfect Match Identified!**\nBased on your message, I'm connecting you with **Marcus**, who can provide exceptional specialized guidance for your veteran background.\n\n**\ud83d\udd04 Routing to Marcus:**\nMarcus will provide:\n\u2022 Enhanced intelligence-driven analysis of your background and goals\n\u2022 Sophisticated tool selection for your specific needs\n\u2022 Memory retention for personalized follow-up guidance\n\u2022 Direct connection to the 38,100 clean energy jobs pipeline\n\u2022 Comprehensive barrier analysis and solution strategies\n\n**\u23f1\ufe0f What to Expect (Enhanced Support):**\n\u2022 Intelligent skills analysis with psychological awareness\n\u2022 Context-aware opportunity matching\n\u2022 Progressive training recommendations\n\u2022 Gateway Cities connections and resources\n\u2022 90-day action plan with milestone tracking\n\u2022 Case-based learning from successful similar transitions\n\n\n**\ud83d\udea7 Barrier Assessment & Solutions (CEA.md Informed):**\n\n**Common Information Barriers:**\n\u2022 **39% of clean energy workers** lack basic career information\n\u2022 **47% of women** face additional information access challenges\n\u2022 **50% of Black respondents** report insufficient career guidance\n\u2022 **Geographic barriers** in Gateway Cities limit job awareness\n\n**ACT Partner Solutions:**\n\u2022 **MassHire Career Centers:** Job coaching with wraparound services\n\u2022 **Community Colleges:** Certificate programs with employer partnerships\n\u2022 **Digital Access:** Technology lending and digital literacy programs\n\u2022 **Transportation:** Shuttle services and transit assistance programs\n\u2022 **Childcare:** Family-friendly employer connections and support services\n\u2022 **Language Support:** Multilingual resources and ESL programs\n\n\n**Intelligence Enhancement:** Your interaction is being processed with advanced cognitive capabilities for exceptional results.\n\n*Transferring you to Marcus with enhanced context now...*\n",
+              "metadata": {
+                "agent_type": "pendo_supervisor",
+                "agent_name": "Pendo",
+                "routing_decision": "marcus_veteran_specialist",
+                "specialist_assigned": "Marcus",
+                "intelligence_level": 17.9,
+                "identities_detected": 1,
+                "psychological_state": {
+                  "transition_anxiety": 0.0,
+                  "confidence_level": 0.5,
+                  "motivation_level": 0.5,
+                  "support_needs": []
+                },
+                "cea_mission": "Address 39% clean energy worker information gap through specialized guidance"
+              }
+            },
+            {
+              "content": "\n\n**\ud83c\udfaf Pendo - Massachusetts Climate Economy Enhanced Routing Coordinator (CEA.md Enhanced)**\n\n*Addressing the information gap crisis affecting 39% of clean energy workers*\n*Connecting you to the 38,100 clean energy jobs needed by 2030*\n*Gateway Cities Focus: Brockton, Fall River/New Bedford, Lowell/Lawrence*\n\n\n**\ud83e\udde0 Enhanced Intelligence Analysis Complete**\n- Intelligence Level: 17.9/10.0\n- Primary Identity: Veteran\n- Confidence Level: 0.5 if identities else 0.8\n\n**\ud83c\udfaf Perfect Match Identified!**\nBased on your message, I'm connecting you with **Marcus**, who can provide exceptional specialized guidance for your veteran background.\n\n**\ud83d\udd04 Routing to Marcus:**\nMarcus will provide:\n\u2022 Enhanced intelligence-driven analysis of your background and goals\n\u2022 Sophisticated tool selection for your specific needs\n\u2022 Memory retention for personalized follow-up guidance\n\u2022 Direct connection to the 38,100 clean energy jobs pipeline\n\u2022 Comprehensive barrier analysis and solution strategies\n\n**\u23f1\ufe0f What to Expect (Enhanced Support):**\n\u2022 Intelligent skills analysis with psychological awareness\n\u2022 Context-aware opportunity matching\n\u2022 Progressive training recommendations\n\u2022 Gateway Cities connections and resources\n\u2022 90-day action plan with milestone tracking\n\u2022 Case-based learning from successful similar transitions\n\n\n**\ud83d\udea7 Barrier Assessment & Solutions (CEA.md Informed):**\n\n**Common Information Barriers:**\n\u2022 **39% of clean energy workers** lack basic career information\n\u2022 **47% of women** face additional information access challenges\n\u2022 **50% of Black respondents** report insufficient career guidance\n\u2022 **Geographic barriers** in Gateway Cities limit job awareness\n\n**ACT Partner Solutions:**\n\u2022 **MassHire Career Centers:** Job coaching with wraparound services\n\u2022 **Community Colleges:** Certificate programs with employer partnerships\n\u2022 **Digital Access:** Technology lending and digital literacy programs\n\u2022 **Transportation:** Shuttle services and transit assistance programs\n\u2022 **Childcare:** Family-friendly employer connections and support services\n\u2022 **Language Support:** Multilingual resources and ESL programs\n\n\n**Intelligence Enhancement:** Your interaction is being processed with advanced cognitive capabilities for exceptional results.\n\n*Transferring you to Marcus with enhanced context now...*\n",
+              "metadata": {
+                "agent_type": "pendo_supervisor",
+                "agent_name": "Pendo",
+                "routing_decision": "marcus_veteran_specialist",
+                "specialist_assigned": "Marcus",
+                "intelligence_level": 17.9,
+                "identities_detected": 1,
+                "psychological_state": {
+                  "transition_anxiety": 0.0,
+                  "confidence_level": 0.5,
+                  "motivation_level": 0.5,
+                  "support_needs": []
+                },
+                "cea_mission": "Address 39% clean energy worker information gap through specialized guidance"
+              }
+            }
+          ],
+          "analysis": {
+            "consistent": true,
+            "consistency_score": 0.8333333333333334,
+            "traits_found": [
+              "respect",
+              "practical"
+            ],
+            "issues": []
+          },
+          "consistency_score": 0.8333333333333334,
+          "status": "PASSED"
+        },
+        {
+          "agent": "liv_international_specialist",
+          "responses": [
+            {
+              "content": "\n\n**\ud83c\udfaf Pendo - Massachusetts Climate Economy Enhanced Career Navigation Coordinator (CEA.md Enhanced)**\n\n*Addressing the information gap crisis affecting 39% of clean energy workers*\n*Connecting you to the 38,100 clean energy jobs needed by 2030*\n*Gateway Cities Focus: Brockton, Fall River/New Bedford, Lowell/Lawrence*\n\n\nWelcome to the Massachusetts Climate Economy Assistant! I'm Pendo, your Enhanced Lead Program Manager.\n\n**\ud83e\udde0 Intelligence Analysis:** Processed your query with 16.9/10.0 intelligence level\n\n**\ud83c\udfaf Quick Assessment Questions:**\nTo ensure exceptional guidance tailored to your specific needs:\n\n1. **Career Background:** What's your current profession or most recent work experience?\n2. **Location Preference:** Are you interested in opportunities in Brockton, Fall River/New Bedford, or Lowell/Lawrence?\n3. **Transition Goals:** What draws you to clean energy careers specifically?\n4. **Timeframe:** What's your target timeline for making this transition?\n5. **Biggest Concerns:** What barriers or challenges are you most worried about?\n\n**\ud83c\udf1f Our Enhanced Specialist Team:**\n\u2022 **Marcus** - Military veterans with sophisticated transition support\n\u2022 **Liv** - International professionals with credential recognition expertise  \n\u2022 **Miguel** - Environmental justice advocates with community-centered approach\n\u2022 **Jasmine** - Career pathway optimization with skills analysis\n\n\n**\ud83d\udea7 Barrier Assessment & Solutions (CEA.md Informed):**\n\n**Common Information Barriers:**\n\u2022 **39% of clean energy workers** lack basic career information\n\u2022 **47% of women** face additional information access challenges\n\u2022 **50% of Black respondents** report insufficient career guidance\n\u2022 **Geographic barriers** in Gateway Cities limit job awareness\n\n**ACT Partner Solutions:**\n\u2022 **MassHire Career Centers:** Job coaching with wraparound services\n\u2022 **Community Colleges:** Certificate programs with employer partnerships\n\u2022 **Digital Access:** Technology lending and digital literacy programs\n\u2022 **Transportation:** Shuttle services and transit assistance programs\n\u2022 **Childcare:** Family-friendly employer connections and support services\n\u2022 **Language Support:** Multilingual resources and ESL programs\n\n\n\n**\ud83e\udd1d ACT Partner Network Resources (CEA.md Validated):**\n\n**Workforce Development Partners:**\n\u2022 **MassHire Career Centers:** Available in all Gateway Cities with wraparound services\n\u2022 **Bristol Community College:** Certificate programs in Fall River/New Bedford area\n\u2022 **UMass Lowell:** Professional development and workforce training programs\n\n**Employer Partners:**\n\u2022 **Greentown Labs:** Climate tech startup opportunities and innovation networking\n\u2022 **SouthCoast Wind:** Offshore wind engineering and marine operations\n\u2022 **Abode Energy Management:** Technical roles and energy efficiency projects\n\u2022 **Nexamp:** Data science and analytics positions in clean energy\n\u2022 **HomeWorks Energy:** Customer service and multilingual outreach roles\n\n**Training and Certification:**\n\u2022 NABCEP Solar Installation Professional certification\n\u2022 BPI Building Analyst Professional certification  \n\u2022 OSHA safety training and compliance certification\n\u2022 EPA environmental monitoring and remediation training\n\n**Contact Information:**\n\u2022 **MassHire Career Centers:** (877) 872-2804 - Available in all Gateway Cities\n\u2022 **Bristol Community College:** (508) 678-2811 - Fall River/New Bedford\n\u2022 **UMass Lowell:** (978) 934-4000 - Lowell area workforce development\n\n\n**\ud83d\udcac Enhanced Support Promise:**\nWith our new intelligence capabilities, we provide:\n- Multi-identity recognition for complex backgrounds\n- Psychological awareness and emotional support\n- Intersectional barrier analysis  \n- Coordinated specialist approach when needed\n- Memory retention for personalized follow-up\n\nLet me know more details, and I'll ensure you receive exceptional, coordinated support!\n",
+              "metadata": {
+                "agent_type": "pendo_supervisor",
+                "agent_name": "Pendo",
+                "routing_needed": true,
+                "specialists_available": {
+                  "marcus_veteran_specialist": "Military veterans transitioning to clean energy careers",
+                  "liv_international_specialist": "International professionals navigating credential recognition",
+                  "miguel_environmental_justice_specialist": "Environmental justice advocates and community organizers",
+                  "jasmine_resume_specialist": "Resume analysis and career pathway optimization"
+                },
+                "intelligence_level": 16.9,
+                "psychological_assessment": {
+                  "transition_anxiety": 0.0,
+                  "confidence_level": 0.5,
+                  "motivation_level": 0.5,
+                  "support_needs": []
+                },
+                "cea_mission": "Address 39% clean energy worker information gap through specialized guidance"
+              }
+            },
+            {
+              "content": "\n\n**\ud83c\udfaf Pendo - Massachusetts Climate Economy Enhanced Career Navigation Coordinator (CEA.md Enhanced)**\n\n*Addressing the information gap crisis affecting 39% of clean energy workers*\n*Connecting you to the 38,100 clean energy jobs needed by 2030*\n*Gateway Cities Focus: Brockton, Fall River/New Bedford, Lowell/Lawrence*\n\n\nWelcome to the Massachusetts Climate Economy Assistant! I'm Pendo, your Enhanced Lead Program Manager.\n\n**\ud83e\udde0 Intelligence Analysis:** Processed your query with 16.9/10.0 intelligence level\n\n**\ud83c\udfaf Quick Assessment Questions:**\nTo ensure exceptional guidance tailored to your specific needs:\n\n1. **Career Background:** What's your current profession or most recent work experience?\n2. **Location Preference:** Are you interested in opportunities in Brockton, Fall River/New Bedford, or Lowell/Lawrence?\n3. **Transition Goals:** What draws you to clean energy careers specifically?\n4. **Timeframe:** What's your target timeline for making this transition?\n5. **Biggest Concerns:** What barriers or challenges are you most worried about?\n\n**\ud83c\udf1f Our Enhanced Specialist Team:**\n\u2022 **Marcus** - Military veterans with sophisticated transition support\n\u2022 **Liv** - International professionals with credential recognition expertise  \n\u2022 **Miguel** - Environmental justice advocates with community-centered approach\n\u2022 **Jasmine** - Career pathway optimization with skills analysis\n\n\n**\ud83d\udea7 Barrier Assessment & Solutions (CEA.md Informed):**\n\n**Common Information Barriers:**\n\u2022 **39% of clean energy workers** lack basic career information\n\u2022 **47% of women** face additional information access challenges\n\u2022 **50% of Black respondents** report insufficient career guidance\n\u2022 **Geographic barriers** in Gateway Cities limit job awareness\n\n**ACT Partner Solutions:**\n\u2022 **MassHire Career Centers:** Job coaching with wraparound services\n\u2022 **Community Colleges:** Certificate programs with employer partnerships\n\u2022 **Digital Access:** Technology lending and digital literacy programs\n\u2022 **Transportation:** Shuttle services and transit assistance programs\n\u2022 **Childcare:** Family-friendly employer connections and support services\n\u2022 **Language Support:** Multilingual resources and ESL programs\n\n\n\n**\ud83e\udd1d ACT Partner Network Resources (CEA.md Validated):**\n\n**Workforce Development Partners:**\n\u2022 **MassHire Career Centers:** Available in all Gateway Cities with wraparound services\n\u2022 **Bristol Community College:** Certificate programs in Fall River/New Bedford area\n\u2022 **UMass Lowell:** Professional development and workforce training programs\n\n**Employer Partners:**\n\u2022 **Greentown Labs:** Climate tech startup opportunities and innovation networking\n\u2022 **SouthCoast Wind:** Offshore wind engineering and marine operations\n\u2022 **Abode Energy Management:** Technical roles and energy efficiency projects\n\u2022 **Nexamp:** Data science and analytics positions in clean energy\n\u2022 **HomeWorks Energy:** Customer service and multilingual outreach roles\n\n**Training and Certification:**\n\u2022 NABCEP Solar Installation Professional certification\n\u2022 BPI Building Analyst Professional certification  \n\u2022 OSHA safety training and compliance certification\n\u2022 EPA environmental monitoring and remediation training\n\n**Contact Information:**\n\u2022 **MassHire Career Centers:** (877) 872-2804 - Available in all Gateway Cities\n\u2022 **Bristol Community College:** (508) 678-2811 - Fall River/New Bedford\n\u2022 **UMass Lowell:** (978) 934-4000 - Lowell area workforce development\n\n\n**\ud83d\udcac Enhanced Support Promise:**\nWith our new intelligence capabilities, we provide:\n- Multi-identity recognition for complex backgrounds\n- Psychological awareness and emotional support\n- Intersectional barrier analysis  \n- Coordinated specialist approach when needed\n- Memory retention for personalized follow-up\n\nLet me know more details, and I'll ensure you receive exceptional, coordinated support!\n",
+              "metadata": {
+                "agent_type": "pendo_supervisor",
+                "agent_name": "Pendo",
+                "routing_needed": true,
+                "specialists_available": {
+                  "marcus_veteran_specialist": "Military veterans transitioning to clean energy careers",
+                  "liv_international_specialist": "International professionals navigating credential recognition",
+                  "miguel_environmental_justice_specialist": "Environmental justice advocates and community organizers",
+                  "jasmine_resume_specialist": "Resume analysis and career pathway optimization"
+                },
+                "intelligence_level": 16.9,
+                "psychological_assessment": {
+                  "transition_anxiety": 0.0,
+                  "confidence_level": 0.5,
+                  "motivation_level": 0.5,
+                  "support_needs": []
+                },
+                "cea_mission": "Address 39% clean energy worker information gap through specialized guidance"
+              }
+            },
+            {
+              "content": "\n\n**\ud83c\udfaf Pendo - Massachusetts Climate Economy Enhanced Career Navigation Coordinator (CEA.md Enhanced)**\n\n*Addressing the information gap crisis affecting 39% of clean energy workers*\n*Connecting you to the 38,100 clean energy jobs needed by 2030*\n*Gateway Cities Focus: Brockton, Fall River/New Bedford, Lowell/Lawrence*\n\n\nWelcome to the Massachusetts Climate Economy Assistant! I'm Pendo, your Enhanced Lead Program Manager.\n\n**\ud83e\udde0 Intelligence Analysis:** Processed your query with 16.9/10.0 intelligence level\n\n**\ud83c\udfaf Quick Assessment Questions:**\nTo ensure exceptional guidance tailored to your specific needs:\n\n1. **Career Background:** What's your current profession or most recent work experience?\n2. **Location Preference:** Are you interested in opportunities in Brockton, Fall River/New Bedford, or Lowell/Lawrence?\n3. **Transition Goals:** What draws you to clean energy careers specifically?\n4. **Timeframe:** What's your target timeline for making this transition?\n5. **Biggest Concerns:** What barriers or challenges are you most worried about?\n\n**\ud83c\udf1f Our Enhanced Specialist Team:**\n\u2022 **Marcus** - Military veterans with sophisticated transition support\n\u2022 **Liv** - International professionals with credential recognition expertise  \n\u2022 **Miguel** - Environmental justice advocates with community-centered approach\n\u2022 **Jasmine** - Career pathway optimization with skills analysis\n\n\n**\ud83d\udea7 Barrier Assessment & Solutions (CEA.md Informed):**\n\n**Common Information Barriers:**\n\u2022 **39% of clean energy workers** lack basic career information\n\u2022 **47% of women** face additional information access challenges\n\u2022 **50% of Black respondents** report insufficient career guidance\n\u2022 **Geographic barriers** in Gateway Cities limit job awareness\n\n**ACT Partner Solutions:**\n\u2022 **MassHire Career Centers:** Job coaching with wraparound services\n\u2022 **Community Colleges:** Certificate programs with employer partnerships\n\u2022 **Digital Access:** Technology lending and digital literacy programs\n\u2022 **Transportation:** Shuttle services and transit assistance programs\n\u2022 **Childcare:** Family-friendly employer connections and support services\n\u2022 **Language Support:** Multilingual resources and ESL programs\n\n\n\n**\ud83e\udd1d ACT Partner Network Resources (CEA.md Validated):**\n\n**Workforce Development Partners:**\n\u2022 **MassHire Career Centers:** Available in all Gateway Cities with wraparound services\n\u2022 **Bristol Community College:** Certificate programs in Fall River/New Bedford area\n\u2022 **UMass Lowell:** Professional development and workforce training programs\n\n**Employer Partners:**\n\u2022 **Greentown Labs:** Climate tech startup opportunities and innovation networking\n\u2022 **SouthCoast Wind:** Offshore wind engineering and marine operations\n\u2022 **Abode Energy Management:** Technical roles and energy efficiency projects\n\u2022 **Nexamp:** Data science and analytics positions in clean energy\n\u2022 **HomeWorks Energy:** Customer service and multilingual outreach roles\n\n**Training and Certification:**\n\u2022 NABCEP Solar Installation Professional certification\n\u2022 BPI Building Analyst Professional certification  \n\u2022 OSHA safety training and compliance certification\n\u2022 EPA environmental monitoring and remediation training\n\n**Contact Information:**\n\u2022 **MassHire Career Centers:** (877) 872-2804 - Available in all Gateway Cities\n\u2022 **Bristol Community College:** (508) 678-2811 - Fall River/New Bedford\n\u2022 **UMass Lowell:** (978) 934-4000 - Lowell area workforce development\n\n\n**\ud83d\udcac Enhanced Support Promise:**\nWith our new intelligence capabilities, we provide:\n- Multi-identity recognition for complex backgrounds\n- Psychological awareness and emotional support\n- Intersectional barrier analysis  \n- Coordinated specialist approach when needed\n- Memory retention for personalized follow-up\n\nLet me know more details, and I'll ensure you receive exceptional, coordinated support!\n",
+              "metadata": {
+                "agent_type": "pendo_supervisor",
+                "agent_name": "Pendo",
+                "routing_needed": true,
+                "specialists_available": {
+                  "marcus_veteran_specialist": "Military veterans transitioning to clean energy careers",
+                  "liv_international_specialist": "International professionals navigating credential recognition",
+                  "miguel_environmental_justice_specialist": "Environmental justice advocates and community organizers",
+                  "jasmine_resume_specialist": "Resume analysis and career pathway optimization"
+                },
+                "intelligence_level": 16.9,
+                "psychological_assessment": {
+                  "transition_anxiety": 0.0,
+                  "confidence_level": 0.5,
+                  "motivation_level": 0.5,
+                  "support_needs": []
+                },
+                "cea_mission": "Address 39% clean energy worker information gap through specialized guidance"
+              }
+            }
+          ],
+          "analysis": {
+            "consistent": true,
+            "consistency_score": 1.0,
+            "traits_found": [
+              "empathetic",
+              "inclusive",
+              "culturally_aware",
+              "supportive"
+            ],
+            "issues": []
+          },
+          "consistency_score": 1.0,
+          "status": "PASSED"
+        }
+      ],
+      "overall_consistency": 0.9166666666666666,
+      "persona_success_rate": 1.0
+    },
+    "skills_translation": {
+      "translation_tests": [
+        {
+          "test_case": {
+            "background": "Software Engineering",
+            "input_skills": [
+              "Python programming",
+              "Database management",
+              "API development"
+            ],
+            "query": "How do my software engineering skills apply to clean energy?",
+            "expected_translations": [
+              "clean energy data analysis",
+              "grid optimization",
+              "energy management systems"
+            ],
+            "context": "Technical skills translation"
+          },
+          "response": {
+            "content": "\n\n**\ud83c\udfaf Pendo - Massachusetts Climate Economy Enhanced Career Navigation Coordinator (CEA.md Enhanced)**\n\n*Addressing the information gap crisis affecting 39% of clean energy workers*\n*Connecting you to the 38,100 clean energy jobs needed by 2030*\n*Gateway Cities Focus: Brockton, Fall River/New Bedford, Lowell/Lawrence*\n\n\nWelcome to the Massachusetts Climate Economy Assistant! I'm Pendo, your Enhanced Lead Program Manager.\n\n**\ud83e\udde0 Intelligence Analysis:** Processed your query with 16.9/10.0 intelligence level\n\n**\ud83c\udfaf Quick Assessment Questions:**\nTo ensure exceptional guidance tailored to your specific needs:\n\n1. **Career Background:** What's your current profession or most recent work experience?\n2. **Location Preference:** Are you interested in opportunities in Brockton, Fall River/New Bedford, or Lowell/Lawrence?\n3. **Transition Goals:** What draws you to clean energy careers specifically?\n4. **Timeframe:** What's your target timeline for making this transition?\n5. **Biggest Concerns:** What barriers or challenges are you most worried about?\n\n**\ud83c\udf1f Our Enhanced Specialist Team:**\n\u2022 **Marcus** - Military veterans with sophisticated transition support\n\u2022 **Liv** - International professionals with credential recognition expertise  \n\u2022 **Miguel** - Environmental justice advocates with community-centered approach\n\u2022 **Jasmine** - Career pathway optimization with skills analysis\n\n\n**\ud83d\udea7 Barrier Assessment & Solutions (CEA.md Informed):**\n\n**Common Information Barriers:**\n\u2022 **39% of clean energy workers** lack basic career information\n\u2022 **47% of women** face additional information access challenges\n\u2022 **50% of Black respondents** report insufficient career guidance\n\u2022 **Geographic barriers** in Gateway Cities limit job awareness\n\n**ACT Partner Solutions:**\n\u2022 **MassHire Career Centers:** Job coaching with wraparound services\n\u2022 **Community Colleges:** Certificate programs with employer partnerships\n\u2022 **Digital Access:** Technology lending and digital literacy programs\n\u2022 **Transportation:** Shuttle services and transit assistance programs\n\u2022 **Childcare:** Family-friendly employer connections and support services\n\u2022 **Language Support:** Multilingual resources and ESL programs\n\n\n\n**\ud83e\udd1d ACT Partner Network Resources (CEA.md Validated):**\n\n**Workforce Development Partners:**\n\u2022 **MassHire Career Centers:** Available in all Gateway Cities with wraparound services\n\u2022 **Bristol Community College:** Certificate programs in Fall River/New Bedford area\n\u2022 **UMass Lowell:** Professional development and workforce training programs\n\n**Employer Partners:**\n\u2022 **Greentown Labs:** Climate tech startup opportunities and innovation networking\n\u2022 **SouthCoast Wind:** Offshore wind engineering and marine operations\n\u2022 **Abode Energy Management:** Technical roles and energy efficiency projects\n\u2022 **Nexamp:** Data science and analytics positions in clean energy\n\u2022 **HomeWorks Energy:** Customer service and multilingual outreach roles\n\n**Training and Certification:**\n\u2022 NABCEP Solar Installation Professional certification\n\u2022 BPI Building Analyst Professional certification  \n\u2022 OSHA safety training and compliance certification\n\u2022 EPA environmental monitoring and remediation training\n\n**Contact Information:**\n\u2022 **MassHire Career Centers:** (877) 872-2804 - Available in all Gateway Cities\n\u2022 **Bristol Community College:** (508) 678-2811 - Fall River/New Bedford\n\u2022 **UMass Lowell:** (978) 934-4000 - Lowell area workforce development\n\n\n**\ud83d\udcac Enhanced Support Promise:**\nWith our new intelligence capabilities, we provide:\n- Multi-identity recognition for complex backgrounds\n- Psychological awareness and emotional support\n- Intersectional barrier analysis  \n- Coordinated specialist approach when needed\n- Memory retention for personalized follow-up\n\nLet me know more details, and I'll ensure you receive exceptional, coordinated support!\n",
+            "metadata": {
+              "agent_type": "pendo_supervisor",
+              "agent_name": "Pendo",
+              "routing_needed": true,
+              "specialists_available": {
+                "marcus_veteran_specialist": "Military veterans transitioning to clean energy careers",
+                "liv_international_specialist": "International professionals navigating credential recognition",
+                "miguel_environmental_justice_specialist": "Environmental justice advocates and community organizers",
+                "jasmine_resume_specialist": "Resume analysis and career pathway optimization"
+              },
+              "intelligence_level": 16.9,
+              "psychological_assessment": {
+                "transition_anxiety": 0.0,
+                "confidence_level": 0.5,
+                "motivation_level": 0.5,
+                "support_needs": []
+              },
+              "cea_mission": "Address 39% clean energy worker information gap through specialized guidance"
+            }
+          },
+          "analysis": {
+            "accurate": false,
+            "accuracy_score": 0.20833333333333331,
+            "translations_found": [
+              "clean energy data analysis"
+            ],
+            "issues": [
+              "Low accuracy score: 0.21"
+            ]
+          },
+          "accuracy_score": 0.20833333333333331,
+          "status": "FAILED"
+        },
+        {
+          "test_case": {
+            "background": "Teaching",
+            "input_skills": [
+              "Curriculum development",
+              "Classroom management",
+              "Student assessment"
+            ],
+            "query": "Can my teaching experience help in environmental education?",
+            "expected_translations": [
+              "environmental education",
+              "outreach coordination",
+              "program development"
+            ],
+            "context": "Education to climate education transition"
+          },
+          "response": {
+            "content": "\n\n**\ud83c\udfaf Pendo - Massachusetts Climate Economy Enhanced Career Navigation Coordinator (CEA.md Enhanced)**\n\n*Addressing the information gap crisis affecting 39% of clean energy workers*\n*Connecting you to the 38,100 clean energy jobs needed by 2030*\n*Gateway Cities Focus: Brockton, Fall River/New Bedford, Lowell/Lawrence*\n\n\nWelcome to the Massachusetts Climate Economy Assistant! I'm Pendo, your Enhanced Lead Program Manager.\n\n**\ud83e\udde0 Intelligence Analysis:** Processed your query with 16.9/10.0 intelligence level\n\n**\ud83c\udfaf Quick Assessment Questions:**\nTo ensure exceptional guidance tailored to your specific needs:\n\n1. **Career Background:** What's your current profession or most recent work experience?\n2. **Location Preference:** Are you interested in opportunities in Brockton, Fall River/New Bedford, or Lowell/Lawrence?\n3. **Transition Goals:** What draws you to clean energy careers specifically?\n4. **Timeframe:** What's your target timeline for making this transition?\n5. **Biggest Concerns:** What barriers or challenges are you most worried about?\n\n**\ud83c\udf1f Our Enhanced Specialist Team:**\n\u2022 **Marcus** - Military veterans with sophisticated transition support\n\u2022 **Liv** - International professionals with credential recognition expertise  \n\u2022 **Miguel** - Environmental justice advocates with community-centered approach\n\u2022 **Jasmine** - Career pathway optimization with skills analysis\n\n\n**\ud83d\udea7 Barrier Assessment & Solutions (CEA.md Informed):**\n\n**Common Information Barriers:**\n\u2022 **39% of clean energy workers** lack basic career information\n\u2022 **47% of women** face additional information access challenges\n\u2022 **50% of Black respondents** report insufficient career guidance\n\u2022 **Geographic barriers** in Gateway Cities limit job awareness\n\n**ACT Partner Solutions:**\n\u2022 **MassHire Career Centers:** Job coaching with wraparound services\n\u2022 **Community Colleges:** Certificate programs with employer partnerships\n\u2022 **Digital Access:** Technology lending and digital literacy programs\n\u2022 **Transportation:** Shuttle services and transit assistance programs\n\u2022 **Childcare:** Family-friendly employer connections and support services\n\u2022 **Language Support:** Multilingual resources and ESL programs\n\n\n\n**\ud83e\udd1d ACT Partner Network Resources (CEA.md Validated):**\n\n**Workforce Development Partners:**\n\u2022 **MassHire Career Centers:** Available in all Gateway Cities with wraparound services\n\u2022 **Bristol Community College:** Certificate programs in Fall River/New Bedford area\n\u2022 **UMass Lowell:** Professional development and workforce training programs\n\n**Employer Partners:**\n\u2022 **Greentown Labs:** Climate tech startup opportunities and innovation networking\n\u2022 **SouthCoast Wind:** Offshore wind engineering and marine operations\n\u2022 **Abode Energy Management:** Technical roles and energy efficiency projects\n\u2022 **Nexamp:** Data science and analytics positions in clean energy\n\u2022 **HomeWorks Energy:** Customer service and multilingual outreach roles\n\n**Training and Certification:**\n\u2022 NABCEP Solar Installation Professional certification\n\u2022 BPI Building Analyst Professional certification  \n\u2022 OSHA safety training and compliance certification\n\u2022 EPA environmental monitoring and remediation training\n\n**Contact Information:**\n\u2022 **MassHire Career Centers:** (877) 872-2804 - Available in all Gateway Cities\n\u2022 **Bristol Community College:** (508) 678-2811 - Fall River/New Bedford\n\u2022 **UMass Lowell:** (978) 934-4000 - Lowell area workforce development\n\n\n**\ud83d\udcac Enhanced Support Promise:**\nWith our new intelligence capabilities, we provide:\n- Multi-identity recognition for complex backgrounds\n- Psychological awareness and emotional support\n- Intersectional barrier analysis  \n- Coordinated specialist approach when needed\n- Memory retention for personalized follow-up\n\nLet me know more details, and I'll ensure you receive exceptional, coordinated support!\n",
+            "metadata": {
+              "agent_type": "pendo_supervisor",
+              "agent_name": "Pendo",
+              "routing_needed": true,
+              "specialists_available": {
+                "marcus_veteran_specialist": "Military veterans transitioning to clean energy careers",
+                "liv_international_specialist": "International professionals navigating credential recognition",
+                "miguel_environmental_justice_specialist": "Environmental justice advocates and community organizers",
+                "jasmine_resume_specialist": "Resume analysis and career pathway optimization"
+              },
+              "intelligence_level": 16.9,
+              "psychological_assessment": {
+                "transition_anxiety": 0.0,
+                "confidence_level": 0.5,
+                "motivation_level": 0.5,
+                "support_needs": []
+              },
+              "cea_mission": "Address 39% clean energy worker information gap through specialized guidance"
+            }
+          },
+          "analysis": {
+            "accurate": false,
+            "accuracy_score": 0.20833333333333331,
+            "translations_found": [
+              "program development"
+            ],
+            "issues": [
+              "Low accuracy score: 0.21"
+            ]
+          },
+          "accuracy_score": 0.20833333333333331,
+          "status": "FAILED"
+        },
+        {
+          "test_case": {
+            "background": "Military Logistics",
+            "input_skills": [
+              "Supply chain coordination",
+              "Team leadership",
+              "Safety protocols"
+            ],
+            "query": "How does military logistics experience help in renewable energy?",
+            "expected_translations": [
+              "renewable energy operations",
+              "project coordination",
+              "safety management"
+            ],
+            "context": "Military to civilian transition"
+          },
+          "response": {
+            "content": "\n\n**\ud83c\udfaf Pendo - Massachusetts Climate Economy Enhanced Routing Coordinator (CEA.md Enhanced)**\n\n*Addressing the information gap crisis affecting 39% of clean energy workers*\n*Connecting you to the 38,100 clean energy jobs needed by 2030*\n*Gateway Cities Focus: Brockton, Fall River/New Bedford, Lowell/Lawrence*\n\n\n**\ud83e\udde0 Enhanced Intelligence Analysis Complete**\n- Intelligence Level: 17.9/10.0\n- Primary Identity: Veteran\n- Confidence Level: 0.5 if identities else 0.8\n\n**\ud83c\udfaf Perfect Match Identified!**\nBased on your message, I'm connecting you with **Marcus**, who can provide exceptional specialized guidance for your veteran background.\n\n**\ud83d\udd04 Routing to Marcus:**\nMarcus will provide:\n\u2022 Enhanced intelligence-driven analysis of your background and goals\n\u2022 Sophisticated tool selection for your specific needs\n\u2022 Memory retention for personalized follow-up guidance\n\u2022 Direct connection to the 38,100 clean energy jobs pipeline\n\u2022 Comprehensive barrier analysis and solution strategies\n\n**\u23f1\ufe0f What to Expect (Enhanced Support):**\n\u2022 Intelligent skills analysis with psychological awareness\n\u2022 Context-aware opportunity matching\n\u2022 Progressive training recommendations\n\u2022 Gateway Cities connections and resources\n\u2022 90-day action plan with milestone tracking\n\u2022 Case-based learning from successful similar transitions\n\n\n**\ud83d\udea7 Barrier Assessment & Solutions (CEA.md Informed):**\n\n**Common Information Barriers:**\n\u2022 **39% of clean energy workers** lack basic career information\n\u2022 **47% of women** face additional information access challenges\n\u2022 **50% of Black respondents** report insufficient career guidance\n\u2022 **Geographic barriers** in Gateway Cities limit job awareness\n\n**ACT Partner Solutions:**\n\u2022 **MassHire Career Centers:** Job coaching with wraparound services\n\u2022 **Community Colleges:** Certificate programs with employer partnerships\n\u2022 **Digital Access:** Technology lending and digital literacy programs\n\u2022 **Transportation:** Shuttle services and transit assistance programs\n\u2022 **Childcare:** Family-friendly employer connections and support services\n\u2022 **Language Support:** Multilingual resources and ESL programs\n\n\n**Intelligence Enhancement:** Your interaction is being processed with advanced cognitive capabilities for exceptional results.\n\n*Transferring you to Marcus with enhanced context now...*\n",
+            "metadata": {
+              "agent_type": "pendo_supervisor",
+              "agent_name": "Pendo",
+              "routing_decision": "marcus_veteran_specialist",
+              "specialist_assigned": "Marcus",
+              "intelligence_level": 17.9,
+              "identities_detected": 1,
+              "psychological_state": {
+                "transition_anxiety": 0.0,
+                "confidence_level": 0.5,
+                "motivation_level": 0.5,
+                "support_needs": []
+              },
+              "cea_mission": "Address 39% clean energy worker information gap through specialized guidance"
+            }
+          },
+          "analysis": {
+            "accurate": false,
+            "accuracy_score": 0.375,
+            "translations_found": [],
+            "issues": [
+              "Low accuracy score: 0.38",
+              "No expected translations found"
+            ]
+          },
+          "accuracy_score": 0.375,
+          "status": "FAILED"
+        },
+        {
+          "test_case": {
+            "background": "Restaurant Management",
+            "input_skills": [
+              "Staff coordination",
+              "Customer service",
+              "Inventory management"
+            ],
+            "query": "Can restaurant management skills work in the clean energy sector?",
+            "expected_translations": [
+              "team coordination",
+              "client relations",
+              "resource management"
+            ],
+            "context": "Service industry to clean energy"
+          },
+          "response": {
+            "content": "\n\n**\ud83c\udfaf Pendo - Massachusetts Climate Economy Enhanced Career Navigation Coordinator (CEA.md Enhanced)**\n\n*Addressing the information gap crisis affecting 39% of clean energy workers*\n*Connecting you to the 38,100 clean energy jobs needed by 2030*\n*Gateway Cities Focus: Brockton, Fall River/New Bedford, Lowell/Lawrence*\n\n\nWelcome to the Massachusetts Climate Economy Assistant! I'm Pendo, your Enhanced Lead Program Manager.\n\n**\ud83e\udde0 Intelligence Analysis:** Processed your query with 16.9/10.0 intelligence level\n\n**\ud83c\udfaf Quick Assessment Questions:**\nTo ensure exceptional guidance tailored to your specific needs:\n\n1. **Career Background:** What's your current profession or most recent work experience?\n2. **Location Preference:** Are you interested in opportunities in Brockton, Fall River/New Bedford, or Lowell/Lawrence?\n3. **Transition Goals:** What draws you to clean energy careers specifically?\n4. **Timeframe:** What's your target timeline for making this transition?\n5. **Biggest Concerns:** What barriers or challenges are you most worried about?\n\n**\ud83c\udf1f Our Enhanced Specialist Team:**\n\u2022 **Marcus** - Military veterans with sophisticated transition support\n\u2022 **Liv** - International professionals with credential recognition expertise  \n\u2022 **Miguel** - Environmental justice advocates with community-centered approach\n\u2022 **Jasmine** - Career pathway optimization with skills analysis\n\n\n**\ud83d\udea7 Barrier Assessment & Solutions (CEA.md Informed):**\n\n**Common Information Barriers:**\n\u2022 **39% of clean energy workers** lack basic career information\n\u2022 **47% of women** face additional information access challenges\n\u2022 **50% of Black respondents** report insufficient career guidance\n\u2022 **Geographic barriers** in Gateway Cities limit job awareness\n\n**ACT Partner Solutions:**\n\u2022 **MassHire Career Centers:** Job coaching with wraparound services\n\u2022 **Community Colleges:** Certificate programs with employer partnerships\n\u2022 **Digital Access:** Technology lending and digital literacy programs\n\u2022 **Transportation:** Shuttle services and transit assistance programs\n\u2022 **Childcare:** Family-friendly employer connections and support services\n\u2022 **Language Support:** Multilingual resources and ESL programs\n\n\n\n**\ud83e\udd1d ACT Partner Network Resources (CEA.md Validated):**\n\n**Workforce Development Partners:**\n\u2022 **MassHire Career Centers:** Available in all Gateway Cities with wraparound services\n\u2022 **Bristol Community College:** Certificate programs in Fall River/New Bedford area\n\u2022 **UMass Lowell:** Professional development and workforce training programs\n\n**Employer Partners:**\n\u2022 **Greentown Labs:** Climate tech startup opportunities and innovation networking\n\u2022 **SouthCoast Wind:** Offshore wind engineering and marine operations\n\u2022 **Abode Energy Management:** Technical roles and energy efficiency projects\n\u2022 **Nexamp:** Data science and analytics positions in clean energy\n\u2022 **HomeWorks Energy:** Customer service and multilingual outreach roles\n\n**Training and Certification:**\n\u2022 NABCEP Solar Installation Professional certification\n\u2022 BPI Building Analyst Professional certification  \n\u2022 OSHA safety training and compliance certification\n\u2022 EPA environmental monitoring and remediation training\n\n**Contact Information:**\n\u2022 **MassHire Career Centers:** (877) 872-2804 - Available in all Gateway Cities\n\u2022 **Bristol Community College:** (508) 678-2811 - Fall River/New Bedford\n\u2022 **UMass Lowell:** (978) 934-4000 - Lowell area workforce development\n\n\n**\ud83d\udcac Enhanced Support Promise:**\nWith our new intelligence capabilities, we provide:\n- Multi-identity recognition for complex backgrounds\n- Psychological awareness and emotional support\n- Intersectional barrier analysis  \n- Coordinated specialist approach when needed\n- Memory retention for personalized follow-up\n\nLet me know more details, and I'll ensure you receive exceptional, coordinated support!\n",
+            "metadata": {
+              "agent_type": "pendo_supervisor",
+              "agent_name": "Pendo",
+              "routing_needed": true,
+              "specialists_available": {
+                "marcus_veteran_specialist": "Military veterans transitioning to clean energy careers",
+                "liv_international_specialist": "International professionals navigating credential recognition",
+                "miguel_environmental_justice_specialist": "Environmental justice advocates and community organizers",
+                "jasmine_resume_specialist": "Resume analysis and career pathway optimization"
+              },
+              "intelligence_level": 16.9,
+              "psychological_assessment": {
+                "transition_anxiety": 0.0,
+                "confidence_level": 0.5,
+                "motivation_level": 0.5,
+                "support_needs": []
+              },
+              "cea_mission": "Address 39% clean energy worker information gap through specialized guidance"
+            }
+          },
+          "analysis": {
+            "accurate": false,
+            "accuracy_score": 0.29166666666666663,
+            "translations_found": [
+              "resource management"
+            ],
+            "issues": [
+              "Low accuracy score: 0.29"
+            ]
+          },
+          "accuracy_score": 0.29166666666666663,
+          "status": "FAILED"
+        }
+      ],
+      "average_accuracy": 0.2708333333333333,
+      "translation_success_rate": 0.0
+    },
+    "job_recommendations": {
+      "job_recommendation_tests": [
+        {
+          "scenario": {
+            "background": "Project Manager with 5 years experience",
+            "location": "Massachusetts",
+            "query": "Find me project management jobs in renewable energy",
+            "expected_elements": [
+              "job titles",
+              "companies",
+              "salary ranges",
+              "locations",
+              "requirements"
+            ],
+            "quality_criteria": [
+              "relevance",
+              "specificity",
+              "actionability",
+              "completeness"
+            ]
+          },
+          "response": {
+            "content": "\n\n**\ud83c\udfaf Pendo - Massachusetts Climate Economy Enhanced Career Navigation Coordinator (CEA.md Enhanced)**\n\n*Addressing the information gap crisis affecting 39% of clean energy workers*\n*Connecting you to the 38,100 clean energy jobs needed by 2030*\n*Gateway Cities Focus: Brockton, Fall River/New Bedford, Lowell/Lawrence*\n\n\nWelcome to the Massachusetts Climate Economy Assistant! I'm Pendo, your Enhanced Lead Program Manager.\n\n**\ud83e\udde0 Intelligence Analysis:** Processed your query with 16.9/10.0 intelligence level\n\n**\ud83c\udfaf Quick Assessment Questions:**\nTo ensure exceptional guidance tailored to your specific needs:\n\n1. **Career Background:** What's your current profession or most recent work experience?\n2. **Location Preference:** Are you interested in opportunities in Brockton, Fall River/New Bedford, or Lowell/Lawrence?\n3. **Transition Goals:** What draws you to clean energy careers specifically?\n4. **Timeframe:** What's your target timeline for making this transition?\n5. **Biggest Concerns:** What barriers or challenges are you most worried about?\n\n**\ud83c\udf1f Our Enhanced Specialist Team:**\n\u2022 **Marcus** - Military veterans with sophisticated transition support\n\u2022 **Liv** - International professionals with credential recognition expertise  \n\u2022 **Miguel** - Environmental justice advocates with community-centered approach\n\u2022 **Jasmine** - Career pathway optimization with skills analysis\n\n\n**\ud83d\udea7 Barrier Assessment & Solutions (CEA.md Informed):**\n\n**Common Information Barriers:**\n\u2022 **39% of clean energy workers** lack basic career information\n\u2022 **47% of women** face additional information access challenges\n\u2022 **50% of Black respondents** report insufficient career guidance\n\u2022 **Geographic barriers** in Gateway Cities limit job awareness\n\n**ACT Partner Solutions:**\n\u2022 **MassHire Career Centers:** Job coaching with wraparound services\n\u2022 **Community Colleges:** Certificate programs with employer partnerships\n\u2022 **Digital Access:** Technology lending and digital literacy programs\n\u2022 **Transportation:** Shuttle services and transit assistance programs\n\u2022 **Childcare:** Family-friendly employer connections and support services\n\u2022 **Language Support:** Multilingual resources and ESL programs\n\n\n\n**\ud83e\udd1d ACT Partner Network Resources (CEA.md Validated):**\n\n**Workforce Development Partners:**\n\u2022 **MassHire Career Centers:** Available in all Gateway Cities with wraparound services\n\u2022 **Bristol Community College:** Certificate programs in Fall River/New Bedford area\n\u2022 **UMass Lowell:** Professional development and workforce training programs\n\n**Employer Partners:**\n\u2022 **Greentown Labs:** Climate tech startup opportunities and innovation networking\n\u2022 **SouthCoast Wind:** Offshore wind engineering and marine operations\n\u2022 **Abode Energy Management:** Technical roles and energy efficiency projects\n\u2022 **Nexamp:** Data science and analytics positions in clean energy\n\u2022 **HomeWorks Energy:** Customer service and multilingual outreach roles\n\n**Training and Certification:**\n\u2022 NABCEP Solar Installation Professional certification\n\u2022 BPI Building Analyst Professional certification  \n\u2022 OSHA safety training and compliance certification\n\u2022 EPA environmental monitoring and remediation training\n\n**Contact Information:**\n\u2022 **MassHire Career Centers:** (877) 872-2804 - Available in all Gateway Cities\n\u2022 **Bristol Community College:** (508) 678-2811 - Fall River/New Bedford\n\u2022 **UMass Lowell:** (978) 934-4000 - Lowell area workforce development\n\n\n**\ud83d\udcac Enhanced Support Promise:**\nWith our new intelligence capabilities, we provide:\n- Multi-identity recognition for complex backgrounds\n- Psychological awareness and emotional support\n- Intersectional barrier analysis  \n- Coordinated specialist approach when needed\n- Memory retention for personalized follow-up\n\nLet me know more details, and I'll ensure you receive exceptional, coordinated support!\n",
+            "metadata": {
+              "agent_type": "pendo_supervisor",
+              "agent_name": "Pendo",
+              "routing_needed": true,
+              "specialists_available": {
+                "marcus_veteran_specialist": "Military veterans transitioning to clean energy careers",
+                "liv_international_specialist": "International professionals navigating credential recognition",
+                "miguel_environmental_justice_specialist": "Environmental justice advocates and community organizers",
+                "jasmine_resume_specialist": "Resume analysis and career pathway optimization"
+              },
+              "intelligence_level": 16.9,
+              "psychological_assessment": {
+                "transition_anxiety": 0.0,
+                "confidence_level": 0.5,
+                "motivation_level": 0.5,
+                "support_needs": []
+              },
+              "cea_mission": "Address 39% clean energy worker information gap through specialized guidance"
+            }
+          },
+          "analysis": {
+            "high_quality": true,
+            "quality_score": 1.0,
+            "elements_found": [
+              "job titles",
+              "companies",
+              "salary ranges",
+              "locations",
+              "requirements"
+            ],
+            "issues": []
+          },
+          "quality_score": 1.0,
+          "status": "PASSED"
+        },
+        {
+          "scenario": {
+            "background": "Recent engineering graduate",
+            "location": "Boston area",
+            "query": "What entry-level clean energy jobs are available for new engineers?",
+            "expected_elements": [
+              "entry-level positions",
+              "training opportunities",
+              "career growth"
+            ],
+            "quality_criteria": [
+              "entry-level focus",
+              "development opportunities",
+              "realistic expectations"
+            ]
+          },
+          "response": {
+            "content": "\n\n**\ud83c\udfaf Pendo - Massachusetts Climate Economy Enhanced Career Navigation Coordinator (CEA.md Enhanced)**\n\n*Addressing the information gap crisis affecting 39% of clean energy workers*\n*Connecting you to the 38,100 clean energy jobs needed by 2030*\n*Gateway Cities Focus: Brockton, Fall River/New Bedford, Lowell/Lawrence*\n\n\nWelcome to the Massachusetts Climate Economy Assistant! I'm Pendo, your Enhanced Lead Program Manager.\n\n**\ud83e\udde0 Intelligence Analysis:** Processed your query with 16.9/10.0 intelligence level\n\n**\ud83c\udfaf Quick Assessment Questions:**\nTo ensure exceptional guidance tailored to your specific needs:\n\n1. **Career Background:** What's your current profession or most recent work experience?\n2. **Location Preference:** Are you interested in opportunities in Brockton, Fall River/New Bedford, or Lowell/Lawrence?\n3. **Transition Goals:** What draws you to clean energy careers specifically?\n4. **Timeframe:** What's your target timeline for making this transition?\n5. **Biggest Concerns:** What barriers or challenges are you most worried about?\n\n**\ud83c\udf1f Our Enhanced Specialist Team:**\n\u2022 **Marcus** - Military veterans with sophisticated transition support\n\u2022 **Liv** - International professionals with credential recognition expertise  \n\u2022 **Miguel** - Environmental justice advocates with community-centered approach\n\u2022 **Jasmine** - Career pathway optimization with skills analysis\n\n\n**\ud83d\udea7 Barrier Assessment & Solutions (CEA.md Informed):**\n\n**Common Information Barriers:**\n\u2022 **39% of clean energy workers** lack basic career information\n\u2022 **47% of women** face additional information access challenges\n\u2022 **50% of Black respondents** report insufficient career guidance\n\u2022 **Geographic barriers** in Gateway Cities limit job awareness\n\n**ACT Partner Solutions:**\n\u2022 **MassHire Career Centers:** Job coaching with wraparound services\n\u2022 **Community Colleges:** Certificate programs with employer partnerships\n\u2022 **Digital Access:** Technology lending and digital literacy programs\n\u2022 **Transportation:** Shuttle services and transit assistance programs\n\u2022 **Childcare:** Family-friendly employer connections and support services\n\u2022 **Language Support:** Multilingual resources and ESL programs\n\n\n\n**\ud83e\udd1d ACT Partner Network Resources (CEA.md Validated):**\n\n**Workforce Development Partners:**\n\u2022 **MassHire Career Centers:** Available in all Gateway Cities with wraparound services\n\u2022 **Bristol Community College:** Certificate programs in Fall River/New Bedford area\n\u2022 **UMass Lowell:** Professional development and workforce training programs\n\n**Employer Partners:**\n\u2022 **Greentown Labs:** Climate tech startup opportunities and innovation networking\n\u2022 **SouthCoast Wind:** Offshore wind engineering and marine operations\n\u2022 **Abode Energy Management:** Technical roles and energy efficiency projects\n\u2022 **Nexamp:** Data science and analytics positions in clean energy\n\u2022 **HomeWorks Energy:** Customer service and multilingual outreach roles\n\n**Training and Certification:**\n\u2022 NABCEP Solar Installation Professional certification\n\u2022 BPI Building Analyst Professional certification  \n\u2022 OSHA safety training and compliance certification\n\u2022 EPA environmental monitoring and remediation training\n\n**Contact Information:**\n\u2022 **MassHire Career Centers:** (877) 872-2804 - Available in all Gateway Cities\n\u2022 **Bristol Community College:** (508) 678-2811 - Fall River/New Bedford\n\u2022 **UMass Lowell:** (978) 934-4000 - Lowell area workforce development\n\n\n**\ud83d\udcac Enhanced Support Promise:**\nWith our new intelligence capabilities, we provide:\n- Multi-identity recognition for complex backgrounds\n- Psychological awareness and emotional support\n- Intersectional barrier analysis  \n- Coordinated specialist approach when needed\n- Memory retention for personalized follow-up\n\nLet me know more details, and I'll ensure you receive exceptional, coordinated support!\n",
+            "metadata": {
+              "agent_type": "pendo_supervisor",
+              "agent_name": "Pendo",
+              "routing_needed": true,
+              "specialists_available": {
+                "marcus_veteran_specialist": "Military veterans transitioning to clean energy careers",
+                "liv_international_specialist": "International professionals navigating credential recognition",
+                "miguel_environmental_justice_specialist": "Environmental justice advocates and community organizers",
+                "jasmine_resume_specialist": "Resume analysis and career pathway optimization"
+              },
+              "intelligence_level": 16.9,
+              "psychological_assessment": {
+                "transition_anxiety": 0.0,
+                "confidence_level": 0.5,
+                "motivation_level": 0.5,
+                "support_needs": []
+              },
+              "cea_mission": "Address 39% clean energy worker information gap through specialized guidance"
+            }
+          },
+          "analysis": {
+            "high_quality": false,
+            "quality_score": 0.5555555555555555,
+            "elements_found": [
+              "training opportunities",
+              "career growth"
+            ],
+            "issues": [
+              "Low quality score: 0.56"
+            ]
+          },
+          "quality_score": 0.5555555555555555,
+          "status": "FAILED"
+        },
+        {
+          "scenario": {
+            "background": "Career changer from finance",
+            "location": "Western Massachusetts",
+            "query": "How can I transition from finance to sustainable investing?",
+            "expected_elements": [
+              "transition pathways",
+              "relevant positions",
+              "skill transferability"
+            ],
+            "quality_criteria": [
+              "transition guidance",
+              "skill acknowledgment",
+              "pathway clarity"
+            ]
+          },
+          "response": {
+            "content": "\n\n**\ud83c\udfaf Pendo - Massachusetts Climate Economy Enhanced Routing Coordinator (CEA.md Enhanced)**\n\n*Addressing the information gap crisis affecting 39% of clean energy workers*\n*Connecting you to the 38,100 clean energy jobs needed by 2030*\n*Gateway Cities Focus: Brockton, Fall River/New Bedford, Lowell/Lawrence*\n\n\n**\ud83e\udde0 Enhanced Intelligence Analysis Complete**\n- Intelligence Level: 17.8/10.0\n- Primary Identity: Career Transition\n- Confidence Level: 0.3 if identities else 0.8\n\n**\ud83c\udfaf Perfect Match Identified!**\nBased on your message, I'm connecting you with **Jasmine**, who can provide exceptional specialized guidance for your career transition background.\n\n**\ud83d\udd04 Routing to Jasmine:**\nJasmine will provide:\n\u2022 Enhanced intelligence-driven analysis of your background and goals\n\u2022 Sophisticated tool selection for your specific needs\n\u2022 Memory retention for personalized follow-up guidance\n\u2022 Direct connection to the 38,100 clean energy jobs pipeline\n\u2022 Comprehensive barrier analysis and solution strategies\n\n**\u23f1\ufe0f What to Expect (Enhanced Support):**\n\u2022 Intelligent skills analysis with psychological awareness\n\u2022 Context-aware opportunity matching\n\u2022 Progressive training recommendations\n\u2022 Gateway Cities connections and resources\n\u2022 90-day action plan with milestone tracking\n\u2022 Case-based learning from successful similar transitions\n\n\n**\ud83d\udea7 Barrier Assessment & Solutions (CEA.md Informed):**\n\n**Common Information Barriers:**\n\u2022 **39% of clean energy workers** lack basic career information\n\u2022 **47% of women** face additional information access challenges\n\u2022 **50% of Black respondents** report insufficient career guidance\n\u2022 **Geographic barriers** in Gateway Cities limit job awareness\n\n**ACT Partner Solutions:**\n\u2022 **MassHire Career Centers:** Job coaching with wraparound services\n\u2022 **Community Colleges:** Certificate programs with employer partnerships\n\u2022 **Digital Access:** Technology lending and digital literacy programs\n\u2022 **Transportation:** Shuttle services and transit assistance programs\n\u2022 **Childcare:** Family-friendly employer connections and support services\n\u2022 **Language Support:** Multilingual resources and ESL programs\n\n\n**Intelligence Enhancement:** Your interaction is being processed with advanced cognitive capabilities for exceptional results.\n\n*Transferring you to Jasmine with enhanced context now...*\n",
+            "metadata": {
+              "agent_type": "pendo_supervisor",
+              "agent_name": "Pendo",
+              "routing_decision": "jasmine_resume_specialist",
+              "specialist_assigned": "Jasmine",
+              "intelligence_level": 17.8,
+              "identities_detected": 1,
+              "psychological_state": {
+                "transition_anxiety": 0.0,
+                "confidence_level": 0.5,
+                "motivation_level": 0.5,
+                "support_needs": []
+              },
+              "cea_mission": "Address 39% clean energy worker information gap through specialized guidance"
+            }
+          },
+          "analysis": {
+            "high_quality": false,
+            "quality_score": 0.5555555555555555,
+            "elements_found": [
+              "transition pathways",
+              "skill transferability"
+            ],
+            "issues": [
+              "Low quality score: 0.56"
+            ]
+          },
+          "quality_score": 0.5555555555555555,
+          "status": "FAILED"
+        }
+      ],
+      "average_quality": 0.7037037037037036,
+      "recommendation_success_rate": 0.3333333333333333
+    }
+  },
+  "overall_metrics": {
+    "routing_success_rate": 1.0,
+    "tool_success_rate": 0.0,
+    "persona_success_rate": 1.0,
+    "translation_success_rate": 0.0,
+    "recommendation_success_rate": 0.3333333333333333
+  },
+  "system_health_score": 0.4666666666666667
+}

@@ -1,28 +1,7 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 
-async function checkBackendHealth(): Promise<{ isHealthy: boolean; error?: string }> {
-  try {
-    const response = await fetch('http://localhost:8000/health', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      // Set a timeout to avoid long waits if the service is down
-      signal: AbortSignal.timeout(5000),
-    });
-
-    if (!response.ok) {
-      return { isHealthy: false, error: 'Backend health check failed' };
-    }
-
-    return { isHealthy: true };
-  } catch {
-    return { isHealthy: false, error: 'Failed to connect to Python backend' };
-  }
-}
-
-export async function POST(req: Request) {
+export async function POST(request: NextRequest) {
   try {
     // Verify authentication
     const supabase = await createClient();
@@ -35,124 +14,64 @@ export async function POST(req: Request) {
       );
     }
 
-    // Check if backend is healthy
-    const healthCheck = await checkBackendHealth();
-    if (!healthCheck.isHealthy) {
+    const body = await request.json();
+    
+    // Transform legacy request format to v1 format
+    const v1Request = {
+      query: body.content || body.query,
+      context: {
+        legacy_mode: true,
+        original_context: body.context || 'general',
+        user_role: body.role || 'user',
+        resume_data: body.resumeData,
+        use_resume_rag: body.useResumeRAG || false,
+        file_id: body.fileId
+      },
+      stream: false
+    };
+
+    // Forward to v1 endpoint
+    const v1Response = await fetch(`${request.url.replace('/api/chat', '/api/v1/interactive-chat')}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': request.headers.get('Authorization') || '',
+        'Cookie': request.headers.get('Cookie') || ''
+      },
+      body: JSON.stringify(v1Request)
+    });
+
+    if (!v1Response.ok) {
+      const errorText = await v1Response.text();
       return NextResponse.json(
-        { error: healthCheck.error || 'Python backend is not properly configured.' },
-        { status: 503 }
+        { error: `Legacy chat proxy failed: ${errorText}` },
+        { status: v1Response.status }
       );
     }
 
-    const body = await req.json();
+    const v1Data = await v1Response.json();
     
-    // Get resume data from the request body if provided
-    let resumeData = body.resumeData || null;
-    
-    // If we have fileId but not resumeData, get the resume data from Supabase
-    if (!resumeData && body.fileId) {
-      const { data: resume, error: resumeError } = await supabase
-        .from("resumes")
-        .select("*")
-        .eq("id", body.fileId)
-        .eq("user_id", user.id)
-        .single();
-      
-      if (resumeError) {
-        console.error("Error fetching resume:", resumeError);
-      } else {
-        resumeData = resume;
+    // Transform v1 response back to legacy format for compatibility
+    const legacyResponse = {
+      content: v1Data.content,
+      role: 'assistant',
+      sources: v1Data.sources || [],
+      metadata: {
+        session_id: v1Data.session_id,
+        workflow_state: v1Data.workflow_state,
+        migrated_to_v1: true
       }
-    }
-    
-    // Add user ID to resume data if available
-    if (resumeData && !resumeData.user_id) {
-      resumeData.user_id = user.id;
-    }
+    };
 
-    try {
-      // Determine which backend endpoint to use based on RAG toggle
-      const endpoint = body.useResumeRAG && resumeData 
-        ? 'http://localhost:8000/api/chat-with-resume'
-        : 'http://localhost:8000/api/chat';
-      
-      // Call Python backend with timeout
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+    return NextResponse.json(legacyResponse);
 
-      // Prepare request body based on endpoint
-      let requestBody = {};
-      
-      if (body.useResumeRAG && resumeData) {
-        // For RAG mode, use the chat-with-resume endpoint
-        requestBody = {
-          query: body.content,
-          user_id: resumeData.user_id || user.id
-        };
-      } else {
-        // For normal chat mode
-        requestBody = {
-          content: body.content,
-          role: 'user',
-          context: body.context || 'general',
-          resumeData: resumeData, // Pass resume data if available
-          useResumeRAG: body.useResumeRAG || false
-        };
-      }
-
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestBody),
-        signal: controller.signal
-      });
-
-      clearTimeout(timeoutId);
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Python backend error:', errorText);
-        return NextResponse.json(
-          { error: `Backend error: ${errorText}` },
-          { status: response.status }
-        );
-      }
-
-      const data = await response.json();
-      
-      // Format response based on the endpoint used
-      if (body.useResumeRAG && resumeData) {
-        // Format response from chat-with-resume endpoint
-        return NextResponse.json({
-          content: data.answer,
-          role: 'assistant',
-          sources: data.sources || []
-        });
-      } else {
-        // Return response from regular chat endpoint
-        return NextResponse.json(data);
-      }
-    } catch (fetchError) {
-      console.error('Fetch error:', fetchError);
-      
-      if (fetchError instanceof Error && fetchError.name === 'AbortError') {
-        return NextResponse.json(
-          { error: 'Request timed out. Please ensure the Python backend is running: Run `python python_backend/main.py` in your terminal.' },
-          { status: 504 }
-        );
-      }
-      
-      return NextResponse.json(
-        { error: 'Failed to connect to Python backend. Please ensure it is running on port 8000.' },
-        { status: 502 }
-      );
-    }
   } catch (error) {
-    console.error('Error in chat API:', error);
+    console.error('Error in legacy chat proxy:', error);
     return NextResponse.json(
-      { error: 'Failed to process chat message' },
+      { 
+        error: 'Failed to process chat message via legacy endpoint. Please use /api/v1/interactive-chat directly.',
+        migration_notice: 'This endpoint is deprecated. Please update to use /api/v1/interactive-chat'
+      },
       { status: 500 }
     );
   }

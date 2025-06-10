@@ -1,43 +1,43 @@
-import type { Metadata } from "next";
-import { Geist } from "next/font/google";
-import { ThemeProvider } from "next-themes";
+import './globals.css'
+import { ThemeProvider } from 'next-themes'
 import { Toaster } from "@/components/ui/toaster";
-import "./globals.css";
+import { ChatProvider } from '@/contexts/ChatContext'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
-  : "http://localhost:3000";
+  : 'http://localhost:3000'
 
-export const metadata: Metadata = {
+export const metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "Next.js and Supabase Starter Kit",
-  description: "The fastest way to build apps with Next.js and Supabase",
-};
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  display: "swap",
-  subsets: ["latin"],
-});
+  title: 'Climate Economy Assistant | Find Climate Jobs',
+  description: 'AI-powered platform connecting job seekers with climate opportunities',
+}
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.className} antialiased`}>
+    <html lang="en" className="font-sf-pro" suppressHydrationWarning>
+      <body className="bg-background text-foreground">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <ErrorBoundary>
+            <ChatProvider>
+              <main className="min-h-screen flex flex-col items-center">
+                {children}
+              </main>
+            </ChatProvider>
+          </ErrorBoundary>
           <Toaster />
         </ThemeProvider>
       </body>
     </html>
-  );
+  )
 }

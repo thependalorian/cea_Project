@@ -1,107 +1,56 @@
-import { createAdminClient } from "@/lib/supabase/admin";
 import { NextResponse } from "next/server";
+import { createClient } from "@/lib/supabase/server";
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
-    // Use admin client to bypass RLS
-    const adminClient = createAdminClient();
+    const supabase = await createClient();
     
-    // Check table schema for resumes
-    const { data: tableInfo, error: tableError } = await adminClient.rpc(
-      'execute_sql',
-      {
-        sql_query: `
-          -- Get table schema for resumes
-          SELECT column_name, data_type, is_nullable
-          FROM information_schema.columns
-          WHERE table_name = 'resumes'
-          ORDER BY ordinal_position;
-        `
-      }
-    );
+    // Check for essential tables
+    const tables = [
+      'users',
+      'resumes', 
+      'jobs',
+      'education_programs',
+      'partners',
+      'knowledge_base'
+    ];
     
-    // Check RLS policies for resumes
-    const { data: policiesInfo, error: policiesError } = await adminClient.rpc(
-      'execute_sql',
-      {
-        sql_query: `
-          -- Get RLS policies for resumes
-          SELECT
-            policyname,
-            permissive,
-            cmd,
-            qual,
-            with_check
-          FROM pg_policies
-          WHERE tablename = 'resumes';
-        `
-      }
-    );
-    
-    // Check storage policies
-    const { data: storagePolicies, error: storagePoliciesError } = await adminClient.rpc(
-      'execute_sql',
-      {
-        sql_query: `
-          -- Get policies for storage.objects
-          SELECT
-            policyname,
-            permissive,
-            cmd,
-            qual,
-            with_check
-          FROM pg_policies
-          WHERE tablename = 'objects' AND schemaname = 'storage';
-        `
-      }
-    );
-    
-    // Check if bucket exists
-    const { data: buckets, error: bucketsError } = await adminClient
-      .from('storage.buckets')
-      .select('id, name')
-      .eq('name', 'user-documents');
-    
-    // Create a test row to check if admin bypass works
-    const testId = Date.now().toString();
-    const { data: testInsert, error: testInsertError } = await adminClient
-      .from('resumes')
-      .insert({
-        user_id: 'test-' + testId,
-        file_path: 'test-path',
-        file_name: 'test.pdf',
-        file_size: 1000,
-        file_type: 'application/pdf',
-        context: 'test',
+    const tableStatus = await Promise.all(
+      tables.map(async (table) => {
+        try {
+          const { data, error } = await supabase
+            .from(table)
+            .select('*')
+            .limit(1);
+          
+          return {
+            table,
+            status: error ? 'error' : 'ok',
+            error: error?.message,
+            hasData: data && data.length > 0
+          };
+        } catch (err) {
+          return {
+            table,
+            status: 'error',
+            error: String(err),
+            hasData: false
+          };
+        }
       })
-      .select()
-      .single();
+    );
     
-    // Clean up the test row
-    if (testInsert) {
-      await adminClient
-        .from('resumes')
-        .delete()
-        .eq('id', testInsert.id);
-    }
+    const allTablesOk = tableStatus.every(t => t.status === 'ok');
     
     return NextResponse.json({
-      tableSchema: tableInfo,
-      rlsPolicies: policiesInfo,
-      storagePolicies: storagePolicies,
-      buckets: buckets,
-      testInsert: testInsertError ? { error: testInsertError } : { success: true },
-      errors: {
-        tableError: tableError || null,
-        policiesError: policiesError || null,
-        storagePoliciesError: storagePoliciesError || null,
-        bucketsError: bucketsError || null,
-      }
+      status: allTablesOk ? 'ok' : 'issues',
+      tables: tableStatus,
+      message: allTablesOk ? 'All tables accessible' : 'Some tables have issues'
     });
   } catch (error) {
     console.error("Error checking tables:", error);
     return NextResponse.json(
-      { error: "Internal server error", details: error },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }

@@ -5,9 +5,9 @@ import { createClient } from '@/lib/supabase/client';
 export type UserRole = 'user' | 'partner' | 'admin';
 
 const roleBasedRoutes = {
-  user: '/protected/job-seekers',
-  partner: '/protected/partners',
-  admin: '/protected/admin'
+  user: '/job-seekers',
+  partner: '/partners',
+  admin: '/admin'
 };
 
 export function useRoleNavigation() {
