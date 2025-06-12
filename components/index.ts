@@ -29,4 +29,8 @@ export * from './search'
 export * from './layout'
 
 // === Tutorial & Onboarding ===
-export * from './tutorial' 
+// export * from './tutorial' - REMOVED: Tutorial directory doesn't exist
+
+export { ErrorBoundary } from './ErrorBoundary';
+export { default as FeedbackWidget } from './FeedbackWidget';
+export { ClimateAdvisoryChat } from './ClimateAdvisoryChat'; 

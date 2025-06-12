@@ -1,3 +1,9 @@
+/**
+ * Partner Sidebar - Climate Economy Assistant  
+ * Navigation sidebar for partner interface with resource management
+ * Location: components/partners/PartnerSidebar.tsx
+ */
+
 'use client'
 
 import Link from 'next/link'
@@ -6,195 +12,307 @@ import { cn } from '@/lib/utils'
 import { 
   LayoutDashboard, 
   Briefcase, 
+  GraduationCap, 
   BookOpen, 
-  FileText, 
-  Users, 
-  BarChart3, 
   Settings, 
   Building2,
+  FileText,
+  BarChart3,
+  Users,
+  CheckCircle,
+  Clock,
   Globe,
-  Calendar,
-  MessageSquare
+  Phone,
+  Mail,
+  HelpCircle,
+  Plus
 } from 'lucide-react'
 
 interface PartnerSidebarProps {
-  partner: {
-    id: string
-    organization_name: string
-    organization_type: string
-    climate_focus: string[]
-    status: string
-    verified: boolean
-    partnership_level: string
-  }
+  profile: {
+    id: string;
+    organization_name: string;
+    organization_type: string;
+    verified: boolean;
+    status: string;
+    total_jobs_posted: number;
+    total_programs_created: number;
+    total_resources_shared: number;
+  };
 }
 
-export default function PartnerSidebar({ partner }: PartnerSidebarProps) {
-  const pathname = usePathname()
+type NavigationItem = {
+  href: string;
+  icon: any;
+  label: string;
+  show: boolean;
+  count?: number;
+};
 
-  const navigationItems = [
+export function PartnerSidebar({ profile }: PartnerSidebarProps) {
+  const pathname = usePathname();
+
+  const navigationSections: { title: string; items: NavigationItem[] }[] = [
     {
       title: 'Dashboard',
-      href: '/partners/dashboard',
-      icon: LayoutDashboard,
-      description: 'Overview and metrics'
+      items: [
+        { 
+          href: '/partners',
+          icon: LayoutDashboard, 
+          label: 'Overview',
+          show: true
+        },
+      ]
     },
     {
-      title: 'Jobs Management',
-      href: '/partners/jobs',
-      icon: Briefcase,
-      description: 'Post and manage job listings'
+      title: 'Resource Management',
+      items: [
+        { 
+          href: '/partners/jobs',
+          icon: Briefcase,
+          label: 'Job Listings',
+          show: true,
+          count: profile.total_jobs_posted
+        },
+        { 
+          href: '/partners/education',
+          icon: GraduationCap, 
+          label: 'Education Programs',
+          show: true,
+          count: profile.total_programs_created
+        },
+        { 
+          href: '/partners/knowledge',
+          icon: BookOpen, 
+          label: 'Knowledge Resources',
+          show: true,
+          count: profile.total_resources_shared
+        },
+      ]
     },
     {
-      title: 'Education Programs',
-      href: '/partners/education',
-      icon: BookOpen,
-      description: 'Manage education offerings'
+      title: 'Analytics & Insights',
+      items: [
+        { 
+          href: '/partners/analytics',
+          icon: BarChart3,
+          label: 'Performance Analytics',
+          show: profile.verified
+        },
+        { 
+          href: '/partners/applications',
+          icon: Users, 
+          label: 'Job Applications',
+          show: profile.verified
+        },
+      ]
     },
     {
-      title: 'Resources',
-      href: '/partners/resources',
-      icon: FileText,
-      description: 'Share partner resources'
+      title: 'Organization',
+      items: [
+        { 
+          href: '/partners/profile',
+          icon: Building2,
+          label: 'Organization Profile',
+          show: true
+        },
+        { 
+          href: '/partners/settings',
+          icon: Settings, 
+          label: 'Account Settings',
+          show: true
+        },
+      ]
     },
     {
-      title: 'Candidates',
-      href: '/partners/candidates',
-      icon: Users,
-      description: 'View interested candidates'
+      title: 'Support',
+      items: [
+        { 
+          href: '/partners/help',
+          icon: HelpCircle, 
+          label: 'Help & Documentation',
+          show: true
+        },
+      ]
     },
-    {
-      title: 'Analytics',
-      href: '/partners/analytics',
-      icon: BarChart3,
-      description: 'Performance insights'
-    },
-    {
-      title: 'Events',
-      href: '/partners/events',
-      icon: Calendar,
-      description: 'Manage events and workshops'
-    },
-    {
-      title: 'Messages',
-      href: '/partners/messages',
-      icon: MessageSquare,
-      description: 'Communication center'
-    },
-    {
-      title: 'Profile',
-      href: '/partners/profile',
-      icon: Building2,
-      description: 'Organization settings'
-    },
-    {
-      title: 'Settings',
-      href: '/partners/settings',
-      icon: Settings,
-      description: 'Account preferences'
+  ];
+
+  const getOrganizationTypeColor = (type: string) => {
+    switch (type) {
+      case 'employer': return 'text-spring-green'
+      case 'educational_institution': return 'text-seafoam-blue'
+      case 'nonprofit': return 'text-moss-green'
+      case 'government_agency': return 'text-midnight-forest'
+      default: return 'text-spring-green'
     }
-  ]
+  }
+
+  const getOrganizationTypeLabel = (type: string) => {
+    switch (type) {
+      case 'employer': return 'Employer'
+      case 'educational_institution': return 'Educational Institution'
+      case 'nonprofit': return 'Nonprofit Organization'
+      case 'government_agency': return 'Government Agency'
+      default: return 'Organization'
+    }
+  }
 
   return (
-    <div className="w-64 bg-card border-r border-border min-h-screen">
+    <div className="w-64 bg-white border-r border-sand-gray/20 min-h-screen">
       <div className="p-6">
+        {/* Organization Summary */}
         <div className="mb-8">
-          <h2 className="text-lg font-semibold">Partner Portal</h2>
-          <p className="text-sm text-muted-foreground">
-            {partner.organization_name}
-          </p>
+          <div className="flex items-center space-x-3 mb-4">
+            <div className="w-10 h-10 bg-gradient-to-br from-spring-green to-seafoam-blue rounded-xl flex items-center justify-center">
+              <span className="text-white font-helvetica font-bold text-sm">
+                {profile.organization_name.charAt(0).toUpperCase()}
+              </span>
+            </div>
+            <div>
+              <h3 className="font-helvetica font-medium text-midnight-forest text-sm">
+                {profile.organization_name}
+              </h3>
+              <p className="text-xs text-midnight-forest/60 font-helvetica">
+                {getOrganizationTypeLabel(profile.organization_type)}
+              </p>
+            </div>
+          </div>
+          
+          {/* Verification Status Badge */}
+          <div className={cn(
+            "inline-flex items-center px-3 py-1 rounded-full text-xs font-helvetica font-medium",
+            profile.verified 
+              ? "bg-green-100 text-green-800" 
+              : "bg-amber-100 text-amber-800"
+          )}>
+            {profile.verified ? (
+              <>
+                <CheckCircle className="w-3 h-3 mr-1" />
+                Verified Partner
+              </>
+            ) : (
+              <>
+                <Clock className="w-3 h-3 mr-1" />
+                Pending Verification
+              </>
+            )}
+          </div>
         </div>
 
-        <nav className="space-y-2">
-          {navigationItems.map((item) => {
-            const isActive = pathname === item.href
-            const Icon = item.icon
+        {/* Navigation */}
+        <nav className="space-y-6">
+          {navigationSections.map((section) => {
+            const visibleItems = section.items.filter(item => item.show);
+            if (visibleItems.length === 0) return null;
             
             return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  'flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors group',
-                  isActive
-                    ? 'bg-primary text-primary-foreground'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-accent'
-                )}
-              >
-                <Icon className="h-5 w-5" />
-                <div className="flex-1">
-                  <div className="font-medium">{item.title}</div>
-                  <div className={cn(
-                    "text-xs opacity-0 group-hover:opacity-100 transition-opacity",
-                    isActive ? "text-primary-foreground/80" : "text-muted-foreground"
-                  )}>
-                    {item.description}
-                  </div>
+              <div key={section.title}>
+                <h4 className="text-xs font-helvetica font-semibold text-midnight-forest/70 uppercase tracking-wider mb-3">
+                  {section.title}
+                </h4>
+                <div className="space-y-1">
+                  {visibleItems.map((item) => {
+                    const isActive = pathname === item.href;
+                    const Icon = item.icon;
+                    
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className={cn(
+                          'flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-helvetica font-medium transition-all duration-200 group',
+                          isActive
+                            ? 'bg-spring-green text-white shadow-md'
+                            : 'text-midnight-forest/70 hover:text-midnight-forest hover:bg-sand-gray/30'
+                        )}
+                      >
+                        <div className="flex items-center space-x-3">
+                          <Icon className={cn(
+                            "w-4 h-4 transition-colors",
+                            isActive ? "text-white" : "text-midnight-forest/50 group-hover:text-midnight-forest"
+                          )} />
+                          <span>{item.label}</span>
+                        </div>
+                        
+                        {/* Show count badge if available */}
+                        {item.count && item.count > 0 && (
+                          <span className={cn(
+                            "px-2 py-0.5 text-xs rounded-full font-helvetica font-medium",
+                            isActive 
+                              ? "bg-white/20 text-white" 
+                              : "bg-spring-green/10 text-spring-green"
+                          )}>
+                            {item.count}
+                          </span>
+                        )}
+                      </Link>
+                    );
+                  })}
                 </div>
-              </Link>
+              </div>
             );
           })}
         </nav>
 
-        {/* Organization Info */}
-        <div className="mt-8 p-3 bg-muted/50 rounded-lg">
-          <div className="flex items-center space-x-2">
-            <Building2 className="h-4 w-4 text-muted-foreground" />
-            <div>
-              <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                Organization Type
-              </p>
-              <p className="text-sm font-semibold capitalize">
-                {partner.organization_type}
-              </p>
+        {/* Quick Actions */}
+        <div className="mt-8 p-4 bg-gradient-to-br from-sand-gray/10 to-spring-green/5 rounded-xl border border-sand-gray/20">
+          <h4 className="text-xs font-helvetica font-semibold text-midnight-forest/70 uppercase tracking-wider mb-3">
+            Quick Actions
+          </h4>
+          <div className="space-y-2">
+            <Link
+              href="/partners/jobs/new"
+              className="flex items-center space-x-2 text-xs text-midnight-forest/70 hover:text-spring-green transition-colors"
+            >
+              <Plus className="w-3 h-3" />
+              <span className="font-helvetica">Post New Job</span>
+            </Link>
+            <Link
+              href="/partners/education/new"
+              className="flex items-center space-x-2 text-xs text-midnight-forest/70 hover:text-spring-green transition-colors"
+            >
+              <Plus className="w-3 h-3" />
+              <span className="font-helvetica">Add Program</span>
+            </Link>
+            <Link
+              href="/partners/knowledge/new"
+              className="flex items-center space-x-2 text-xs text-midnight-forest/70 hover:text-spring-green transition-colors"
+            >
+              <Plus className="w-3 h-3" />
+              <span className="font-helvetica">Share Resource</span>
+            </Link>
+          </div>
+        </div>
+
+        {/* Resource Stats */}
+        <div className="mt-6 p-4 bg-gradient-to-br from-spring-green/5 to-seafoam-blue/5 rounded-xl border border-sand-gray/20">
+          <h4 className="text-xs font-helvetica font-semibold text-midnight-forest/70 uppercase tracking-wider mb-3">
+            Your Contributions
+          </h4>
+          <div className="space-y-2">
+            <div className="flex justify-between items-center">
+              <span className="text-xs text-midnight-forest/60 font-helvetica">Jobs Posted</span>
+              <span className="text-xs font-helvetica font-medium text-midnight-forest">
+                {profile.total_jobs_posted}
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-xs text-midnight-forest/60 font-helvetica">Programs Created</span>
+              <span className="text-xs font-helvetica font-medium text-midnight-forest">
+                {profile.total_programs_created}
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-xs text-midnight-forest/60 font-helvetica">Resources Shared</span>
+              <span className="text-xs font-helvetica font-medium text-midnight-forest">
+                {profile.total_resources_shared}
+              </span>
             </div>
           </div>
-          
-          {/* Verification Status */}
-          <div className="mt-3 flex items-center justify-between">
-            <div>
-              <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                Status
-              </p>
-              <div className="flex items-center gap-2">
-                <span className={`text-xs px-2 py-1 rounded ${
-                  partner.verified 
-                    ? 'bg-green-100 text-green-700' 
-                    : 'bg-yellow-100 text-yellow-700'
-                }`}>
-                  {partner.verified ? '✓ Verified' : 'Pending'}
-                </span>
-                <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded capitalize">
-                  {partner.partnership_level}
-                </span>
-              </div>
-            </div>
-          </div>
-          
-          {partner.climate_focus && partner.climate_focus.length > 0 && (
-            <div className="mt-3">
-              <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground mb-1">
-                Focus Areas
-              </p>
-              <div className="flex flex-wrap gap-1">
-                {partner.climate_focus.slice(0, 3).map((area, index) => (
-                  <span 
-                    key={index}
-                    className="text-xs bg-primary/10 text-primary px-2 py-1 rounded"
-                  >
-                    {area}
-                  </span>
-                ))}
-                {partner.climate_focus.length > 3 && (
-                  <span className="text-xs text-muted-foreground">
-                    +{partner.climate_focus.length - 3} more
-                  </span>
-                )}
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>
   );
-} 
+}
+
+export default PartnerSidebar; 

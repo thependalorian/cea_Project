@@ -13,27 +13,14 @@ export async function createClient() {
           return cookieStore.get(name)?.value
         },
         set(name: string, value: string, options: any) {
-          try {
-            cookieStore.set(name, value, options)
-          } catch (error) {
-            // The `set` method was called from a Server Component.
-            // This can be ignored if you have middleware refreshing
-            // user sessions.
-            console.log('Cookie set error in server component (expected):', error)
-          }
+          // In Server Components, cookies can only be set in Route Handlers or Server Actions
+          // We'll handle this gracefully by not attempting to set cookies in server components
+          return
         },
         remove(name: string, options: any) {
-          try {
-            cookieStore.set(name, '', {
-              ...options,
-              maxAge: 0,
-            })
-          } catch (error) {
-            // The `remove` method was called from a Server Component.
-            // This can be ignored if you have middleware refreshing
-            // user sessions.
-            console.log('Cookie remove error in server component (expected):', error)
-          }
+          // In Server Components, cookies can only be removed in Route Handlers or Server Actions
+          // We'll handle this gracefully by not attempting to remove cookies in server components
+          return
         },
       },
     }
@@ -76,4 +63,38 @@ export async function getUser() {
     console.error('🚨 SERVER: Error getting user:', error)
     return { user: null, error }
   }
+}
+
+// Alternative client for Route Handlers and Server Actions where cookies can be modified
+export async function createClientForRouteHandler() {
+  const cookieStore = await cookies()
+
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value
+        },
+        set(name: string, value: string, options: any) {
+          try {
+            cookieStore.set(name, value, options)
+          } catch (error) {
+            console.log('Cookie set error in route handler:', error)
+          }
+        },
+        remove(name: string, options: any) {
+          try {
+            cookieStore.set(name, '', {
+              ...options,
+              maxAge: 0,
+            })
+          } catch (error) {
+            console.log('Cookie remove error in route handler:', error)
+          }
+        },
+      },
+    }
+  )
 }

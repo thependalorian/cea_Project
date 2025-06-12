@@ -48,7 +48,7 @@ export function Navigation() {
             <div className="flex items-center gap-3">
               {/* iOS-style app icon */}
               <div className="w-10 h-10 bg-gradient-to-br from-spring-green to-moss-green rounded-ios-lg flex items-center justify-center shadow-ios-subtle">
-                <span className="text-white font-sf-pro font-semibold text-sm">CEA</span>
+                <span className="text-white font-helvetica font-semibold text-sm">CEA</span>
               </div>
               <div className="hidden sm:flex flex-col">
                 <span className="text-ios-headline text-midnight-forest leading-tight">

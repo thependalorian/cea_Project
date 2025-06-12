@@ -1,7 +1,35 @@
+/**
+ * Job Seekers Layout - Climate Economy Assistant
+ * Professional job seeker interface with sidebar navigation and profile management
+ * Location: app/job-seekers/layout.tsx
+ */
+
 import { createClient } from "@/lib/supabase/server";
-import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Brain, FileText, TrendingUp, BookOpen, User, Shield } from "lucide-react";
+import { JobSeekerSidebar } from "@/components/job-seekers/JobSeekerSidebar";
+import { JobSeekerHeader } from "@/components/job-seekers/JobSeekerHeader";
+
+interface JobSeekerProfile {
+  id: string;
+  user_id: string;
+  full_name: string | null;
+  email: string | null;
+  phone: string | null;
+  current_title: string | null;
+  experience_level: string | null;
+  location: string | null;
+  profile_completed: boolean;
+  climate_focus_areas: any[];
+  desired_roles: any[];
+  employment_types: any[];
+  preferred_locations: any[];
+  salary_range_min: number | null;
+  salary_range_max: number | null;
+  remote_work_preference: string | null;
+  resume_uploaded_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
 
 export default async function JobSeekersLayout({
   children,
@@ -13,93 +41,75 @@ export default async function JobSeekersLayout({
   // Check authentication
   const { data: { user }, error: userError } = await supabase.auth.getUser();
   if (userError || !user) {
-    redirect("/auth/login");
+    redirect("/auth/login?redirectTo=/job-seekers");
   }
 
-  // Check if user is a job seeker using correct user_id field
+  // Check job seeker access and get job seeker profile
   const { data: jobSeekerProfile, error: profileError } = await supabase
-    .from("job_seeker_profiles")
-    .select("id, profile_completed, full_name")
-    .eq("user_id", user.id)
+    .from('job_seeker_profiles')
+    .select(`
+      id, user_id, full_name, email, phone, current_title,
+      experience_level, location, profile_completed,
+      climate_focus_areas, desired_roles, employment_types,
+      preferred_locations, salary_range_min, salary_range_max,
+      remote_work_preference, resume_uploaded_at,
+      created_at, updated_at
+    `)
+    .eq('user_id', user.id)
     .single();
 
-  // If no job seeker profile found, redirect to general dashboard
   if (profileError || !jobSeekerProfile) {
-    console.log('Job seeker profile not found:', profileError, 'User ID:', user.id)
-    redirect("/dashboard");
-  }
-
-  // If profile is not completed, redirect to setup
-  if (!jobSeekerProfile.profile_completed) {
     redirect("/job-seekers/setup");
   }
 
+  // Get application and activity counts
+  const [applicationsResult, savedJobsResult, interestsResult] = await Promise.allSettled([
+    supabase
+      .from('job_applications')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', user.id),
+    supabase
+      .from('saved_jobs')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', user.id),
+    supabase
+      .from('user_interests')
+      .select('*')
+      .eq('user_id', user.id)
+      .single()
+  ]);
+
+  const totalApplications = applicationsResult.status === 'fulfilled' ? 
+    (applicationsResult.value.count || 0) : 0;
+  const savedJobsCount = savedJobsResult.status === 'fulfilled' ? 
+    (savedJobsResult.value.count || 0) : 0;
+  const userInterests = interestsResult.status === 'fulfilled' ? 
+    interestsResult.value.data : null;
+
+  const profile = {
+    ...jobSeekerProfile,
+    total_applications: totalApplications,
+    saved_jobs_count: savedJobsCount,
+    has_resume: !!jobSeekerProfile.resume_uploaded_at,
+    status: jobSeekerProfile.profile_completed ? 'active' : 'setup_required',
+    notification_preferences: userInterests || {}
+  };
+
   return (
-    <div className="flex-1 w-full flex flex-col">
-      {/* Job Seekers specific navigation */}
-      <div className="w-full border-b bg-base-200/50 shadow-sm">
-        <div className="max-w-6xl mx-auto py-3 px-4">
-          <div className="flex gap-6 items-center text-sm justify-between flex-wrap">
-            <div className="flex gap-4 items-center flex-wrap">
-              <Link
-                href="/job-seekers"
-                className="btn btn-ghost btn-sm gap-2"
-                aria-label="AI Job Search"
-              >
-                <Brain className="h-4 w-4" />
-                <span className="hidden sm:inline">AI Job Search</span>
-                <span className="sm:hidden">Jobs</span>
-              </Link>
-              <Link
-                href="/job-seekers/resume"
-                className="btn btn-ghost btn-sm gap-2"
-                aria-label="Skills Translation"
-              >
-                <FileText className="h-4 w-4" />
-                <span className="hidden sm:inline">Skills Translation</span>
-                <span className="sm:hidden">Skills</span>
-              </Link>
-              <Link
-                href="/job-seekers/career-pathways"
-                className="btn btn-ghost btn-sm gap-2"
-                aria-label="Career Pathways"
-              >
-                <TrendingUp className="h-4 w-4" />
-                <span className="hidden sm:inline">Career Pathways</span>
-                <span className="sm:hidden">Careers</span>
-              </Link>
-              <Link
-                href="/job-seekers/training"
-                className="btn btn-ghost btn-sm gap-2"
-                aria-label="Training & Upskilling"
-              >
-                <BookOpen className="h-4 w-4" />
-                <span className="hidden sm:inline">Training & Resources</span>
-                <span className="sm:hidden">Training</span>
-              </Link>
-              <Link
-                href="/job-seekers/profile"
-                className="btn btn-ghost btn-sm gap-2"
-                aria-label="Profile Settings"
-              >
-                <User className="h-4 w-4" />
-                <span className="hidden sm:inline">Profile</span>
-                <span className="sm:hidden">Profile</span>
-              </Link>
-            </div>
-            
-            {/* User info */}
-            <div className="flex items-center gap-2 text-sm">
-              <Shield className="h-4 w-4 text-green-600" />
-              <span className="text-green-600 font-medium">
-                {jobSeekerProfile.full_name || 'Job Seeker'}
-              </span>
-            </div>
+    <div className="min-h-screen bg-sand-gray/5">
+      {/* Job Seeker Header */}
+      <JobSeekerHeader profile={profile} user={user} />
+      
+      <div className="flex">
+        {/* Job Seeker Sidebar */}
+        <JobSeekerSidebar profile={profile} />
+        
+        {/* Main Content */}
+        <main className="flex-1 min-h-screen">
+          <div className="p-6">
+            {children}
           </div>
-        </div>
-      </div>
-      <div className="flex-1">
-        {children}
+        </main>
       </div>
     </div>
   );

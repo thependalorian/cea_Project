@@ -7,13 +7,14 @@
 
 "use client";
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AIAssistantChatBubble } from './AIAssistantChatBubble';
 import { ACTButton } from '@/components/ui/ACTButton';
 import { cn } from '@/lib/utils';
 import { Paperclip, X, Send, Mic, MinusCircle, MaximizeIcon } from 'lucide-react';
 import { API_ENDPOINTS } from '@/lib/config/constants';
+import Image from 'next/image';
 
 interface Message {
   id: string;
@@ -73,64 +74,8 @@ export const AIAssistantInterface = ({
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
-  // Create a welcome message if no initial messages
-  useEffect(() => {
-    if (initialMessages.length === 0 && welcomeMessage) {
-      setMessages([
-        {
-          id: 'welcome',
-          text: welcomeMessage,
-          sender: 'assistant',
-          timestamp: new Date(),
-          actionItems: suggestions.map(suggestion => ({
-            text: suggestion,
-            action: () => handleSendMessage(suggestion)
-          }))
-        }
-      ]);
-    }
-  }, []);
-  
-  // Scroll to bottom when messages change
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-  
-  // Auto-resize textarea
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.style.height = 'auto';
-      inputRef.current.style.height = `${inputRef.current.scrollHeight}px`;
-    }
-  }, [inputText]);
-  
-  // Handle file selection
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const newFiles = Array.from(e.target.files);
-      setAttachedFiles(prev => [...prev, ...newFiles]);
-    }
-  };
-  
-  // Handle file removal
-  const handleRemoveFile = (index: number) => {
-    setAttachedFiles(prev => prev.filter((_, i) => i !== index));
-  };
-  
-  // Trigger file input click
-  const triggerFileInput = () => {
-    fileInputRef.current?.click();
-  };
-  
-  // Format file size
-  const formatFileSize = (bytes: number): string => {
-    if (bytes < 1024) return bytes + ' B';
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
-    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
-  };
-  
   // Handle sending a message
-  const handleSendMessage = async (text: string = inputText) => {
+  const handleSendMessage = useCallback(async (text: string = inputText) => {
     if ((!text.trim() && attachedFiles.length === 0) || isProcessing) return;
     
     // Create attachment data for display
@@ -238,6 +183,62 @@ export const AIAssistantInterface = ({
     } finally {
       setIsProcessing(false);
     }
+  }, [inputText, attachedFiles, isProcessing, onSendMessage]);
+  
+  // Initialize with welcome message and suggestions
+  useEffect(() => {
+    if (initialMessages.length === 0 && welcomeMessage) {
+      setMessages([
+        {
+          id: 'welcome',
+          text: welcomeMessage,
+          sender: 'assistant',
+          timestamp: new Date(),
+          actionItems: suggestions.map(suggestion => ({
+            text: suggestion,
+            action: () => handleSendMessage(suggestion)
+          }))
+        }
+      ]);
+    }
+  }, [initialMessages.length, welcomeMessage, suggestions, handleSendMessage]);
+  
+  // Scroll to bottom when messages change
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+  
+  // Auto-resize textarea
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.style.height = 'auto';
+      inputRef.current.style.height = `${inputRef.current.scrollHeight}px`;
+    }
+  }, [inputText]);
+  
+  // Handle file selection
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const newFiles = Array.from(e.target.files);
+      setAttachedFiles(prev => [...prev, ...newFiles]);
+    }
+  };
+  
+  // Handle file removal
+  const handleRemoveFile = (index: number) => {
+    setAttachedFiles(prev => prev.filter((_, i) => i !== index));
+  };
+  
+  // Trigger file input click
+  const triggerFileInput = () => {
+    fileInputRef.current?.click();
+  };
+  
+  // Format file size
+  const formatFileSize = (bytes: number): string => {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
   };
   
   // Handle voice input
@@ -348,7 +349,13 @@ export const AIAssistantInterface = ({
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-ios-full overflow-hidden bg-seafoam-blue border-2 border-spring-green flex items-center justify-center">
             {assistantAvatar ? (
-              <img src={assistantAvatar} alt={assistantName} className="w-full h-full object-cover" />
+              <Image 
+                src={assistantAvatar} 
+                alt={assistantName} 
+                width={32}
+                height={32}
+                className="object-cover"
+              />
             ) : (
               <span className="text-sm">🤖</span>
             )}

@@ -1,8 +1,11 @@
 import './globals.css'
+import { Inter } from "next/font/google";
 import { ThemeProvider } from 'next-themes'
 import { Toaster } from "@/components/ui/toaster";
 import { ChatProvider } from '@/contexts/ChatContext'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
+
+const inter = Inter({ subsets: ["latin"] });
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -10,8 +13,8 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata = {
   metadataBase: new URL(defaultUrl),
-  title: 'Climate Economy Assistant | Find Climate Jobs',
-  description: 'AI-powered platform connecting job seekers with climate opportunities',
+  title: 'Climate Economy Assistant',
+  description: 'AI-powered career guidance for navigating the transition to a sustainable future in Massachusetts',
 }
 
 export default function RootLayout({
@@ -20,8 +23,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="font-sf-pro" suppressHydrationWarning>
-      <body className="bg-background text-foreground">
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.className} bg-white text-midnight-forest antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -30,12 +33,10 @@ export default function RootLayout({
         >
           <ErrorBoundary>
             <ChatProvider>
-              <main className="min-h-screen flex flex-col items-center">
-                {children}
-              </main>
+              {children}
+              <Toaster />
             </ChatProvider>
           </ErrorBoundary>
-          <Toaster />
         </ThemeProvider>
       </body>
     </html>

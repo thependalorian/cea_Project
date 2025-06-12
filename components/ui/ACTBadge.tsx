@@ -60,7 +60,7 @@ export function ACTBadge({
     <Badge
       variant={badgeVariant}
       className={cn(
-        'font-sf-pro rounded-ios-lg border-0',
+        'font-helvetica rounded-ios-lg border-0',
         getVariantClass(),
         getSizeClass(),
         className

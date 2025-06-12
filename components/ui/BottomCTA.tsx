@@ -82,14 +82,14 @@ export function BottomCTA({
           />
           <div className="relative z-10">
             <h2 className={cn(
-              "text-ios-large-title font-sf-pro font-semibold mb-4",
+              "text-act-display font-helvetica font-medium mb-4",
               textColorClass
             )}>
               {title}
             </h2>
             
             <p className={cn(
-              "text-ios-title-3 font-sf-pro mb-8 max-w-2xl mx-auto",
+              "text-act-body-large font-inter mb-8 max-w-2xl mx-auto",
               subtitleColorClass
             )}>
               {subtitle}
@@ -100,7 +100,7 @@ export function BottomCTA({
                 variant="primary"
                 size="lg"
                 href={primaryCTA.href}
-                className="font-sf-pro font-medium"
+                className="font-helvetica font-medium"
               >
                 {primaryCTA.text}
                 {primaryCTA.icon && <span className="ml-2">{primaryCTA.icon}</span>}
@@ -111,7 +111,7 @@ export function BottomCTA({
                   variant={variant === 'gradient' || variant === 'dark' ? 'glass' : 'outline'}
                   size="lg"
                   href={secondaryCTA.href}
-                  className="font-sf-pro font-medium"
+                  className="font-helvetica font-medium"
                 >
                   {secondaryCTA.text}
                   {secondaryCTA.icon && <span className="ml-2">{secondaryCTA.icon}</span>}

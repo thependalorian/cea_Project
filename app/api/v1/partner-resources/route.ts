@@ -44,10 +44,20 @@ function getClientId(request: NextRequest): string {
   return forwarded?.split(',')[0] || realIp || 'unknown';
 }
 
-function createErrorResponse(message: string, status: number): NextResponse {
+function createErrorResponse(message: string, status: number, details?: any): NextResponse {
   return NextResponse.json(
-    { success: false, error: message } as ApiResponse<null>,
-    { status, headers: { 'Content-Type': 'application/json', 'X-API-Version': 'v1' } }
+    { 
+      success: false, 
+      error: message,
+      ...(details && { details })
+    } as ApiResponse<null>,
+    { 
+      status, 
+      headers: { 
+        'Content-Type': 'application/json', 
+        'X-API-Version': 'v1' 
+      } 
+    }
   );
 }
 
@@ -56,6 +66,19 @@ function createSuccessResponse<T>(data: T, message?: string, meta?: any): NextRe
     { success: true, data, ...(message && { message }), ...(meta && { meta }) } as ApiResponse<T>,
     { headers: { 'Content-Type': 'application/json', 'X-API-Version': 'v1', 'Cache-Control': 'public, max-age=300' } }
   );
+}
+
+// Check if partner_resources table exists
+async function checkTableExists(supabase: any): Promise<boolean> {
+  try {
+    await supabase.from('partner_resources').select('id').limit(1);
+    return true;
+  } catch (error: any) {
+    if (error?.code === '42P01') { // Table does not exist
+      return false;
+    }
+    throw error;
+  }
 }
 
 // GET /api/v1/partner-resources - List partner resources
@@ -67,6 +90,20 @@ export async function GET(request: NextRequest) {
     }
 
     const supabase = await createClient();
+    
+    // Check if partner_resources table exists
+    const tableExists = await checkTableExists(supabase);
+    if (!tableExists) {
+      return createErrorResponse(
+        'Partner resources feature not yet implemented', 
+        501,
+        { 
+          reason: 'partner_resources table not found',
+          suggestion: 'This feature will be available after database migration'
+        }
+      );
+    }
+
     const { searchParams } = new URL(request.url);
 
     // Get authenticated user (optional for public resources)
@@ -104,21 +141,30 @@ export async function GET(request: NextRequest) {
       query = query.eq('visibility', 'public');
     } else {
       // Check if user is admin
-      const { data: adminProfile } = await supabase
-        .from('admin_profiles')
-        .select('can_manage_content, can_manage_system')
-        .eq('user_id', user.id)
-        .single();
+      try {
+        const { data: adminProfile } = await supabase
+          .from('admin_profiles')
+          .select('can_manage_content, can_manage_system')
+          .eq('user_id', user.id)
+          .single();
 
-      if (!(adminProfile && (adminProfile.can_manage_content || adminProfile.can_manage_system))) {
-        // Non-admin users can see public and partner_only resources
+        if (!(adminProfile && (adminProfile.can_manage_content || adminProfile.can_manage_system))) {
+          // Non-admin users can see public and partner_only resources
+          if (visibility) {
+            query = query.eq('visibility', visibility);
+          } else {
+            query = query.in('visibility', ['public', 'partner_only']);
+          }
+        }
+        // Admins can see all resources regardless of visibility
+      } catch (adminError) {
+        // If admin check fails, treat as regular user
         if (visibility) {
           query = query.eq('visibility', visibility);
         } else {
           query = query.in('visibility', ['public', 'partner_only']);
         }
       }
-      // Admins can see all resources regardless of visibility
     }
 
     // Search across title and description
@@ -139,7 +185,7 @@ export async function GET(request: NextRequest) {
 
     if (error) {
       console.error('Database error:', error);
-      return createErrorResponse('Failed to fetch partner resources', 500);
+      return createErrorResponse('Failed to fetch partner resources', 500, { database_error: error.message });
     }
 
     const totalPages = Math.ceil((count || 0) / limit);
@@ -150,8 +196,18 @@ export async function GET(request: NextRequest) {
       { total: count || 0, limit, offset, page, total_pages: totalPages }
     );
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('GET /api/v1/partner-resources error:', error);
+    
+    // Handle specific database errors
+    if (error?.code === '42P01') {
+      return createErrorResponse(
+        'Partner resources table not found', 
+        501,
+        { suggestion: 'Database migration needed to enable this feature' }
+      );
+    }
+    
     return createErrorResponse('Internal server error', 500);
   }
 }
@@ -166,23 +222,32 @@ export async function POST(request: NextRequest) {
 
     const supabase = await createClient();
     
+    // Check if partner_resources table exists
+    const tableExists = await checkTableExists(supabase);
+    if (!tableExists) {
+      return createErrorResponse(
+        'Partner resources creation not yet implemented', 
+        501,
+        { 
+          reason: 'partner_resources table not found',
+          suggestion: 'This feature will be available after database migration'
+        }
+      );
+    }
+    
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
       return createErrorResponse('Authentication required', 401);
     }
 
     // Check if user is partner or admin
-    const { data: partnerProfile } = await supabase
-      .from('partner_profiles')
-      .select('id')
-      .eq('id', user.id)
-      .single();
+    const [partnerCheck, adminCheck] = await Promise.allSettled([
+      supabase.from('partner_profiles').select('id').eq('id', user.id).single(),
+      supabase.from('admin_profiles').select('can_manage_content, can_manage_system').eq('user_id', user.id).single()
+    ]);
 
-    const { data: adminProfile } = await supabase
-      .from('admin_profiles')
-      .select('can_manage_content, can_manage_system')
-      .eq('user_id', user.id)
-      .single();
+    const partnerProfile = partnerCheck.status === 'fulfilled' ? partnerCheck.value.data : null;
+    const adminProfile = adminCheck.status === 'fulfilled' ? adminCheck.value.data : null;
 
     if (!partnerProfile && !adminProfile) {
       return createErrorResponse('Partner or Admin access required', 403);
@@ -201,83 +266,84 @@ export async function POST(request: NextRequest) {
       content,
       file_url,
       category,
-      tags,
-      visibility,
-      metadata,
-      external_link,
-      access_requirements,
-      download_count,
-      status = 'active'
+      tags = [],
+      visibility = 'partner_only',
+      metadata = {}
     } = body;
 
     // Validation
-    if (!title?.trim()) {
-      return createErrorResponse('Resource title is required', 400);
+    if (!title || !description || !resource_type) {
+      return createErrorResponse('Title, description, and resource_type are required', 400);
     }
 
-    if (!description?.trim()) {
-      return createErrorResponse('Resource description is required', 400);
+    if (title.length > 200) {
+      return createErrorResponse('Title must be 200 characters or less', 400);
     }
 
-    const validResourceTypes = ['document', 'template', 'tool', 'guide', 'webinar', 'case_study', 'dataset'];
-    if (resource_type && !validResourceTypes.includes(resource_type)) {
-      return createErrorResponse('Invalid resource type', 400);
+    if (description.length > 1000) {
+      return createErrorResponse('Description must be 1000 characters or less', 400);
     }
 
-    const validVisibilities = ['public', 'partner_only', 'private'];
-    if (visibility && !validVisibilities.includes(visibility)) {
-      return createErrorResponse('Invalid visibility setting', 400);
+    const validResourceTypes = ['document', 'link', 'video', 'course', 'tool', 'guide'];
+    if (!validResourceTypes.includes(resource_type)) {
+      return createErrorResponse(`Invalid resource_type. Must be one of: ${validResourceTypes.join(', ')}`, 400);
     }
 
-    const validStatuses = ['active', 'inactive', 'archived', 'pending_review'];
-    if (status && !validStatuses.includes(status)) {
-      return createErrorResponse('Invalid status', 400);
+    const validVisibility = ['public', 'partner_only', 'private'];
+    if (!validVisibility.includes(visibility)) {
+      return createErrorResponse(`Invalid visibility. Must be one of: ${validVisibility.join(', ')}`, 400);
     }
 
-    // Create partner resource
-    const { data: newResource, error: createError } = await supabase
+    const resourceData = {
+      title,
+      description,
+      resource_type,
+      content,
+      file_url,
+      category,
+      tags,
+      visibility,
+      status: 'active',
+      metadata,
+      partner_id: partnerProfile?.id || null, // Use partner ID if available
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+
+    const { data: newResource, error } = await supabase
       .from('partner_resources')
-      .insert({
-        title: title.trim(),
-        description: description.trim(),
-        resource_type: resource_type || 'document',
-        content: content?.trim() || null,
-        file_url: file_url?.trim() || null,
-        category: category?.trim() || null,
-        tags: tags || [],
-        visibility: visibility || 'partner_only',
-        status,
-        metadata: metadata || {},
-        external_link: external_link?.trim() || null,
-        access_requirements: access_requirements || {},
-        download_count: download_count || 0,
-        usage_stats: {
-          views: 0,
-          downloads: 0,
-          shares: 0,
-          last_accessed: null
-        },
-        partner_id: partnerProfile ? user.id : adminProfile ? user.id : null
-      })
+      .insert([resourceData])
       .select()
       .single();
 
-    if (createError) {
-      console.error('Partner resource creation error:', createError);
-      return createErrorResponse('Failed to create partner resource', 500);
+    if (error) {
+      console.error('Database error:', error);
+      return createErrorResponse('Failed to create partner resource', 500, { database_error: error.message });
     }
 
     return createSuccessResponse(
       newResource,
-      'Partner resource created successfully'
+      'Partner resource created successfully',
+      { resource_id: newResource.id }
     );
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('POST /api/v1/partner-resources error:', error);
+    
+    // Handle specific database errors
+    if (error?.code === '42P01') {
+      return createErrorResponse(
+        'Partner resources table not found', 
+        501,
+        { suggestion: 'Database migration needed to enable this feature' }
+      );
+    }
+    
     return createErrorResponse('Internal server error', 500);
   }
 }
 
+// OPTIONS - CORS preflight support
 export async function OPTIONS() {
   return new NextResponse(null, {
     status: 200,

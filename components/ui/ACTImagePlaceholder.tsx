@@ -10,6 +10,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Image as ImageIcon, Camera, Leaf, Globe, Mountain, Trees, Waves, Sun } from 'lucide-react';
+import Image from 'next/image';
 
 type PlaceholderVariant = 'default' | 'climate' | 'nature' | 'ocean' | 'forest' | 'mountain' | 'solar';
 type PlaceholderSize = 'sm' | 'md' | 'lg' | 'xl' | 'hero';
@@ -141,11 +142,12 @@ export function ACTImagePlaceholder({
 
       {/* Image */}
       {src && !imageError && (
-        <img
+        <Image
           src={src}
           alt={alt || 'Image'}
+          fill
           className={cn(
-            'absolute inset-0 w-full h-full object-cover transition-opacity duration-300',
+            'object-cover transition-opacity duration-300',
             imageLoaded ? 'opacity-100' : 'opacity-0'
           )}
           onLoad={() => setImageLoaded(true)}

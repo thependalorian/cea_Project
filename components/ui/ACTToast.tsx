@@ -6,9 +6,10 @@
  * Location: components/ui/ACTToast.tsx
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { X } from 'lucide-react';
 
 export interface ACTToastProps {
   message: React.ReactNode;
@@ -40,17 +41,25 @@ export function ACTToast({
   const [isVisible, setIsVisible] = useState(true);
   const [progress, setProgress] = useState(100);
 
+  const handleClose = useCallback(() => {
+    setIsVisible(false);
+    setTimeout(() => {
+      if (onClose) onClose();
+    }, 300); // Wait for exit animation
+  }, [onClose]);
+
+  // Auto-close timer with progress tracking
   useEffect(() => {
     if (autoClose && duration > 0) {
-      const startTime = Date.now();
+      let startTime = Date.now();
       
       const progressInterval = setInterval(() => {
         const elapsed = Date.now() - startTime;
-        const remaining = Math.max(0, duration - elapsed);
-        const progressValue = (remaining / duration) * 100;
-        setProgress(progressValue);
+        const progressPercent = Math.max(0, ((duration - elapsed) / duration) * 100);
         
-        if (remaining <= 0) {
+        setProgress(progressPercent);
+        
+        if (elapsed >= duration) {
           clearInterval(progressInterval);
           handleClose();
         }
@@ -58,14 +67,7 @@ export function ACTToast({
       
       return () => clearInterval(progressInterval);
     }
-  }, [duration, autoClose]);
-
-  const handleClose = () => {
-    setIsVisible(false);
-    setTimeout(() => {
-      if (onClose) onClose();
-    }, 300); // Wait for exit animation
-  };
+  }, [duration, autoClose, handleClose]);
 
   // Position mapping for toast placement
   const positionStyles = {
@@ -236,14 +238,14 @@ export function ACTToast({
                 <div className="flex-1 min-w-0">
                   {title && (
                     <h4 className={cn(
-                      'font-sf-pro-rounded font-medium text-sm mb-1',
+                      'font-helvetica font-medium text-sm mb-1',
                       currentStyles.text
                     )}>
                       {title}
                     </h4>
                   )}
                   <div className={cn(
-                    'text-sm font-sf-pro',
+                    'text-sm font-inter',
                     currentStyles.text,
                     title ? 'opacity-90' : ''
                   )}>

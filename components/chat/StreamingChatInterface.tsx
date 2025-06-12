@@ -6,7 +6,7 @@
 
 "use client";
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Send, 
@@ -71,27 +71,20 @@ export const StreamingChatInterface = ({
   const abortControllerRef = useRef<AbortController | null>(null);
   const supabase = createClient();
 
-  // Get authenticated user
+  // Initialize
   useEffect(() => {
     const getUser = async () => {
       try {
         const { data: { user }, error } = await supabase.auth.getUser();
-        if (error) {
-          console.error('Auth error:', error);
-          setError('Please log in to use the chat feature');
-        } else {
-          setUser(user);
-        }
-      } catch (err) {
-        console.error('Failed to get user:', err);
-        setError('Authentication failed. Please refresh and try again.');
-      } finally {
-        setAuthLoading(false);
+        if (error) throw error;
+        setUser(user);
+      } catch (error) {
+        console.error('Error getting user:', error);
       }
     };
 
     getUser();
-  }, []);
+  }, [supabase.auth]);
 
   // Initialize welcome message
   useEffect(() => {
@@ -105,10 +98,172 @@ export const StreamingChatInterface = ({
       };
       setMessages([welcomeMsg]);
     }
-  }, [sessionId, welcomeMessage]);
+  }, [sessionId, welcomeMessage, messages.length]);
+
+  // Handle streaming response
+  const handleStreamingResponse = useCallback(async (reader: ReadableStreamDefaultReader<Uint8Array>) => {
+    const decoder = new TextDecoder();
+    let buffer = '';
+    let hasReceivedContent = false;
+    const currentMessageId = `assistant-${Date.now()}`;
+    
+    // Add initial streaming message
+    const streamingMessage: ChatMessage = {
+      id: currentMessageId,
+      content: '',
+      role: 'assistant',
+      timestamp: new Date(),
+      isStreaming: true,
+      sessionId: sessionId || undefined
+    };
+    
+    setMessages(prev => [...prev, streamingMessage]);
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        
+        // Try to parse as complete JSON first (non-streaming response)
+        try {
+          const completeResponse = JSON.parse(buffer);
+          if (completeResponse.content && completeResponse.role === 'assistant') {
+            hasReceivedContent = true;
+            setMessages(prev => 
+              prev.map(msg => 
+                msg.id === currentMessageId 
+                  ? { 
+                      ...msg, 
+                      content: completeResponse.content,
+                      isStreaming: false,
+                      sources: completeResponse.sources || []
+                    }
+                  : msg
+              )
+            );
+            return; // Complete response received
+          }
+        } catch {
+          // Not a complete JSON, continue with streaming logic
+        }
+
+        // Handle streaming format
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
+
+        for (const line of lines) {
+          if (line.trim()) {
+            try {
+              // Handle different line formats
+              let data;
+              if (line.startsWith('data: ')) {
+                const jsonStr = line.replace('data: ', '');
+                if (jsonStr === '[DONE]') {
+                  setMessages(prev => 
+                    prev.map(msg => 
+                      msg.id === currentMessageId 
+                        ? { ...msg, isStreaming: false }
+                        : msg
+                    )
+                  );
+                  return;
+                }
+                data = JSON.parse(jsonStr);
+              } else if (line.startsWith('{')) {
+                data = JSON.parse(line);
+              } else {
+                // Handle plain text streaming
+                hasReceivedContent = true;
+                setMessages(prev => 
+                  prev.map(msg => 
+                    msg.id === currentMessageId 
+                      ? { ...msg, content: msg.content + line + ' ' }
+                      : msg
+                  )
+                );
+                continue;
+              }
+              
+              // Handle structured data responses
+              if (data.type === 'chunk' && data.content) {
+                hasReceivedContent = true;
+                setMessages(prev => 
+                  prev.map(msg => 
+                    msg.id === currentMessageId 
+                      ? { ...msg, content: msg.content + data.content }
+                      : msg
+                  )
+                );
+              } else if (data.type === 'complete') {
+                setMessages(prev => 
+                  prev.map(msg => 
+                    msg.id === currentMessageId 
+                      ? { ...msg, isStreaming: false }
+                      : msg
+                  )
+                );
+                return;
+              } else if (data.content && typeof data.content === 'string') {
+                hasReceivedContent = true;
+                setMessages(prev => 
+                  prev.map(msg => 
+                    msg.id === currentMessageId 
+                      ? { 
+                          ...msg, 
+                          content: data.content, 
+                          isStreaming: false,
+                          sources: data.sources || []
+                        }
+                      : msg
+                  )
+                );
+                return;
+              }
+            } catch (parseError) {
+              console.warn('Failed to parse streaming line:', line, parseError);
+            }
+          }
+        }
+      }
+
+      // If we reach here and haven't received content, show fallback
+      if (!hasReceivedContent) {
+        const fallbackContent = "I apologize, but I'm having trouble generating a response right now. This might be due to:\n\n" +
+          "• Backend configuration issues\n" +
+          "• Missing API keys for the AI service\n" +
+          "• Temporary service interruption\n\n" +
+          "Please try asking your question again, or contact support if the issue persists.";
+        
+        setMessages(prev => 
+          prev.map(msg => 
+            msg.id === currentMessageId 
+              ? { ...msg, content: fallbackContent, isStreaming: false, error: true }
+              : msg
+          )
+        );
+      }
+
+    } catch (error) {
+      console.error('Streaming error:', error);
+      setMessages(prev => 
+        prev.map(msg => 
+          msg.id === currentMessageId 
+            ? { 
+                ...msg, 
+                content: 'Sorry, there was an error processing your request. Please try again.', 
+                isStreaming: false, 
+                error: true 
+              }
+            : msg
+        )
+      );
+    }
+  }, [sessionId]);
 
   // Define handleSendMessage function at component level
-  const handleSendMessage = async (text: string = inputText) => {
+  const handleSendMessage = useCallback(async (text: string = inputText) => {
     if ((!text.trim() && attachedFiles.length === 0) || isProcessing || isStreaming) return;
 
     // Check if user is authenticated
@@ -245,7 +400,7 @@ export const StreamingChatInterface = ({
       onStatusChange('ready');
       setAttachedFiles([]);
     }
-  };
+  }, [inputText, attachedFiles, isProcessing, isStreaming, user, sessionId, onStatusChange, onSessionUpdate, handleStreamingResponse]);
 
   // Quick action handler
   useEffect(() => {
@@ -259,7 +414,7 @@ export const StreamingChatInterface = ({
     return () => {
       window.removeEventListener('quickActionSelected', handleQuickAction as EventListener);
     };
-  }, [sessionId, onStatusChange, onSessionUpdate]);
+  }, [handleSendMessage]);
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -485,168 +640,6 @@ Feel free to ask me anything about climate careers!`
     if (bytes < 1024) return `${bytes} B`;
     if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-  };
-
-  // Handle streaming response - Enhanced to handle different response formats
-  const handleStreamingResponse = async (reader: ReadableStreamDefaultReader<Uint8Array>) => {
-    const decoder = new TextDecoder();
-    let buffer = '';
-    let hasReceivedContent = false;
-    const currentMessageId = `assistant-${Date.now()}`;
-    
-    // Add initial streaming message
-    const streamingMessage: ChatMessage = {
-      id: currentMessageId,
-      content: '',
-      role: 'assistant',
-      timestamp: new Date(),
-      isStreaming: true,
-      sessionId: sessionId || undefined
-    };
-    
-    setMessages(prev => [...prev, streamingMessage]);
-
-    try {
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        buffer += decoder.decode(value, { stream: true });
-        
-        // Try to parse as complete JSON first (non-streaming response)
-        try {
-          const completeResponse = JSON.parse(buffer);
-          if (completeResponse.content && completeResponse.role === 'assistant') {
-            hasReceivedContent = true;
-            setMessages(prev => 
-              prev.map(msg => 
-                msg.id === currentMessageId 
-                  ? { 
-                      ...msg, 
-                      content: completeResponse.content,
-                      isStreaming: false,
-                      sources: completeResponse.sources || []
-                    }
-                  : msg
-              )
-            );
-            return; // Complete response received
-          }
-        } catch {
-          // Not a complete JSON, continue with streaming logic
-        }
-
-        // Handle streaming format
-        const lines = buffer.split('\n');
-        buffer = lines.pop() || '';
-
-        for (const line of lines) {
-          if (line.trim()) {
-            try {
-              // Handle different line formats
-              let data;
-              if (line.startsWith('data: ')) {
-                const jsonStr = line.replace('data: ', '');
-                if (jsonStr === '[DONE]') {
-                  setMessages(prev => 
-                    prev.map(msg => 
-                      msg.id === currentMessageId 
-                        ? { ...msg, isStreaming: false }
-                        : msg
-                    )
-                  );
-                  return;
-                }
-                data = JSON.parse(jsonStr);
-              } else if (line.startsWith('{')) {
-                data = JSON.parse(line);
-              } else {
-                // Handle plain text streaming
-                hasReceivedContent = true;
-                setMessages(prev => 
-                  prev.map(msg => 
-                    msg.id === currentMessageId 
-                      ? { ...msg, content: msg.content + line + ' ' }
-                      : msg
-                  )
-                );
-                continue;
-              }
-              
-              // Handle structured data responses
-              if (data.type === 'chunk' && data.content) {
-                hasReceivedContent = true;
-                setMessages(prev => 
-                  prev.map(msg => 
-                    msg.id === currentMessageId 
-                      ? { ...msg, content: msg.content + data.content }
-                      : msg
-                  )
-                );
-              } else if (data.type === 'complete') {
-                setMessages(prev => 
-                  prev.map(msg => 
-                    msg.id === currentMessageId 
-                      ? { ...msg, isStreaming: false }
-                      : msg
-                  )
-                );
-                return;
-              } else if (data.content && typeof data.content === 'string') {
-                hasReceivedContent = true;
-                setMessages(prev => 
-                  prev.map(msg => 
-                    msg.id === currentMessageId 
-                      ? { 
-                          ...msg, 
-                          content: data.content, 
-                          isStreaming: false,
-                          sources: data.sources || []
-                        }
-                      : msg
-                  )
-                );
-                return;
-              }
-            } catch (parseError) {
-              console.warn('Failed to parse streaming line:', line, parseError);
-            }
-          }
-        }
-      }
-
-      // If we reach here and haven't received content, show fallback
-      if (!hasReceivedContent) {
-        const fallbackContent = "I apologize, but I'm having trouble generating a response right now. This might be due to:\n\n" +
-          "• Backend configuration issues\n" +
-          "• Missing API keys for the AI service\n" +
-          "• Temporary service interruption\n\n" +
-          "Please try asking your question again, or contact support if the issue persists.";
-        
-        setMessages(prev => 
-          prev.map(msg => 
-            msg.id === currentMessageId 
-              ? { ...msg, content: fallbackContent, isStreaming: false, error: true }
-              : msg
-          )
-        );
-      }
-
-    } catch (error) {
-      console.error('Streaming error:', error);
-      setMessages(prev => 
-        prev.map(msg => 
-          msg.id === currentMessageId 
-            ? { 
-                ...msg, 
-                content: 'Sorry, there was an error processing your request. Please try again.', 
-                isStreaming: false, 
-                error: true 
-              }
-            : msg
-        )
-      );
-    }
   };
 
   // Stop streaming

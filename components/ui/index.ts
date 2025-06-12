@@ -8,6 +8,10 @@ export { ACTBadge } from './ACTBadge';
 export { ACTFrameElement } from './ACTFrameElement';
 export { ACTForm } from './ACTForm';
 
+// Chat Components
+export { FloatingChatWindow } from './FloatingChatWindow';
+export { ChatButton } from './ChatButton';
+
 // Standard UI Components
 export { Button } from './button';
 export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent } from './card';
@@ -73,4 +77,52 @@ export {
   DashboardOverview, 
   ProjectPortfolio, 
   FeatureShowcase 
-} from './ACTVisualShowcase'; 
+} from './ACTVisualShowcase';
+
+export { ImagePlaceholder } from "./ImagePlaceholder";
+
+// ACT Brand Typography Classes (for TypeScript support)
+export const ACTBrandClasses = {
+  typography: {
+    hero: 'text-act-hero font-helvetica font-medium',
+    display: 'text-act-display font-helvetica font-medium', 
+    title: 'text-act-title font-helvetica font-medium',
+    bodyLarge: 'text-act-body-large font-inter',
+    body: 'text-act-body font-inter',
+    small: 'text-act-small font-inter',
+  },
+  components: {
+    buttonPrimary: 'btn-act-primary',
+    buttonSecondary: 'btn-act-secondary', 
+    buttonOutline: 'btn-act-outline',
+    card: 'card-act',
+    cardFramed: 'card-act-framed',
+    input: 'input-act',
+    frame: 'act-frame',
+    frameOpen: 'act-frame-open',
+    brackets: 'act-brackets',
+  },
+  gradients: {
+    primary: 'act-gradient-primary',
+    secondary: 'act-gradient-secondary',
+    accent: 'act-gradient-accent',
+  },
+  colors: {
+    springGreen: 'text-spring-green',
+    mossGreen: 'text-moss-green', 
+    midnightForest: 'text-midnight-forest',
+    seafoamBlue: 'text-seafoam-blue',
+    sandGray: 'text-sand-gray',
+  },
+  layout: {
+    section: 'layout-act-section',
+    container: 'layout-act-container',
+    grid: 'layout-act-grid',
+  },
+  animations: {
+    glow: 'animate-act-glow',
+    bounce: 'animate-act-bounce',
+    fadeIn: 'animate-act-fade-in',
+    slideUp: 'animate-act-slide-up',
+  }
+} as const; 

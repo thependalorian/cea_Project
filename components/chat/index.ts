@@ -12,3 +12,5 @@ export { StreamingMessage } from './StreamingMessage';
 export { ChatSidebar } from './ChatSidebar';
 export { AssistantHeader } from './AssistantHeader';
 export { QuickActions } from './QuickActions'; 
+export { SupervisorChatWindow } from './SupervisorChatWindow';
+export { AIVisualizer } from './AIVisualizer'; 

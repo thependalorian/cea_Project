@@ -210,9 +210,9 @@ export const ClimateMetricsDashboard = ({
         {/* Header */}
         <div className={cn("flex flex-col sm:flex-row sm:items-center justify-between mb-6 p-4 rounded-ios-lg", themeStyles.header)}>
           <div>
-            <h2 className="text-ios-title-2 md:text-ios-title-1 font-sf-pro font-semibold">Climate Metrics Dashboard</h2>
-            <p className="text-ios-body font-sf-pro opacity-70 mt-1">
-              Real-time climate data and predictive analytics
+            <h2 className="text-act-display font-helvetica font-medium">Climate Metrics Dashboard</h2>
+            <p className="text-act-body font-inter opacity-70 mt-1">
+              Real-time environmental and climate data from Massachusetts
             </p>
           </div>
           
@@ -221,12 +221,11 @@ export const ClimateMetricsDashboard = ({
               <select 
                 value={currentTimeRange}
                 onChange={(e) => setTimeRange(e.target.value as any)}
-                className="appearance-none pl-3 pr-8 py-2 rounded-ios-lg text-ios-subheadline font-sf-pro bg-white/10 border border-white/20 focus:outline-none focus:ring-1 focus:ring-spring-green"
+                className="appearance-none pl-3 pr-8 py-2 rounded-ios-lg text-act-small font-inter bg-white/10 border border-white/20 focus:outline-none focus:ring-1 focus:ring-spring-green"
               >
-                <option value="day">Last 24 Hours</option>
-                <option value="week">Last Week</option>
-                <option value="month">Last Month</option>
-                <option value="year">Last Year</option>
+                <option value="7d">Last 7 Days</option>
+                <option value="30d">Last 30 Days</option>
+                <option value="1y">Last Year</option>
               </select>
               
               <ACTButton 
@@ -292,7 +291,7 @@ export const ClimateMetricsDashboard = ({
           <button
             onClick={() => setActiveTab('emissions')}
             className={cn(
-              "px-4 py-2 rounded-ios-lg text-ios-subheadline font-sf-pro font-medium transition-colors",
+              "px-4 py-2 rounded-ios-lg text-act-small font-inter font-medium transition-colors",
               activeTab === 'emissions' ? themeStyles.tabButton.active : themeStyles.tabButton.inactive
             )}
           >
@@ -302,7 +301,7 @@ export const ClimateMetricsDashboard = ({
           <button
             onClick={() => setActiveTab('temperature')}
             className={cn(
-              "px-4 py-2 rounded-ios-lg text-ios-subheadline font-sf-pro font-medium transition-colors",
+              "px-4 py-2 rounded-ios-lg text-act-small font-inter font-medium transition-colors",
               activeTab === 'temperature' ? themeStyles.tabButton.active : themeStyles.tabButton.inactive
             )}
           >
@@ -312,7 +311,7 @@ export const ClimateMetricsDashboard = ({
           <button
             onClick={() => setActiveTab('energy')}
             className={cn(
-              "px-4 py-2 rounded-ios-lg text-ios-subheadline font-sf-pro font-medium transition-colors",
+              "px-4 py-2 rounded-ios-lg text-act-small font-inter font-medium transition-colors",
               activeTab === 'energy' ? themeStyles.tabButton.active : themeStyles.tabButton.inactive
             )}
           >
@@ -326,8 +325,8 @@ export const ClimateMetricsDashboard = ({
           {/* Emissions Chart */}
           {activeTab === 'emissions' && (
             <div className={cn("p-6 rounded-ios-xl shadow-ios-subtle", themeStyles.card)}>
-              <h3 className="text-ios-headline font-sf-pro font-medium">Greenhouse Gas Emissions</h3>
-              <p className="text-ios-caption-1 font-sf-pro opacity-70 mb-4">Monthly emissions by type (Mt CO₂ equivalent)</p>
+              <h3 className="text-act-body font-helvetica font-medium">Greenhouse Gas Emissions</h3>
+              <p className="text-act-small font-inter opacity-70 mb-4">Monthly emissions by type (Mt CO₂ equivalent)</p>
               
               <ResponsiveContainer width="100%" height={300}>
                 <AreaChart data={chartData}>
@@ -336,12 +335,12 @@ export const ClimateMetricsDashboard = ({
                     dataKey="name" 
                     axisLine={false}
                     tickLine={false}
-                    className="text-ios-caption-1 font-sf-pro"
+                    className="text-act-small font-inter"
                   />
                   <YAxis 
                     axisLine={false}
                     tickLine={false}
-                    className="text-ios-caption-1 font-sf-pro"
+                    className="text-act-small font-inter"
                   />
                   <Tooltip 
                     contentStyle={{
@@ -364,8 +363,8 @@ export const ClimateMetricsDashboard = ({
           {/* Temperature Chart */}
           {activeTab === 'temperature' && (
             <div className={cn("p-6 rounded-ios-xl shadow-ios-subtle", themeStyles.card)}>
-              <h3 className="text-ios-headline font-sf-pro font-medium">Global Temperature Anomalies</h3>
-              <p className="text-ios-caption-1 font-sf-pro opacity-70 mb-4">Temperature deviation from 1900-2000 average (°C)</p>
+              <h3 className="text-act-body font-helvetica font-medium">Global Temperature Anomalies</h3>
+              <p className="text-act-small font-inter opacity-70 mb-4">Temperature deviation from 1900-2000 average (°C)</p>
               
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={tempData}>
@@ -374,12 +373,12 @@ export const ClimateMetricsDashboard = ({
                     dataKey="name" 
                     axisLine={false}
                     tickLine={false}
-                    className="text-ios-caption-1 font-sf-pro"
+                    className="text-act-small font-inter"
                   />
                   <YAxis 
                     axisLine={false}
                     tickLine={false}
-                    className="text-ios-caption-1 font-sf-pro"
+                    className="text-act-small font-inter"
                   />
                   <Tooltip 
                     contentStyle={{
@@ -402,8 +401,8 @@ export const ClimateMetricsDashboard = ({
           {/* Energy Chart */}
           {activeTab === 'energy' && (
             <div className={cn("p-6 rounded-ios-xl shadow-ios-subtle", themeStyles.card)}>
-              <h3 className="text-ios-headline font-sf-pro font-medium">Renewable Energy Sources</h3>
-              <p className="text-ios-caption-1 font-sf-pro opacity-70 mb-4">Global renewable energy mix (%)</p>
+              <h3 className="text-act-body font-helvetica font-medium">Renewable Energy Sources</h3>
+              <p className="text-act-small font-inter opacity-70 mb-4">Global renewable energy mix (%)</p>
               
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
@@ -463,14 +462,14 @@ const MetricCard = ({
   valueDirection = 'down'
 }: MetricCardProps) => {
   const isPositive = valueDirection === 'up' ? change > 0 : change < 0;
-  const changeColor = isPositive ? 'text-ios-green' : 'text-ios-red';
+  const changeColor = isPositive ? 'text-spring-green' : 'text-red-400';
   const changeIcon = isPositive ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />;
 
   return (
     <div className={cn("p-4 rounded-ios-xl shadow-ios-subtle", themeStyles.card)}>
       <div className="flex items-center justify-between mb-3">
         <div className="text-spring-green">{icon}</div>
-        <div className={cn("flex items-center gap-1 text-ios-caption-1 font-sf-pro", changeColor)}>
+        <div className={cn("flex items-center gap-1 text-act-small font-inter", changeColor)}>
           {changeIcon}
           <span>{Math.abs(change)}%</span>
         </div>
@@ -478,11 +477,11 @@ const MetricCard = ({
       
       <div>
         <div className="flex items-baseline gap-1 mb-1">
-          <span className="text-ios-title-2 font-sf-pro font-bold">{value}</span>
-          <span className="text-ios-caption-1 font-sf-pro opacity-70">{unit}</span>
+          <span className="text-act-title font-helvetica font-bold">{value}</span>
+          <span className="text-act-small font-inter opacity-70">{unit}</span>
         </div>
-        <div className="text-ios-caption-1 font-sf-pro opacity-70">{title}</div>
-        <div className="text-ios-caption-2 font-sf-pro opacity-50">{period}</div>
+        <div className="text-act-small font-inter opacity-70">{title}</div>
+        <div className="text-act-small font-inter opacity-50">{period}</div>
       </div>
     </div>
   );

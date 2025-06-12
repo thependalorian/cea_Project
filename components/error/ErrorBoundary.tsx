@@ -123,12 +123,12 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
             </div>
 
             {/* Error Title */}
-            <h1 className="text-ios-title-1 font-sf-pro font-semibold text-midnight-forest mb-4">
+            <h1 className="text-act-display font-helvetica font-medium text-midnight-forest mb-4">
               {title || 'Something went wrong'}
             </h1>
 
             {/* Error Description */}
-            <p className="text-ios-body font-sf-pro text-midnight-forest/70 mb-6">
+            <p className="text-act-body font-inter text-midnight-forest/70 mb-6">
               {description || 'We encountered an unexpected error while processing your request. Our team has been notified and is working to resolve the issue.'}
             </p>
 

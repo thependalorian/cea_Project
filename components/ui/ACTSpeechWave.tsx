@@ -6,7 +6,7 @@
  * Location: components/ui/ACTSpeechWave.tsx
  */
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
@@ -50,6 +50,7 @@ export function ACTSpeechWave({
   const dataArrayRef = useRef<Uint8Array | null>(null);
   const animationRef = useRef<number | null>(null);
   const micStreamRef = useRef<MediaStreamAudioSourceNode | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
   
   // Calculate animation speed in ms
   const getAnimationDuration = () => {
@@ -91,61 +92,8 @@ export function ACTSpeechWave({
     },
   };
   
-  // Set up audio analyzer for live audio
-  useEffect(() => {
-    if (liveAudio) {
-      const setupMicrophone = async () => {
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          
-          if (!audioContextRef.current) {
-            audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
-          }
-          
-          const audioContext = audioContextRef.current;
-          
-          // Create analyzer
-          analyserRef.current = audioContext.createAnalyser();
-          analyserRef.current.fftSize = 32;
-          
-          // Create buffer
-          const bufferLength = analyserRef.current.frequencyBinCount;
-          dataArrayRef.current = new Uint8Array(bufferLength);
-          
-          // Connect microphone to analyzer
-          micStreamRef.current = audioContext.createMediaStreamSource(stream);
-          micStreamRef.current.connect(analyserRef.current);
-          
-          setIsListening(true);
-          updateAudioLevel();
-        } catch (error) {
-          console.error("Error accessing microphone:", error);
-          setIsListening(false);
-        }
-      };
-      
-      setupMicrophone();
-      
-      return () => {
-        if (animationRef.current) {
-          cancelAnimationFrame(animationRef.current);
-        }
-        
-        if (micStreamRef.current) {
-          micStreamRef.current.disconnect();
-        }
-        
-        if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
-          audioContextRef.current.close();
-        }
-        
-        setIsListening(false);
-      };
-    }
-  }, [liveAudio]);
-  
   // Update audio level from analyzer
-  const updateAudioLevel = () => {
+  const updateAudioLevel = useCallback(() => {
     if (!analyserRef.current || !dataArrayRef.current) return;
     
     analyserRef.current.getByteFrequencyData(dataArrayRef.current);
@@ -158,7 +106,59 @@ export function ACTSpeechWave({
     setAudioLevel(normalizedLevel);
     
     animationRef.current = requestAnimationFrame(updateAudioLevel);
-  };
+  }, [sensitivity]);
+  
+  // Setup live audio listening
+  useEffect(() => {
+    if (liveAudio && typeof window !== 'undefined') {
+      const setupMicrophone = async () => {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          streamRef.current = stream;
+          
+          // Create audio context and analyzer
+          const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+          audioContextRef.current = audioContext;
+          
+          const analyser = audioContext.createAnalyser();
+          analyser.fftSize = 256;
+          analyserRef.current = analyser;
+          
+          const dataArray = new Uint8Array(analyser.frequencyBinCount);
+          dataArrayRef.current = dataArray;
+          
+          // Connect microphone to analyzer
+          const source = audioContext.createMediaStreamSource(stream);
+          source.connect(analyser);
+          
+          setIsListening(true);
+          
+          // Start updating audio level
+          updateAudioLevel();
+          
+        } catch (error) {
+          console.error('Error setting up microphone:', error);
+        }
+      };
+
+      setupMicrophone();
+
+      return () => {
+        // Cleanup
+        if (streamRef.current) {
+          streamRef.current.getTracks().forEach(track => track.stop());
+        }
+        if (audioContextRef.current) {
+          audioContextRef.current.close();
+        }
+        if (animationRef.current) {
+          cancelAnimationFrame(animationRef.current);
+        }
+        
+        setIsListening(false);
+      };
+    }
+  }, [liveAudio, updateAudioLevel]);
   
   // Get active state (either from prop or from live audio)
   const isActiveState = liveAudio ? isListening && audioLevel > 0.05 : isActive;

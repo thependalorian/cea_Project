@@ -3,271 +3,314 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Modern iOS-style custom properties */
+/* Import climate chat styles */
+@import '../styles/climate-chat.css';
+
+/* ACT Brand Foundation - Following Brand Guidelines */
 @layer base {
-  /* Typography improvements */
-  h1, h2, h3, h4, h5, h6 {
-    font-family: -apple-system, BlinkMacSystemFont, 'San Francisco', 'Helvetica Neue', sans-serif;
-    font-weight: 600;
-    letter-spacing: -0.025em;
-    line-height: 1.2;
+  /* Root Variables for ACT Brand Colors */
+  :root {
+    --spring-green: #B2DE26;
+    --moss-green: #394816;
+    --midnight-forest: #001818;
+    --seafoam-blue: #E0FFFF;
+    --sand-gray: #EBE9E1;
   }
 
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'San Francisco', 'Helvetica Neue', sans-serif;
+  /* ACT Brand Typography System - Per Brand Guidelines */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Helvetica', 'Helvetica Neue', Arial, sans-serif;
     font-feature-settings: 'rlig' 1, 'calt' 1;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* iOS-style selection */
-  ::selection {
-    background: #B2DE26;
-    color: #001818;
+  body {
+    font-family: 'Inter', 'Helvetica', system-ui, sans-serif;
+    font-feature-settings: 'rlig' 1, 'calt' 1;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: var(--midnight-forest);
   }
 
-  /* Focus styles */
+  /* ACT Brand Selection Styling */
+  ::selection {
+    background: var(--spring-green);
+    color: var(--midnight-forest);
+  }
+
+  ::-moz-selection {
+    background: var(--spring-green);
+    color: var(--midnight-forest);
+  }
+
+  /* Focus styles with ACT brand colors */
   *:focus {
-    outline: 2px solid #B2DE26;
+    outline: 2px solid var(--spring-green);
     outline-offset: 2px;
   }
 
   *:focus-visible {
-    outline: 2px solid #B2DE26;
+    outline: 2px solid var(--spring-green);
     outline-offset: 2px;
   }
 }
 
-/* iOS Typography Scale */
+/* ACT Brand Typography Scale - Exact from Brand Guidelines */
 @layer utilities {
-  .text-ios-large-title {
-    font-size: 2rem; /* 32px */
-    line-height: 1.19;
-    font-weight: 700;
+  /* Headlines - Helvetica with proper tracking and leading */
+  .text-act-hero {
+    font-family: 'Helvetica', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 4rem; /* 64px */
+    font-weight: 500;
+    line-height: 1.1;
     letter-spacing: -0.025em;
-    @media (min-width: 768px) {
-      font-size: 2.5rem; /* 40px */
-    }
   }
   
-  .text-ios-title-1 {
+  .text-act-display {
+    font-family: 'Helvetica', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 3rem; /* 48px */
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.02em; /* -20 tracking from brand guidelines */
+  }
+  
+  .text-act-title {
+    font-family: 'Helvetica', 'Helvetica Neue', Arial, sans-serif;
     font-size: 1.75rem; /* 28px */
-    line-height: 1.21;
-    font-weight: 700;
-    letter-spacing: -0.025em;
-    @media (min-width: 768px) {
-      font-size: 2rem; /* 32px */
-    }
+    font-weight: 500;
+    line-height: 1.14; /* 32pt leading for 28pt text */
+    letter-spacing: -0.02em; /* -20 tracking from brand guidelines */
   }
   
-  .text-ios-title-2 {
-    font-size: 1.375rem; /* 22px */
-    line-height: 1.27;
-    font-weight: 700;
-    letter-spacing: -0.025em;
-    @media (min-width: 768px) {
-      font-size: 1.5rem; /* 24px */
-    }
-  }
-  
-  .text-ios-title-3 {
-    font-size: 1.25rem; /* 20px */
-    line-height: 1.25;
-    font-weight: 600;
-    letter-spacing: -0.022em;
-  }
-  
-  .text-ios-headline {
-    font-size: 1.0625rem; /* 17px */
-    line-height: 1.29;
-    font-weight: 600;
-    letter-spacing: -0.022em;
-  }
-  
-  .text-ios-body {
-    font-size: 1.0625rem; /* 17px */
-    line-height: 1.29;
+  /* Body Text - Inter with proper tracking and leading */
+  .text-act-body-large {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 1.5rem; /* 24px */
     font-weight: 400;
-    letter-spacing: -0.022em;
+    line-height: 1.33; /* 32pt leading for 24pt text */
+    letter-spacing: -0.02em; /* -20 tracking from brand guidelines */
   }
   
-  .text-ios-callout {
+  .text-act-body {
+    font-family: 'Inter', system-ui, sans-serif;
     font-size: 1rem; /* 16px */
-    line-height: 1.31;
     font-weight: 400;
-    letter-spacing: -0.022em;
+    line-height: 1.5; /* 15pt leading for 12pt text scaled */
+    letter-spacing: 0; /* 0 tracking for body text */
   }
   
-  .text-ios-subheadline {
-    font-size: 0.9375rem; /* 15px */
-    line-height: 1.33;
+  .text-act-small {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 0.875rem; /* 14px */
     font-weight: 400;
-    letter-spacing: -0.022em;
+    line-height: 1.4;
+    letter-spacing: 0;
   }
-  
-  .text-ios-footnote {
-    font-size: 0.8125rem; /* 13px */
-    line-height: 1.38;
-    font-weight: 400;
-    letter-spacing: -0.022em;
-  }
-  
-  .text-ios-caption-1 {
-    font-size: 0.75rem; /* 12px */
-    line-height: 1.33;
-    font-weight: 400;
-    letter-spacing: -0.022em;
-  }
-  
-  .text-ios-caption-2 {
-    font-size: 0.6875rem; /* 11px */
-    line-height: 1.36;
-    font-weight: 400;
-    letter-spacing: -0.022em;
+
+  @media (min-width: 768px) {
+    .text-act-hero {
+      font-size: 5rem; /* 80px on larger screens */
+    }
+    
+    .text-act-display {
+      font-size: 4rem; /* 64px on larger screens */
+    }
+    
+    .text-act-title {
+      font-size: 2rem; /* 32px on larger screens */
+    }
+    
+    .text-act-body-large {
+      font-size: 1.75rem; /* 28px on larger screens */
+    }
   }
 }
 
-/* iOS-Inspired Component Classes */
+/* ACT Brand Component Classes */
 @layer components {
-  /* iOS-style buttons */
-  .btn-ios-primary {
-    @apply bg-blue-500 text-white font-medium rounded-2xl px-6 py-3 text-lg;
-    @apply hover:bg-blue-600 active:bg-blue-700 transition-all duration-150;
-    @apply shadow-md hover:shadow-lg;
+  /* Button Components with ACT Brand Colors */
+  .btn-act-primary {
+    @apply bg-spring-green text-midnight-forest hover:bg-spring-green/90 font-helvetica font-medium;
+    @apply border-none shadow-ios-button transition-all duration-200;
+    @apply rounded-ios-button px-6 py-3 tracking-normal;
   }
   
-  .btn-ios-secondary {
-    @apply bg-gray-100 text-blue-500 font-medium rounded-2xl px-6 py-3 text-lg;
-    @apply hover:bg-gray-200 active:bg-gray-300 transition-all duration-150;
-    @apply shadow-md hover:shadow-lg;
+  .btn-act-secondary {
+    @apply bg-moss-green text-white hover:bg-moss-green/90 font-helvetica font-medium;
+    @apply border-none shadow-ios-button transition-all duration-200;
+    @apply rounded-ios-button px-6 py-3 tracking-normal;
   }
   
-  .btn-ios-destructive {
-    @apply bg-red-500 text-white font-medium rounded-2xl px-6 py-3 text-lg;
-    @apply hover:bg-red-600 active:bg-red-700 transition-all duration-150;
-    @apply shadow-md hover:shadow-lg;
+  .btn-act-outline {
+    @apply border-3 border-spring-green text-midnight-forest hover:bg-spring-green/10;
+    @apply font-helvetica font-medium transition-all duration-200;
+    @apply rounded-ios-button px-6 py-3 tracking-normal bg-transparent;
+  }
+
+  /* Card Components with ACT Branding */
+  .card-act {
+    @apply bg-white border border-sand-gray/20 rounded-ios-xl shadow-ios-subtle;
+    @apply transition-all duration-300 hover:shadow-ios-normal hover:-translate-y-1;
   }
   
-  /* iOS-style cards */
-  .card-ios {
-    @apply bg-white/95 backdrop-blur-md border border-white/25 rounded-2xl;
-    @apply shadow-md hover:shadow-lg transition-all duration-300;
+  .card-act-framed {
+    @apply bg-white border-l-4 border-spring-green rounded-ios-lg shadow-ios-subtle;
+    @apply pl-6 transition-all duration-300;
+  }
+
+  /* ACT Frame Elements - Direct from Brand Guidelines */
+  .act-frame {
+    @apply border-3 border-spring-green rounded-ios-lg p-6;
+    position: relative;
   }
   
-  .card-ios-glass {
-    @apply bg-white/15 backdrop-blur-md border border-white/25 rounded-2xl;
-    @apply shadow-md hover:shadow-lg transition-all duration-300;
+  .act-frame-open {
+    @apply border-l-3 border-t-3 border-b-3 border-spring-green rounded-l-ios-lg p-6;
+    position: relative;
   }
   
-  .card-ios-frosted {
-    @apply bg-white/75 backdrop-blur-xl border border-white/30 rounded-2xl;
-    @apply shadow-lg hover:shadow-xl transition-all duration-300;
+  /* ACT Brackets Implementation */
+  .act-brackets {
+    @apply relative p-8;
   }
   
-  /* iOS-style inputs */
-  .input-ios {
-    @apply bg-gray-100 border-0 rounded-xl px-4 py-3 text-lg;
-    @apply focus:bg-white focus:ring-2 focus:ring-blue-300 transition-all duration-150;
-    @apply placeholder:text-gray-500;
+  .act-brackets::before,
+  .act-brackets::after,
+  .act-brackets .corner-tl,
+  .act-brackets .corner-tr,
+  .act-brackets .corner-bl,
+  .act-brackets .corner-br {
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    border: 3px solid var(--spring-green);
+    border-radius: 4px;
   }
   
-  /* iOS-style navigation */
-  .nav-ios {
-    @apply bg-white/95 backdrop-blur-md border-b border-gray-200;
-    @apply shadow-md;
+  .act-brackets .corner-tl {
+    top: 0;
+    left: 0;
+    border-right: none;
+    border-bottom: none;
   }
   
-  .nav-ios-item {
-    @apply text-lg font-medium text-blue-500;
-    @apply hover:text-blue-600 active:text-blue-700 transition-colors duration-150;
+  .act-brackets .corner-tr {
+    top: 0;
+    right: 0;
+    border-left: none;
+    border-bottom: none;
   }
   
-  /* iOS-style containers */
-  .container-ios {
-    @apply bg-white/95 backdrop-blur-md rounded-2xl border border-white/25;
-    @apply shadow-md p-6;
+  .act-brackets .corner-bl {
+    bottom: 0;
+    left: 0;
+    border-right: none;
+    border-top: none;
   }
   
-  .container-ios-inset {
-    @apply bg-gray-100 rounded-xl border-0 p-4;
+  .act-brackets .corner-br {
+    bottom: 0;
+    right: 0;
+    border-left: none;
+    border-top: none;
+  }
+
+  /* ACT Gradient Classes */
+  .act-gradient-primary {
+    background: linear-gradient(135deg, var(--spring-green), var(--moss-green));
   }
   
-  /* iOS-style lists */
-  .list-ios {
-    @apply bg-white rounded-2xl border border-gray-200 overflow-hidden;
+  .act-gradient-secondary {
+    background: linear-gradient(135deg, var(--seafoam-blue), var(--sand-gray));
   }
   
-  .list-ios-item {
-    @apply px-4 py-3 border-b border-gray-200 last:border-b-0;
-    @apply hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150;
+  .act-gradient-accent {
+    background: linear-gradient(135deg, var(--moss-green), var(--spring-green));
+  }
+
+  /* Form Components with ACT Styling */
+  .input-act {
+    @apply w-full px-4 py-3 border border-sand-gray/30 rounded-ios-lg;
+    @apply font-inter text-midnight-forest placeholder:text-midnight-forest/50;
+    @apply focus:outline-none focus:ring-2 focus:ring-spring-green/50 focus:border-spring-green;
+    @apply transition-all duration-200 bg-white;
+  }
+
+  /* Content Layout Classes */
+  .layout-act-section {
+    @apply py-16 px-4 max-w-7xl mx-auto;
   }
   
-  /* iOS-style spacing system */
-  .spacing-ios-xs { @apply p-2; }
-  .spacing-ios-sm { @apply p-3; }
-  .spacing-ios-md { @apply p-4; }
-  .spacing-ios-lg { @apply p-6; }
-  .spacing-ios-xl { @apply p-8; }
-  .spacing-ios-2xl { @apply p-12; }
-  
-  /* iOS-style layout containers */
-  .layout-ios-page {
-    @apply min-h-screen bg-gradient-to-b from-gray-100 to-white;
+  .layout-act-container {
+    @apply container mx-auto px-4;
   }
   
-  .layout-ios-section {
-    @apply py-12 px-4 max-w-7xl mx-auto;
-  }
-  
-  .layout-ios-grid {
-    @apply grid gap-6;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  }
-  
-  /* iOS-style animations */
-  .animate-ios-bounce {
-    animation: ios-bounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  }
-  
-  .animate-ios-fade-in {
-    animation: ios-fade-in 0.3s ease-out;
-  }
-  
-  .animate-ios-slide-up {
-    animation: ios-slide-up 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  .layout-act-grid {
+    @apply grid gap-8;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   }
 }
 
-/* iOS-style animations */
-@keyframes ios-bounce {
+/* Animation Classes with ACT Brand Integration */
+@layer utilities {
+  .animate-act-glow {
+    animation: actGlow 2s ease-in-out infinite;
+  }
+  
+  .animate-act-bounce {
+    animation: actBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+  
+  .animate-act-fade-in {
+    animation: actFadeIn 0.5s ease-out;
+  }
+  
+  .animate-act-slide-up {
+    animation: actSlideUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+}
+
+/* Keyframe Animations */
+@keyframes actGlow {
+  0%, 100% { 
+    box-shadow: 0 0 10px rgba(178, 222, 38, 0.3);
+  }
+  50% { 
+    box-shadow: 0 0 20px rgba(178, 222, 38, 0.5);
+  }
+}
+
+@keyframes actBounce {
   0% { transform: scale(0.3); opacity: 0; }
   50% { transform: scale(1.05); }
   70% { transform: scale(0.9); }
   100% { transform: scale(1); opacity: 1; }
 }
 
-@keyframes ios-fade-in {
+@keyframes actFadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes ios-slide-up {
+@keyframes actSlideUp {
   from { transform: translateY(100%); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
 
-/* Typing indicator animation */
+/* Climate Economy Typing Indicator */
 .typing-indicator {
   display: flex;
   align-items: center;
+  gap: 4px;
 }
 
 .typing-indicator span {
   height: 8px;
   width: 8px;
-  margin: 0 2px;
-  background-color: #394816; /* moss-green */
+  background-color: var(--moss-green);
   border-radius: 50%;
   display: inline-block;
   opacity: 0.4;
@@ -293,18 +336,30 @@
   }
 }
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 250, 250, 250;
-  --background-end-rgb: 255, 255, 255;
-}
+/* iOS-Enhanced Compatibility Classes */
+.shadow-ios-subtle { box-shadow: 0 1px 3px rgba(0, 24, 24, 0.1); }
+.shadow-ios-normal { box-shadow: 0 4px 12px rgba(0, 24, 24, 0.15); }
+.shadow-ios-prominent { box-shadow: 0 8px 25px rgba(0, 24, 24, 0.15); }
+.shadow-ios-elevated { box-shadow: 0 12px 35px rgba(0, 24, 24, 0.18); }
+.shadow-ios-button { box-shadow: 0 2px 8px rgba(178, 222, 38, 0.15); }
 
+.rounded-ios { border-radius: 10px; }
+.rounded-ios-lg { border-radius: 14px; }
+.rounded-ios-xl { border-radius: 18px; }
+.rounded-ios-2xl { border-radius: 22px; }
+.rounded-ios-button { border-radius: 16px; }
+.rounded-ios-full { border-radius: 9999px; }
+
+.backdrop-blur-ios { backdrop-filter: blur(10px); }
+.backdrop-blur-ios-light { backdrop-filter: blur(5px); }
+.backdrop-blur-ios-heavy { backdrop-filter: blur(20px); }
+
+/* Ensure proper page background */
 body {
-  color: rgb(var(--foreground-rgb));
+  min-height: 100vh;
   background: linear-gradient(
     to bottom,
-    rgb(var(--background-start-rgb)),
-    rgb(var(--background-end-rgb))
+    rgb(250, 250, 250),
+    rgb(255, 255, 255)
   );
-  min-height: 100vh;
 }

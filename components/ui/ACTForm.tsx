@@ -227,7 +227,7 @@ export const ACTTextInput = React.forwardRef<HTMLInputElement, ACTTextInputProps
           autoFocus={autoFocus}
           className={cn(
             getVariantStyles(variant, size, !!error),
-            'w-full font-sf-pro outline-none',
+            'w-full font-inter outline-none',
             icon && 'pl-10',
             (endIcon || isPasswordType) && 'pr-10',
             disabled && 'opacity-50 cursor-not-allowed',
@@ -382,7 +382,7 @@ export const ACTTextarea = React.forwardRef<HTMLTextAreaElement, ACTTextareaProp
           rows={rows}
           className={cn(
             getVariantStyles(variant, size, !!error),
-            'w-full font-sf-pro outline-none',
+            'w-full font-inter outline-none',
             !resizable && 'resize-none',
             autoResize && 'resize-none overflow-hidden',
             disabled && 'opacity-50 cursor-not-allowed',
@@ -500,7 +500,7 @@ export const ACTSelect = React.forwardRef<HTMLSelectElement, ACTSelectProps>(({
           disabled={disabled}
           className={cn(
             getVariantStyles(variant, size, !!error),
-            'w-full text-left font-sf-pro outline-none flex items-center justify-between',
+            'w-full text-left font-inter outline-none flex items-center justify-between',
             disabled && 'opacity-50 cursor-not-allowed'
           )}
         >

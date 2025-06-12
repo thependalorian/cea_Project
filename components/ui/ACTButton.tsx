@@ -41,7 +41,7 @@ export const ACTButton = forwardRef<HTMLButtonElement, ACTButtonProps>(
     ...props 
   }, ref) => {
     // Base button styling following ACT brand guidelines with modern touches
-    const baseStyles = 'inline-flex items-center justify-center font-sf-pro font-medium transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-spring-green/50 disabled:opacity-60 disabled:pointer-events-none';
+    const baseStyles = 'inline-flex items-center justify-center font-helvetica font-medium transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-spring-green/50 disabled:opacity-60 disabled:pointer-events-none';
     
     // Modern variant styles based on ACT color palette with iOS-inspired design
     const variantStyles = {

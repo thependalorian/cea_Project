@@ -6,7 +6,7 @@
 
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ACTCard } from '@/components/ui';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -43,12 +43,7 @@ export function PrivacySettings({ userId }: PrivacySettingsProps) {
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
   const { toast } = useToast();
 
-  // Load user preferences on component mount
-  useEffect(() => {
-    loadPreferences();
-  }, []);
-
-  const loadPreferences = async () => {
+  const loadPreferences = useCallback(async () => {
     try {
       const response = await fetch('/api/v1/user/preferences');
       const data = await response.json();
@@ -74,7 +69,12 @@ export function PrivacySettings({ userId }: PrivacySettingsProps) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [toast]);
+
+  // Load user preferences on component mount
+  useEffect(() => {
+    loadPreferences();
+  }, [loadPreferences]);
 
   const updatePreference = async (key: keyof UserPreferences, value: boolean) => {
     setIsSaving(true);

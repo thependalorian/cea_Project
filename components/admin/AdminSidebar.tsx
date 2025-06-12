@@ -1,7 +1,13 @@
+/**
+ * Admin Sidebar - Climate Economy Assistant  
+ * Permission-based navigation sidebar for admin interface
+ * Location: components/admin/AdminSidebar.tsx
+ */
+
 'use client'
 
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { 
   LayoutDashboard, 
@@ -16,41 +22,49 @@ import {
   Database,
   UserCheck,
   TrendingUp,
-  Globe,
-  Star,
-  Bug,
-  MessageSquare,
   CheckCircle,
   FolderOpen,
   Search,
   Activity,
   GraduationCap,
-  Settings2
+  Settings2,
+  Bug,
+  MessageSquare,
+  HelpCircle
 } from 'lucide-react'
 
 interface AdminSidebarProps {
   profile: {
+    id: string;
+    full_name: string;
     access_level: 'standard' | 'super' | 'system';
     department: string | null;
     status: string;
+    can_manage_users: boolean;
+    can_manage_partners: boolean;
+    can_manage_content: boolean;
+    can_view_analytics: boolean;
+    can_manage_system: boolean;
   };
 }
 
-export default function AdminSidebar({ profile }: AdminSidebarProps) {
+export function AdminSidebar({ profile }: AdminSidebarProps) {
   const pathname = usePathname();
-  const router = useRouter();
 
-  // Determine available navigation items based on access level
-  const shouldShowAdvancedFeatures = profile.access_level === 'super' || profile.access_level === 'system';
-  const shouldShowSystemFeatures = profile.access_level === 'system';
+  // Permission-based navigation visibility
+  const canManageUsers = profile.can_manage_users || profile.can_manage_system;
+  const canManagePartners = profile.can_manage_partners || profile.can_manage_system;
+  const canManageContent = profile.can_manage_content || profile.can_manage_system;
+  const canViewAnalytics = profile.can_view_analytics || profile.can_manage_system;
+  const canManageSystem = profile.can_manage_system;
 
   const navigationSections = [
     {
       title: 'Dashboard',
       items: [
         { 
-      href: '/admin/dashboard',
-          icon: BarChart3, 
+          href: '/admin',
+          icon: LayoutDashboard, 
           label: 'Overview',
           show: true
         },
@@ -60,16 +74,16 @@ export default function AdminSidebar({ profile }: AdminSidebarProps) {
       title: 'User Management',
       items: [
         { 
-      href: '/admin/users',
-      icon: Users,
+          href: '/admin/users',
+          icon: Users,
           label: 'All Users',
-          show: true 
+          show: canManageUsers
         },
         { 
           href: '/admin/reviews', 
           icon: MessageSquare, 
           label: 'Reviews & Feedback',
-          show: true 
+          show: canManageUsers
         },
       ]
     },
@@ -77,22 +91,22 @@ export default function AdminSidebar({ profile }: AdminSidebarProps) {
       title: 'Partner Management', 
       items: [
         { 
-      href: '/admin/partners',
-          icon: Briefcase, 
+          href: '/admin/partners',
+          icon: Building2, 
           label: 'All Partners',
-          show: true
+          show: canManagePartners
         },
         { 
           href: '/admin/partner-verification', 
           icon: CheckCircle, 
           label: 'Verification Queue',
-          show: shouldShowAdvancedFeatures
+          show: canManagePartners
         },
         { 
           href: '/admin/partner-resources', 
           icon: FolderOpen, 
           label: 'Partner Resources',
-          show: shouldShowAdvancedFeatures
+          show: canManagePartners
         },
       ]
     },
@@ -100,22 +114,28 @@ export default function AdminSidebar({ profile }: AdminSidebarProps) {
       title: 'Content Management',
       items: [
         { 
-      href: '/admin/jobs',
-          icon: Search, 
+          href: '/admin/jobs',
+          icon: Briefcase, 
           label: 'Job Listings',
-          show: true
-    },
-    {
+          show: canManageContent
+        },
+        {
           href: '/admin/job-moderation', 
           icon: Shield, 
           label: 'Job Moderation',
-          show: shouldShowAdvancedFeatures
-    },
-    {
-          href: '/admin/admin-resources', 
-      icon: FileText,
-          label: 'Admin Resources',
-          show: shouldShowAdvancedFeatures
+          show: canManageContent
+        },
+        {
+          href: '/admin/education-programs', 
+          icon: GraduationCap, 
+          label: 'Education Programs',
+          show: canManageContent
+        },
+        {
+          href: '/admin/knowledge-resources', 
+          icon: BookOpen,
+          label: 'Knowledge Resources',
+          show: canManageContent
         },
       ]
     },
@@ -125,114 +145,160 @@ export default function AdminSidebar({ profile }: AdminSidebarProps) {
         { 
           href: '/admin/reports', 
           icon: TrendingUp, 
-          label: 'Reports',
-          show: true
+          label: 'Platform Reports',
+          show: canViewAnalytics
+        },
+        { 
+          href: '/admin/analytics', 
+          icon: BarChart3, 
+          label: 'Advanced Analytics',
+          show: canViewAnalytics
         },
         { 
           href: '/admin/system-analytics', 
           icon: Activity, 
           label: 'System Analytics',
-          show: shouldShowSystemFeatures
+          show: canManageSystem
         },
       ]
     },
     {
-      title: 'Education',
-      items: [
-        { 
-          href: '/admin/education-programs', 
-          icon: GraduationCap, 
-          label: 'Programs',
-          show: true
-    },
-    {
-          href: '/admin/education-settings', 
-          icon: Settings2, 
-          label: 'Education Settings',
-          show: shouldShowAdvancedFeatures
-        },
-      ]
-    },
-    {
-      title: 'System',
+      title: 'System Administration',
       items: [
         { 
           href: '/admin/settings', 
           icon: Settings, 
           label: 'System Settings',
-          show: shouldShowSystemFeatures
+          show: canManageSystem
         },
         { 
-      href: '/admin/database',
-      icon: Database,
+          href: '/admin/database',
+          icon: Database,
           label: 'Database Tools',
-          show: shouldShowSystemFeatures
-    },
-    {
+          show: canManageSystem
+        },
+        {
           href: '/admin/debug', 
           icon: Bug, 
           label: 'Debug Tools',
-          show: shouldShowSystemFeatures
+          show: canManageSystem
+        },
+      ]
+    },
+    {
+      title: 'Support',
+      items: [
+        { 
+          href: '/admin/help', 
+          icon: HelpCircle, 
+          label: 'Help & Documentation',
+          show: true
         },
       ]
     },
   ];
 
   return (
-    <div className="w-64 bg-card border-r border-border min-h-screen">
+    <div className="w-64 bg-white border-r border-sand-gray/20 min-h-screen">
       <div className="p-6">
+        {/* Profile Summary */}
         <div className="mb-8">
-          <h2 className="text-lg font-semibold">Admin Panel</h2>
-          <p className="text-sm text-muted-foreground capitalize">
-            {profile.access_level} • {profile.department}
-          </p>
+          <div className="flex items-center space-x-3 mb-4">
+            <div className="w-10 h-10 bg-gradient-to-br from-spring-green to-seafoam-blue rounded-xl flex items-center justify-center">
+              <span className="text-white font-helvetica font-bold text-sm">
+                {profile.full_name.charAt(0).toUpperCase()}
+              </span>
+            </div>
+            <div>
+              <h3 className="font-helvetica font-medium text-midnight-forest text-sm">
+                {profile.full_name}
+              </h3>
+              <p className="text-xs text-midnight-forest/60 font-helvetica">
+                {profile.department || 'Administrator'}
+              </p>
+            </div>
+          </div>
+          
+          {/* Access Level Badge */}
+          <div className={cn(
+            "inline-flex items-center px-3 py-1 rounded-full text-xs font-helvetica font-medium",
+            profile.access_level === 'system' && "bg-spring-green/10 text-spring-green",
+            profile.access_level === 'super' && "bg-seafoam-blue/10 text-seafoam-blue", 
+            profile.access_level === 'standard' && "bg-moss-green/10 text-moss-green"
+          )}>
+            <Shield className="w-3 h-3 mr-1" />
+            {profile.access_level === 'system' ? 'System Admin' : 
+             profile.access_level === 'super' ? 'Super Admin' : 'Admin'}
+          </div>
         </div>
 
-        <nav className="space-y-2">
-          {navigationSections.map((section) => (
-            <div key={section.title}>
-              <h3 className="text-sm font-semibold mb-2">{section.title}</h3>
-              {section.items.map((item) => {
-            const isActive = pathname === item.href
-            const Icon = item.icon
+        {/* Navigation */}
+        <nav className="space-y-6">
+          {navigationSections.map((section) => {
+            const visibleItems = section.items.filter(item => item.show);
+            if (visibleItems.length === 0) return null;
             
-                if (item.show) {
             return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  'flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
-                  isActive
-                    ? 'bg-primary text-primary-foreground'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-accent'
-                )}
-              >
-                <Icon className="h-5 w-5" />
-                      <span>{item.label}</span>
-              </Link>
+              <div key={section.title}>
+                <h4 className="text-xs font-helvetica font-semibold text-midnight-forest/70 uppercase tracking-wider mb-3">
+                  {section.title}
+                </h4>
+                <div className="space-y-1">
+                  {visibleItems.map((item) => {
+                    const isActive = pathname === item.href;
+                    const Icon = item.icon;
+                    
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className={cn(
+                          'flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-helvetica font-medium transition-all duration-200 group',
+                          isActive
+                            ? 'bg-spring-green text-white shadow-md'
+                            : 'text-midnight-forest/70 hover:text-midnight-forest hover:bg-sand-gray/30'
+                        )}
+                      >
+                        <Icon className={cn(
+                          "w-4 h-4 transition-colors",
+                          isActive ? "text-white" : "text-midnight-forest/50 group-hover:text-midnight-forest"
+                        )} />
+                        <span>{item.label}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
             );
-                }
           })}
-            </div>
-          ))}
         </nav>
 
-        {/* Access Level Indicator */}
-        <div className="mt-8 p-3 bg-muted/50 rounded-lg">
-          <div className="flex items-center space-x-2">
-            <Shield className="h-4 w-4 text-muted-foreground" />
-            <div>
-              <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                Access Level
-              </p>
-              <p className="text-sm font-semibold capitalize">
+        {/* Quick Stats */}
+        <div className="mt-8 p-4 bg-gradient-to-br from-sand-gray/10 to-spring-green/5 rounded-xl border border-sand-gray/20">
+          <h4 className="text-xs font-helvetica font-semibold text-midnight-forest/70 uppercase tracking-wider mb-3">
+            Quick Stats
+          </h4>
+          <div className="space-y-2">
+            <div className="flex justify-between items-center">
+              <span className="text-xs text-midnight-forest/60 font-helvetica">Permission Level</span>
+              <span className="text-xs font-helvetica font-medium text-midnight-forest capitalize">
                 {profile.access_level}
-              </p>
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-xs text-midnight-forest/60 font-helvetica">Status</span>
+              <span className={cn(
+                "text-xs font-helvetica font-medium",
+                profile.status === 'active' ? "text-spring-green" : "text-amber-600"
+              )}>
+                {profile.status === 'active' ? 'Active' : 'Setup Required'}
+              </span>
             </div>
           </div>
         </div>
       </div>
     </div>
   );
-} 
+}
+
+export default AdminSidebar; 

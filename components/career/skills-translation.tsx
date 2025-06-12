@@ -158,7 +158,7 @@ export default function SkillsTranslation() {
         languages_spoken: languagesSpoken.length > 0 ? languagesSpoken : undefined
       };
 
-      const response = await fetch(API_ENDPOINTS.LEGACY_SKILLS_TRANSLATION, {
+      const response = await fetch(API_ENDPOINTS.V1_SKILLS_TRANSLATE, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

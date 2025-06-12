@@ -201,11 +201,11 @@ export function PartnerProfileForm({ initialData, onSave }: PartnerProfileFormPr
           <div className="w-16 h-16 bg-gradient-to-br from-spring-green to-moss-green rounded-ios-2xl mx-auto mb-4 flex items-center justify-center shadow-ios-subtle">
             <Building2 className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-ios-title-1 text-midnight-forest mb-2">
-            {initialData ? "Edit Partner Profile" : "Create Partner Profile"}
+          <h1 className="text-act-display text-midnight-forest mb-2">
+            Complete Your Partner Profile
           </h1>
-          <p className="text-ios-subheadline text-midnight-forest/70">
-            Complete your organization's profile to join our climate partnership network
+          <p className="text-act-body text-midnight-forest/70">
+            Help us understand your organization so we can better match you with qualified candidates.
           </p>
         </div>
 

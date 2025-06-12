@@ -84,6 +84,20 @@ class ApiClient {
     return this.postV1('/interactive-chat', data)
   }
 
+  // NEW: Supervisor Chat with enhanced workflow capabilities
+  async supervisorChat(data: {
+    message: string;
+    conversation_id?: string;
+    context?: Record<string, unknown>;
+    metadata?: Record<string, unknown>;
+    stream?: boolean;
+  }): Promise<ChatResponse | ReadableStream> {
+    if (data.stream) {
+      return this.streamV1('/supervisor-chat', data);
+    }
+    return this.postV1('/supervisor-chat', data)
+  }
+
   async resumeAnalysis(data: {
     user_id: string;
     analysis_type?: string;

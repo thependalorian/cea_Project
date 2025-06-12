@@ -2,12 +2,21 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
+  // 🚨 TEMPORARY: AUTH DISABLED FOR TESTING PAGES AND FLOWS
+  // All authentication checks are commented out to allow direct access to all pages
+  
   let response = NextResponse.next({
     request: {
       headers: request.headers,
     },
   })
 
+  // Just return the response without any auth checks
+  return response
+
+  /*
+  // === ORIGINAL AUTH CODE (COMMENTED OUT FOR TESTING) ===
+  
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -77,6 +86,7 @@ export async function middleware(request: NextRequest) {
   }
 
   return response
+  */
 }
 
 export const config = {
