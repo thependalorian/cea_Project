@@ -40,8 +40,18 @@ export function AuthGuard({
     hasPermission
   } = useAuth();
 
+  console.log('AuthGuard rendered:', { 
+    isAuthenticated, 
+    loading, 
+    userId: user?.id,
+    userEmail: user?.email,
+    profileType: profile?.user_type,
+    requiredRoles: allowedRoles
+  });
+
   // Handle loading state
   if (loading && showLoadingState) {
+    console.log('AuthGuard showing loading state');
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-seafoam-blue/20 to-spring-green/20 p-4">
         <div className="max-w-md w-full">
@@ -62,6 +72,7 @@ export function AuthGuard({
   // Check authentication requirement
   if (requireAuth && !loading) {
     if (!isAuthenticated) {
+      console.log('AuthGuard: Not authenticated, redirecting to login');
       // Redirect to login automatically
       if (typeof window !== 'undefined') {
         window.location.href = '/auth/login';
@@ -87,22 +98,32 @@ export function AuthGuard({
   // Check role-based access
   if (allowedRoles.length > 0 && isAuthenticated && !loading) {
     if (!hasPermission(allowedRoles)) {
+      console.log('AuthGuard: Permission denied', { 
+        userType: profile?.user_type, 
+        requiredRoles: allowedRoles 
+      });
+      
       // Redirect based on role
       if (typeof window !== 'undefined') {
         const userType = profile?.user_type;
+        let redirectPath = '/dashboard';
+        
         switch (userType) {
           case 'job_seeker':
-            window.location.href = '/job-seekers';
+            redirectPath = '/job-seekers';
             break;
           case 'partner':
-            window.location.href = '/partners';
+            redirectPath = '/partners';
             break;
           case 'admin':
-            window.location.href = '/admin';
+            redirectPath = '/admin';
             break;
           default:
-            window.location.href = '/dashboard';
+            redirectPath = '/dashboard';
         }
+        
+        console.log(`AuthGuard: Redirecting to ${redirectPath} based on role`);
+        window.location.href = redirectPath;
       }
       return fallback || (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-seafoam-blue/5 to-moss-green/5">
@@ -128,6 +149,7 @@ export function AuthGuard({
   }
 
   // Render protected content
+  console.log('AuthGuard: Access granted, rendering children');
   return <>{children}</>;
 }
 

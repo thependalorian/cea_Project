@@ -37,7 +37,7 @@ class StorageAdapter:
         file_data: bytes,
         filename: str,
         bucket: str = "documents",
-        user_id: Optional[str] = None
+        user_id: Optional[str] = None,
     ) -> Dict[str, Any]:
         """
         Upload file to storage.
@@ -55,7 +55,7 @@ class StorageAdapter:
             file_id = str(uuid.uuid4())
             file_extension = Path(filename).suffix
             stored_filename = f"{file_id}{file_extension}"
-            
+
             # Organize by user if provided
             if user_id:
                 storage_path = f"{user_id}/{stored_filename}"
@@ -68,17 +68,19 @@ class StorageAdapter:
                     response = self.supabase.storage.from_(bucket).upload(
                         storage_path, file_data
                     )
-                    
+
                     # Get public URL
-                    public_url = self.supabase.storage.from_(bucket).get_public_url(storage_path)
-                    
+                    public_url = self.supabase.storage.from_(bucket).get_public_url(
+                        storage_path
+                    )
+
                     return {
                         "success": True,
                         "file_id": file_id,
                         "storage_path": storage_path,
                         "public_url": public_url,
                         "storage_type": "supabase",
-                        "uploaded_at": datetime.now().isoformat()
+                        "uploaded_at": datetime.now().isoformat(),
                     }
                 except Exception as e:
                     print(f"Supabase storage failed, falling back to local: {e}")
@@ -86,7 +88,7 @@ class StorageAdapter:
             # Fallback to local storage
             local_path = self.local_storage_path / storage_path
             local_path.parent.mkdir(parents=True, exist_ok=True)
-            
+
             with open(local_path, "wb") as f:
                 f.write(file_data)
 
@@ -96,17 +98,19 @@ class StorageAdapter:
                 "storage_path": str(local_path),
                 "public_url": f"/storage/{storage_path}",
                 "storage_type": "local",
-                "uploaded_at": datetime.now().isoformat()
+                "uploaded_at": datetime.now().isoformat(),
             }
 
         except Exception as e:
             return {
                 "success": False,
                 "error": str(e),
-                "uploaded_at": datetime.now().isoformat()
+                "uploaded_at": datetime.now().isoformat(),
             }
 
-    async def download_file(self, storage_path: str, bucket: str = "documents") -> Optional[bytes]:
+    async def download_file(
+        self, storage_path: str, bucket: str = "documents"
+    ) -> Optional[bytes]:
         """
         Download file from storage.
 
@@ -121,7 +125,9 @@ class StorageAdapter:
             # Try Supabase first
             if self.supabase:
                 try:
-                    response = self.supabase.storage.from_(bucket).download(storage_path)
+                    response = self.supabase.storage.from_(bucket).download(
+                        storage_path
+                    )
                     return response
                 except Exception as e:
                     print(f"Supabase download failed, trying local: {e}")
@@ -155,7 +161,9 @@ class StorageAdapter:
             # Delete from Supabase
             if self.supabase:
                 try:
-                    response = self.supabase.storage.from_(bucket).remove([storage_path])
+                    response = self.supabase.storage.from_(bucket).remove(
+                        [storage_path]
+                    )
                     success = True
                 except Exception as e:
                     print(f"Supabase delete failed: {e}")
@@ -173,10 +181,7 @@ class StorageAdapter:
             return False
 
     async def list_files(
-        self, 
-        prefix: str = "",
-        bucket: str = "documents",
-        limit: int = 100
+        self, prefix: str = "", bucket: str = "documents", limit: int = 100
     ) -> List[Dict[str, Any]]:
         """
         List files in storage.
@@ -199,12 +204,14 @@ class StorageAdapter:
                         prefix, {"limit": limit}
                     )
                     for file_info in response:
-                        files.append({
-                            "name": file_info["name"],
-                            "size": file_info.get("metadata", {}).get("size", 0),
-                            "created_at": file_info.get("created_at"),
-                            "storage_type": "supabase"
-                        })
+                        files.append(
+                            {
+                                "name": file_info["name"],
+                                "size": file_info.get("metadata", {}).get("size", 0),
+                                "created_at": file_info.get("created_at"),
+                                "storage_type": "supabase",
+                            }
+                        )
                 except Exception as e:
                     print(f"Supabase list failed: {e}")
 
@@ -214,12 +221,16 @@ class StorageAdapter:
                 for file_path in local_prefix_path.rglob("*"):
                     if file_path.is_file():
                         relative_path = file_path.relative_to(self.local_storage_path)
-                        files.append({
-                            "name": str(relative_path),
-                            "size": file_path.stat().st_size,
-                            "created_at": datetime.fromtimestamp(file_path.stat().st_ctime).isoformat(),
-                            "storage_type": "local"
-                        })
+                        files.append(
+                            {
+                                "name": str(relative_path),
+                                "size": file_path.stat().st_size,
+                                "created_at": datetime.fromtimestamp(
+                                    file_path.stat().st_ctime
+                                ).isoformat(),
+                                "storage_type": "local",
+                            }
+                        )
 
             return files[:limit]
 
@@ -238,7 +249,9 @@ async def initialize_storage():
 
 
 # Convenience functions
-async def upload_document(file_data: bytes, filename: str, user_id: Optional[str] = None):
+async def upload_document(
+    file_data: bytes, filename: str, user_id: Optional[str] = None
+):
     """Upload a document file"""
     return await storage_adapter.upload_file(file_data, filename, "documents", user_id)
 

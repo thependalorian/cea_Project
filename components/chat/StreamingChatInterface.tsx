@@ -1,30 +1,35 @@
 /**
  * Streaming Chat Interface Component
- * Modern 2025 real-time chat interface with streaming capabilities
+ * Advanced streaming chat interface with file uploads and real-time messaging
  * Location: components/chat/StreamingChatInterface.tsx
  */
 
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Send, 
   Paperclip, 
   Mic, 
   MicOff, 
-  Square, 
-  Loader2, 
-  AlertCircle,
-  FileText,
-  X
+  X, 
+  FileText, 
+  Image as ImageIcon, 
+  Download,
+  ThumbsUp,
+  ThumbsDown,
+  Flag,
+  Copy,
+  Share2,
+  MoreHorizontal,
+  Loader2,
+  StopCircle,
+  Sparkles,
+  Brain
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { API_ENDPOINTS } from '@/lib/config/constants';
-import { IOSContainer } from '@/components/layout/IOSLayout';
-import { StreamingMessage } from './StreamingMessage';
-import { createClient } from '@/lib/supabase/client';
-import { User } from '@supabase/supabase-js';
+import { useAuth } from '@/contexts/auth-context';
 
 interface ChatMessage {
   id: string;
@@ -36,6 +41,13 @@ interface ChatMessage {
   attachments?: Array<{ name: string; type: string; size: string }>;
   sessionId?: string;
   error?: boolean;
+}
+
+interface AttachedFile {
+  file: File;
+  name: string;
+  type: string;
+  size: string;
 }
 
 interface StreamingChatInterfaceProps {
@@ -53,38 +65,17 @@ export const StreamingChatInterface = ({
   welcomeMessage = "Hello! I'm your Climate Economy Assistant. How can I help you today?",
   className
 }: StreamingChatInterfaceProps) => {
+  const { user } = useAuth(); // Use secure auth context instead of direct Supabase
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [inputText, setInputText] = useState('');
-  const [isStreaming, setIsStreaming] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [attachedFiles, setAttachedFiles] = useState<AttachedFile[]>([]);
   const [isListening, setIsListening] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [isProcessingResume, setIsProcessingResume] = useState(false);
-  const [resumeProcessingStatus, setResumeProcessingStatus] = useState<string>('');
-  const [user, setUser] = useState<User | null>(null);
-  const [authLoading, setAuthLoading] = useState(true);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
-  const supabase = createClient();
-
-  // Initialize
-  useEffect(() => {
-    const getUser = async () => {
-      try {
-        const { data: { user }, error } = await supabase.auth.getUser();
-        if (error) throw error;
-        setUser(user);
-      } catch (error) {
-        console.error('Error getting user:', error);
-      }
-    };
-
-    getUser();
-  }, [supabase.auth]);
 
   // Initialize welcome message
   useEffect(() => {
@@ -262,632 +253,538 @@ export const StreamingChatInterface = ({
     }
   }, [sessionId]);
 
-  // Define handleSendMessage function at component level
-  const handleSendMessage = useCallback(async (text: string = inputText) => {
-    if ((!text.trim() && attachedFiles.length === 0) || isProcessing || isStreaming) return;
-
-    // Check if user is authenticated
+  // Send message function
+  const sendMessage = async () => {
+    if (!input.trim() && attachedFiles.length === 0) return;
     if (!user) {
-      setError('Please log in to send messages');
+      console.error('User not authenticated');
       return;
     }
 
-    const messageText = text.trim();
-    setInputText('');
-    setError('');
-    setIsProcessing(true);
-    onStatusChange('processing');
-
-    // Add user message to chat
     const userMessage: ChatMessage = {
-      id: Date.now().toString(),
-      content: messageText || `📎 ${attachedFiles.map(f => f.name).join(', ')}`,
+      id: `user-${Date.now()}`,
+      content: input.trim(),
       role: 'user',
       timestamp: new Date(),
-      attachments: attachedFiles.length > 0 ? attachedFiles.map(file => ({
-        name: file.name,
-        type: file.type,
-        size: formatFileSize(file.size)
-      })) : undefined
+      attachments: attachedFiles.map(f => ({ name: f.name, type: f.type, size: f.size })),
+      sessionId: sessionId || undefined
     };
 
     setMessages(prev => [...prev, userMessage]);
+    setInput('');
+    setAttachedFiles([]);
+    setIsLoading(true);
+    onStatusChange('processing');
+
+    // Create abort controller for this request
+    abortControllerRef.current = new AbortController();
 
     try {
-      // Prepare context
-      const context = {
-        session_id: sessionId,
-        user: {
-          id: user.id,
-          email: user.email
-        },
-        attachments: attachedFiles.length > 0 ? attachedFiles.map(f => ({
-          name: f.name,
-          type: f.type
-        })) : undefined
-      };
-
-      // Send request to API
-      console.log('Sending request to API:', {
-        query: messageText,
-        session_id: sessionId,
-        user_id: user.id, // Use actual user ID
-        context,
-        stream: true
+      const formData = new FormData();
+      formData.append('message', input.trim());
+      formData.append('sessionId', sessionId || '');
+      formData.append('userId', user.id);
+      
+      // Add files to form data
+      attachedFiles.forEach((attachedFile, index) => {
+        formData.append(`file_${index}`, attachedFile.file);
       });
 
-      const response = await fetch('/api/v1/interactive-chat', {
+      const response = await fetch('/api/v1/chat/streaming', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          query: messageText,
-          session_id: sessionId,
-          user_id: user.id, // Use actual user ID instead of null
-          context,
-          stream: false // Changed to false since backend returns JSON
-        }),
-        credentials: 'include', // Include cookies for authentication
-        signal: abortControllerRef.current?.signal
+        body: formData,
+        signal: abortControllerRef.current.signal,
       });
-
-      console.log('API Response status:', response.status);
-      console.log('API Response content-type:', response.headers.get('content-type'));
 
       if (!response.ok) {
-        if (response.status === 401) {
-          throw new Error('Please log in to continue chatting');
-        }
-        const errorData = await response.json();
-        console.error('API Error Response:', errorData);
-        throw new Error(errorData.error || `Server error: ${response.status}`);
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      // Check if response is streaming or JSON
-      const contentType = response.headers.get('content-type');
+      if (!response.body) {
+        throw new Error('No response body');
+      }
+
+      onStatusChange('streaming');
+      const reader = response.body.getReader();
+      await handleStreamingResponse(reader);
+
+      // Update session if needed
+      if (sessionId && userMessage.content) {
+        const preview = userMessage.content.substring(0, 100) + (userMessage.content.length > 100 ? '...' : '');
+        onSessionUpdate(sessionId, preview, preview);
+      }
+
+    } catch (error: any) {
+      if (error.name === 'AbortError') {
+        console.log('Request was aborted');
+        return;
+      }
       
-      if (contentType?.includes('application/json')) {
-        // Handle JSON response directly
-        const data = await response.json();
-        console.log('JSON response received:', data);
-        
-        // Check if response has the expected structure
-        if (!data.content && !data.message) {
-          console.warn('Response missing content/message field:', data);
-        }
-        
-        const assistantMessage: ChatMessage = {
-          id: `assistant-${Date.now()}`,
-          content: data.content || data.message || "I'm having trouble generating a response right now.",
-          role: 'assistant',
-          timestamp: new Date(),
-          sources: data.sources || [],
-          sessionId: sessionId || undefined
-        };
-        
-        setMessages(prev => [...prev, assistantMessage]);
-      } else if (contentType?.includes('text/event-stream') && response.body) {
-        // Handle streaming response
-        setIsStreaming(true);
-        onStatusChange('streaming');
-        const reader = response.body.getReader();
-        await handleStreamingResponse(reader);
-      } else {
-        throw new Error('Unexpected response format');
-      }
-
-      // Update session
-      if (sessionId) {
-        onSessionUpdate(sessionId, messageText.slice(0, 50) + '...', 'Updated chat');
-      }
-
-    } catch (error) {
       console.error('Error sending message:', error);
-      setError(error instanceof Error ? error.message : 'An unexpected error occurred');
-      
-      // Add error message to chat
       const errorMessage: ChatMessage = {
         id: `error-${Date.now()}`,
-        content: error instanceof Error ? error.message : 'Failed to send message',
-        role: 'system',
+        content: 'Sorry, there was an error sending your message. Please try again.',
+        role: 'assistant',
         timestamp: new Date(),
-        error: true
+        error: true,
+        sessionId: sessionId || undefined
       };
-      
       setMessages(prev => [...prev, errorMessage]);
     } finally {
-      setIsProcessing(false);
-      setIsStreaming(false);
+      setIsLoading(false);
       onStatusChange('ready');
-      setAttachedFiles([]);
+      abortControllerRef.current = null;
     }
-  }, [inputText, attachedFiles, isProcessing, isStreaming, user, sessionId, onStatusChange, onSessionUpdate, handleStreamingResponse]);
-
-  // Quick action handler
-  useEffect(() => {
-    const handleQuickAction = (event: CustomEvent) => {
-      if (event.detail?.action === 'send_message' && event.detail?.message) {
-        handleSendMessage(event.detail.message);
-      }
-    };
-
-    window.addEventListener('quickActionSelected', handleQuickAction as EventListener);
-    return () => {
-      window.removeEventListener('quickActionSelected', handleQuickAction as EventListener);
-    };
-  }, [handleSendMessage]);
+  };
 
   // Auto-scroll to bottom
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Auto-resize textarea
+  // Handle quick actions from other components
   useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.style.height = 'auto';
-      inputRef.current.style.height = `${Math.min(inputRef.current.scrollHeight, 120)}px`;
-    }
-  }, [inputText]);
+    const handleQuickAction = (event: CustomEvent) => {
+      const { action, data } = event.detail;
+      
+      switch (action) {
+        case 'send_message':
+          setInput(data.message || '');
+          if (data.autoSend) {
+            setTimeout(() => sendMessage(), 100);
+          }
+          break;
+        case 'attach_resume':
+          if (data.file) {
+            const attachedFile: AttachedFile = {
+              file: data.file,
+              name: data.file.name,
+              type: data.file.type,
+              size: formatFileSize(data.file.size)
+            };
+            setAttachedFiles(prev => [...prev, attachedFile]);
+          }
+          break;
+      }
+    };
 
-  // Enhanced file handling with resume detection
+    window.addEventListener('quickAction', handleQuickAction as EventListener);
+    return () => window.removeEventListener('quickAction', handleQuickAction as EventListener);
+  }, []);
+
+  // File handling
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
-    if (!files || files.length === 0) return;
+    if (!files) return;
 
-    const file = files[0];
-    
-    // Check if this is a resume file (PDF, DOC, DOCX)
-    const resumeTypes = [
-      'application/pdf',
-      'application/msword', 
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-    ];
-    
-    const isResumeFile = resumeTypes.includes(file.type);
-    
-    if (isResumeFile) {
-      // Handle as resume upload
-      await handleResumeUpload(file);
-    } else {
-      // Handle as regular file attachment
-      setAttachedFiles(prev => [...prev, file]);
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
       
-      // Add system message about file attachment
-      const systemMessage: ChatMessage = {
-        id: Date.now().toString(),
-        role: 'system',
-        content: `📎 File attached: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`,
-        timestamp: new Date()
-      };
-      
-      setMessages(prev => [...prev, systemMessage]);
+      // Check file size (10MB limit)
+      if (file.size > 10 * 1024 * 1024) {
+        alert(`File ${file.name} is too large. Maximum size is 10MB.`);
+        continue;
+      }
+
+      // Handle resume files specially
+      if (file.type === 'application/pdf' || file.name.toLowerCase().includes('resume') || file.name.toLowerCase().includes('cv')) {
+        await handleResumeUpload(file);
+      } else {
+        const attachedFile: AttachedFile = {
+          file,
+          name: file.name,
+          type: file.type,
+          size: formatFileSize(file.size)
+        };
+        setAttachedFiles(prev => [...prev, attachedFile]);
+      }
     }
-    
+
     // Reset file input
-    event.target.value = '';
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
-  // Resume upload handler
   const handleResumeUpload = async (file: File) => {
+    if (!user) return;
+
     try {
-      setIsProcessingResume(true);
-      setResumeProcessingStatus('Uploading resume...');
-      
-      // Add processing message to chat
-      const processingMessage: ChatMessage = {
-        id: Date.now().toString(),
-        role: 'system',
-        content: '🔄 Processing your resume... This may take a moment.',
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, processingMessage]);
-
-      // Create FormData for file upload
       const formData = new FormData();
-      formData.append('file', file);
-      formData.append('originalName', file.name);
+      formData.append('resume', file);
+      formData.append('userId', user.id);
 
-      // Upload to our API
-      const uploadResponse = await fetch('/api/v1/resumes', {
+      const response = await fetch('/api/v1/resume/secure-upload', {
         method: 'POST',
-        body: formData
+        body: formData,
       });
 
-      if (!uploadResponse.ok) {
-        const errorData = await uploadResponse.json();
-        throw new Error(errorData.error || 'Failed to upload resume');
+      if (!response.ok) {
+        throw new Error('Failed to upload resume');
       }
 
-      const uploadResult = await uploadResponse.json();
-      console.log('Resume upload result:', uploadResult);
-
-      setResumeProcessingStatus('Analyzing resume content...');
+      const result = await response.json();
       
-      // Get the resume ID from the correct structure
-      // API returns either { data: { id: ... } } or { resume: { id: ... } }
-      const resumeId = uploadResult.data?.id || uploadResult.resume?.id || uploadResult.id;
-      
-      if (resumeId) {
-        // Process resume via API
-        const processResponse = await fetch('/api/v1/process-resume', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            resume_id: resumeId,
-            file_name: file.name
-          })
-        });
-
-        if (!processResponse.ok) {
-          console.warn('Resume processing failed, but upload succeeded');
-        }
-      } else {
-        console.warn('Could not find resume ID in response, skipping processing');
-      }
-
-      // Add success message with AI analysis
-      const aiAnalysisMessage: ChatMessage = {
-        id: (Date.now() + 1).toString(),
+      // Add success message
+      const successMessage: ChatMessage = {
+        id: `resume-success-${Date.now()}`,
+        content: `✅ Resume "${file.name}" uploaded successfully! I can now provide personalized career advice based on your background.`,
         role: 'assistant',
-        content: `✅ Resume "${file.name}" uploaded and analyzed successfully!
-
-🔍 **Analysis in progress...** Let me provide you with personalized climate career guidance based on your background.`,
-        timestamp: new Date()
+        timestamp: new Date(),
+        sessionId: sessionId || undefined
       };
-      
-      setMessages(prev => [...prev.slice(0, -1), aiAnalysisMessage]); // Replace processing message
-      
-      // Now get AI analysis of the uploaded resume
-      try {
-        const analysisResponse = await fetch('/api/v1/interactive-chat', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            query: `I just uploaded my resume "${file.name}". Please analyze my background and provide personalized climate career recommendations, including: 1) My skills and experience summary, 2) Climate career opportunities that match my profile, 3) Skills gap analysis for climate roles, 4) Specific next steps for my transition. Use the detailed analysis from my resume processing.`,
-            context: {
-              resume_uploaded: true,
-              file_name: file.name,
-              timestamp: new Date().toISOString(),
-              request_type: 'resume_analysis'
-            }
-          })
-        });
+      setMessages(prev => [...prev, successMessage]);
 
-        if (analysisResponse.ok) {
-          const analysisData = await analysisResponse.json();
-          
-          if (analysisData.content) {
-            // Update the message with the AI analysis
-            const finalAnalysisMessage: ChatMessage = {
-              id: aiAnalysisMessage.id,
-              role: 'assistant',
-              content: analysisData.content,
-              timestamp: new Date(),
-              sources: analysisData.sources || []
-            };
-            
-            setMessages(prev => 
-              prev.map(msg => 
-                msg.id === aiAnalysisMessage.id ? finalAnalysisMessage : msg
-              )
-            );
-          } else {
-            // Fallback if no content in response
-            setMessages(prev => 
-              prev.map(msg => 
-                msg.id === aiAnalysisMessage.id 
-                  ? { 
-                      ...msg, 
-                      content: `✅ Resume "${file.name}" uploaded successfully! I can now provide personalized climate career guidance. Please ask me about specific aspects like "What climate roles match my background?" or "What skills should I develop for renewable energy careers?"`
-                    }
-                  : msg
-              )
-            );
-          }
-        } else {
-          // Fallback message if AI analysis fails
-          setMessages(prev => 
-            prev.map(msg => 
-              msg.id === aiAnalysisMessage.id 
-                ? { 
-                    ...msg, 
-                    content: `✅ Resume "${file.name}" uploaded successfully! I can now provide personalized climate career guidance based on your background and experience.
-
-**What I can help you with:**
-- Climate career opportunities matching your skills
-- Industry transition strategies  
-- Skills gap analysis for climate roles
-- Networking and professional development advice
-
-Feel free to ask me anything about climate careers!`
-                  }
-                : msg
-            )
-          );
-        }
-      } catch (aiError) {
-        console.error('AI analysis error:', aiError);
-        // Keep the initial success message if AI analysis fails
-      }
+      // Trigger resume analysis
+      setInput("Please analyze my resume and provide career recommendations.");
+      setTimeout(() => sendMessage(), 1000);
 
     } catch (error) {
       console.error('Resume upload error:', error);
-      
-      // Add error message
       const errorMessage: ChatMessage = {
-        id: (Date.now() + 2).toString(),
-        role: 'system',
-        content: `❌ Failed to upload resume: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        timestamp: new Date()
+        id: `resume-error-${Date.now()}`,
+        content: `❌ Failed to upload resume "${file.name}". Please try again or contact support.`,
+        role: 'assistant',
+        timestamp: new Date(),
+        error: true,
+        sessionId: sessionId || undefined
       };
-      
-      setMessages(prev => [...prev.slice(0, -1), errorMessage]); // Replace processing message
-    } finally {
-      setIsProcessingResume(false);
-      setResumeProcessingStatus('');
+      setMessages(prev => [...prev, errorMessage]);
     }
   };
 
-  // Remove attached file
   const removeAttachedFile = (index: number) => {
     setAttachedFiles(prev => prev.filter((_, i) => i !== index));
   };
 
-  // Format file size
   const formatFileSize = (bytes: number): string => {
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
-  // Stop streaming
   const handleStopStreaming = () => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
-      setIsStreaming(false);
+      setIsLoading(false);
       onStatusChange('ready');
     }
   };
 
-  // Handle key press
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      handleSendMessage();
+      sendMessage();
     }
   };
 
-  // Voice input (placeholder for future implementation)
   const handleVoiceInput = () => {
     setIsListening(!isListening);
-    // Voice recognition implementation would go here
+    // Voice input implementation would go here
   };
 
-  // Add feedback functionality to leverage the rich database structure
   const handleMessageFeedback = async (messageId: string, feedbackType: 'helpful' | 'not_helpful' | 'correction' | 'flag', rating?: number, comment?: string) => {
+    if (!user) return;
+
     try {
-      const response = await fetch('/api/v1/conversations/feedback', {
+      const response = await fetch('/api/v1/chat/feedback', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
-          conversation_id: sessionId,
-          message_id: messageId,
-          feedback_type: feedbackType,
+          messageId,
+          userId: user.id,
+          feedbackType,
           rating,
-          comment
-        })
+          comment,
+          sessionId
+        }),
       });
 
-      if (response.ok) {
-        console.log('Feedback submitted successfully');
-        // Optionally show a toast notification
+      if (!response.ok) {
+        throw new Error('Failed to submit feedback');
       }
+
+      // Show success feedback
+      console.log('Feedback submitted successfully');
     } catch (error) {
       console.error('Error submitting feedback:', error);
     }
   };
 
-  // Track conversation analytics
   const trackConversationMetrics = async (metrics: any) => {
+    if (!user || !sessionId) return;
+
     try {
-      await fetch('/api/v1/conversations/analytics', {
+      await fetch('/api/v1/analytics/conversation', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
-          conversation_id: sessionId,
+          sessionId,
+          userId: user.id,
           metrics,
-          user_id: null // Will be set by API if authenticated
-        })
+          timestamp: new Date().toISOString()
+        }),
       });
     } catch (error) {
-      console.error('Error tracking analytics:', error);
+      console.error('Error tracking metrics:', error);
     }
   };
 
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div className="text-center p-8">
+          <Brain className="w-16 h-16 mx-auto mb-4 text-spring-green" />
+          <h3 className="text-xl font-semibold text-midnight-forest mb-2">Sign In Required</h3>
+          <p className="text-midnight-forest/70 mb-4">
+            Please sign in to start chatting with your Climate Economy Assistant.
+          </p>
+          <a 
+            href="/auth/login" 
+            className="inline-flex items-center px-6 py-3 bg-spring-green text-white rounded-lg hover:bg-spring-green/90 transition-colors"
+          >
+            Sign In
+          </a>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className={cn("flex flex-col h-full", className)}>
-      {/* Authentication Loading */}
-      {authLoading && (
-        <div className="flex-1 flex items-center justify-center">
-          <div className="flex items-center gap-3 text-midnight-forest/60">
-            <Loader2 className="h-5 w-5 animate-spin" />
-            <span className="text-ios-body">Loading chat...</span>
-          </div>
-        </div>
-      )}
-
-      {/* Not Authenticated */}
-      {!authLoading && !user && (
-        <div className="flex-1 flex items-center justify-center">
-          <IOSContainer variant="glass" padding="xl" className="max-w-md text-center">
-            <div className="flex flex-col items-center gap-4">
-              <AlertCircle className="h-12 w-12 text-spring-green/60" />
-              <div>
-                <h3 className="text-ios-title-3 text-midnight-forest mb-2">
-                  Authentication Required
-                </h3>
-                <p className="text-ios-body text-midnight-forest/70 mb-4">
-                  Please log in to use the Climate Economy Assistant chat feature.
-                </p>
-                <button
-                  onClick={() => window.location.href = '/auth/login'}
-                  className="bg-spring-green text-white px-6 py-2 rounded-ios-lg hover:bg-spring-green/90 transition-colors"
-                >
-                  Log In
-                </button>
-              </div>
-            </div>
-          </IOSContainer>
-        </div>
-      )}
-
-      {/* Authenticated Chat Interface */}
-      {!authLoading && user && (
-        <>
-          {/* Error Display */}
-          {error && (
+    <div className={cn("flex flex-col h-full bg-gradient-to-br from-white to-seafoam-blue/10", className)}>
+      {/* Messages Container */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        <AnimatePresence>
+          {messages.map((message, index) => (
             <motion.div
-              initial={{ opacity: 0, y: -20 }}
+              key={message.id}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-4"
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3, delay: index * 0.05 }}
+              className={cn(
+                "flex gap-3 max-w-4xl",
+                message.role === 'user' ? 'ml-auto flex-row-reverse' : 'mr-auto'
+              )}
             >
-              <IOSContainer variant="glass" padding="md" className="border border-ios-red/20">
-                <div className="flex items-center gap-2 text-ios-red">
-                  <AlertCircle className="h-4 w-4" />
-                  <span className="text-ios-caption-1">{error}</span>
-                  <button
-                    onClick={() => setError(null)}
-                    className="ml-auto text-ios-red/60 hover:text-ios-red"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
+              {/* Avatar */}
+              <div className={cn(
+                "w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0",
+                message.role === 'user' 
+                  ? "bg-spring-green text-white" 
+                  : "bg-gradient-to-br from-seafoam-blue to-spring-green text-white"
+              )}>
+                {message.role === 'user' ? (
+                  <span className="text-xs font-semibold">U</span>
+                ) : (
+                  <Brain className="w-4 h-4" />
+                )}
+              </div>
+
+              {/* Message Content */}
+              <div className={cn(
+                "flex-1 p-4 rounded-2xl shadow-sm",
+                message.role === 'user'
+                  ? "bg-spring-green text-white"
+                  : message.error
+                  ? "bg-red-50 border border-red-200"
+                  : "bg-white border border-gray-200"
+              )}>
+                {/* Message Header */}
+                <div className="flex items-center justify-between mb-2">
+                  <span className={cn(
+                    "text-xs font-medium",
+                    message.role === 'user' ? "text-white/80" : "text-gray-500"
+                  )}>
+                    {message.role === 'user' ? 'You' : 'Climate Assistant'}
+                    {message.isStreaming && (
+                      <span className="ml-2 inline-flex items-center">
+                        <Loader2 className="w-3 h-3 animate-spin" />
+                        <span className="ml-1">Thinking...</span>
+                      </span>
+                    )}
+                  </span>
+                  <span className={cn(
+                    "text-xs",
+                    message.role === 'user' ? "text-white/60" : "text-gray-400"
+                  )}>
+                    {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </span>
                 </div>
-              </IOSContainer>
-            </motion.div>
-          )}
 
-          {/* Messages Container */}
-          <div className="flex-1 overflow-y-auto space-y-4 pb-4">
-            <AnimatePresence>
-              {messages.map((message) => (
-                <StreamingMessage
-                  key={message.id}
-                  message={message}
-                  isStreaming={message.isStreaming || false}
-                />
-              ))}
-            </AnimatePresence>
-            <div ref={messagesEndRef} />
-          </div>
+                {/* Message Text */}
+                <div className={cn(
+                  "prose prose-sm max-w-none",
+                  message.role === 'user' ? "prose-invert" : "",
+                  message.error ? "text-red-700" : ""
+                )}>
+                  <div className="whitespace-pre-wrap">{message.content}</div>
+                </div>
 
-          {/* Input Container */}
-          <IOSContainer variant="glass" padding="lg" className="mt-4">
-            {/* Attached Files */}
-            {attachedFiles.length > 0 && (
-              <div className="mb-4 flex flex-wrap gap-2">
-                {attachedFiles.map((file, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center gap-2 bg-seafoam-blue/10 rounded-ios-lg px-3 py-2"
-                  >
-                    <FileText className="h-4 w-4 text-seafoam-blue" />
-                    <span className="text-ios-caption-1 text-midnight-forest">
-                      {file.name} ({formatFileSize(file.size)})
-                    </span>
+                {/* Attachments */}
+                {message.attachments && message.attachments.length > 0 && (
+                  <div className="mt-3 space-y-2">
+                    {message.attachments.map((attachment, idx) => (
+                      <div key={idx} className="flex items-center gap-2 p-2 bg-gray-100 rounded-lg">
+                        <FileText className="w-4 h-4 text-gray-500" />
+                        <span className="text-sm text-gray-700">{attachment.name}</span>
+                        <span className="text-xs text-gray-500">({attachment.size})</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Sources */}
+                {message.sources && message.sources.length > 0 && (
+                  <div className="mt-3 pt-3 border-t border-gray-200">
+                    <p className="text-xs font-medium text-gray-500 mb-2">Sources:</p>
+                    <div className="space-y-1">
+                      {message.sources.map((source, idx) => (
+                        <div key={idx} className="flex items-center gap-2">
+                          <Sparkles className="w-3 h-3 text-spring-green" />
+                          <a 
+                            href={source.url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-xs text-spring-green hover:underline"
+                          >
+                            {source.title}
+                          </a>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Message Actions */}
+                {message.role === 'assistant' && !message.isStreaming && (
+                  <div className="mt-3 pt-3 border-t border-gray-200 flex items-center gap-2">
                     <button
-                      onClick={() => removeAttachedFile(index)}
-                      className="text-ios-red/60 hover:text-ios-red"
+                      onClick={() => handleMessageFeedback(message.id, 'helpful')}
+                      className="p-1 text-gray-400 hover:text-green-600 transition-colors"
+                      title="Helpful"
                     >
-                      <X className="h-3 w-3" />
+                      <ThumbsUp className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => handleMessageFeedback(message.id, 'not_helpful')}
+                      className="p-1 text-gray-400 hover:text-red-600 transition-colors"
+                      title="Not helpful"
+                    >
+                      <ThumbsDown className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => navigator.clipboard.writeText(message.content)}
+                      className="p-1 text-gray-400 hover:text-blue-600 transition-colors"
+                      title="Copy"
+                    >
+                      <Copy className="w-4 h-4" />
                     </button>
                   </div>
-                ))}
-              </div>
-            )}
-
-            {/* Input Row */}
-            <div className="flex items-end gap-3">
-              {/* File Upload Button */}
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                disabled={isProcessing || isStreaming}
-                className="flex-shrink-0 p-2 text-midnight-forest/60 hover:text-midnight-forest hover:bg-midnight-forest/5 rounded-ios-lg transition-colors disabled:opacity-50"
-                title="Upload resume (PDF, DOC, DOCX) or other files"
-              >
-                <Paperclip className="h-5 w-5" />
-              </button>
-
-              {/* Text Input */}
-              <div className="flex-1 relative">
-                <textarea
-                  ref={inputRef}
-                  value={inputText}
-                  onChange={(e) => setInputText(e.target.value)}
-                  onKeyDown={handleKeyPress}
-                  placeholder={attachedFiles.length > 0 
-                    ? `Message with ${attachedFiles.length} file(s)...` 
-                    : "Ask me anything about climate careers, or upload your resume for personalized advice..."
-                  }
-                  disabled={isProcessing || isStreaming}
-                  className="w-full resize-none bg-white/50 border border-midnight-forest/10 rounded-ios-xl px-4 py-3 text-ios-body text-midnight-forest placeholder-midnight-forest/50 focus:outline-none focus:ring-2 focus:ring-spring-green/20 focus:border-spring-green/30 disabled:opacity-50 max-h-[120px]"
-                  rows={1}
-                />
-              </div>
-
-              {/* Voice Input Button */}
-              <button
-                onClick={handleVoiceInput}
-                disabled={isProcessing || isStreaming}
-                className={cn(
-                  "flex-shrink-0 p-2 rounded-ios-lg transition-colors disabled:opacity-50",
-                  isListening 
-                    ? "text-ios-red bg-ios-red/10" 
-                    : "text-midnight-forest/60 hover:text-midnight-forest hover:bg-midnight-forest/5"
                 )}
-                title={isListening ? "Stop voice input" : "Start voice input"}
-              >
-                {isListening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
-              </button>
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+        <div ref={messagesEndRef} />
+      </div>
 
-              {/* Send/Stop Button */}
-              {isStreaming ? (
+      {/* Input Area */}
+      <div className="border-t border-gray-200 bg-white p-4">
+        {/* Attached Files */}
+        {attachedFiles.length > 0 && (
+          <div className="mb-3 flex flex-wrap gap-2">
+            {attachedFiles.map((file, index) => (
+              <div key={index} className="flex items-center gap-2 bg-gray-100 rounded-lg px-3 py-2">
+                <FileText className="w-4 h-4 text-gray-500" />
+                <span className="text-sm text-gray-700">{file.name}</span>
+                <span className="text-xs text-gray-500">({file.size})</span>
                 <button
-                  onClick={handleStopStreaming}
-                  className="flex-shrink-0 p-2 text-ios-red hover:bg-ios-red/10 rounded-ios-lg transition-colors"
-                  title="Stop response"
+                  onClick={() => removeAttachedFile(index)}
+                  className="text-gray-400 hover:text-red-600 transition-colors"
                 >
-                  <Square className="h-5 w-5" />
+                  <X className="w-4 h-4" />
                 </button>
-              ) : (
-                <button
-                  onClick={() => handleSendMessage()}
-                  disabled={(!inputText.trim() && attachedFiles.length === 0) || isProcessing}
-                  className="flex-shrink-0 p-2 bg-spring-green text-white hover:bg-spring-green/90 rounded-ios-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  title={isProcessing ? "Processing..." : "Send message"}
-                >
-                  {isProcessing ? (
-                    <Loader2 className="h-5 w-5 animate-spin" />
-                  ) : (
-                    <Send className="h-5 w-5" />
-                  )}
-                </button>
-              )}
-            </div>
+              </div>
+            ))}
+          </div>
+        )}
 
-            {/* Hidden file input */}
-            <input
-              ref={fileInputRef}
-              type="file"
-              multiple
-              accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png"
-              onChange={handleFileChange}
-              className="hidden"
+        {/* Input Form */}
+        <div className="flex items-end gap-3">
+          <div className="flex-1 relative">
+            <textarea
+              ref={inputRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="Ask about climate careers, upload your resume, or get personalized advice..."
+              className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-spring-green focus:border-transparent"
+              rows={1}
+              style={{ minHeight: '48px', maxHeight: '120px' }}
+              disabled={isLoading}
             />
-          </IOSContainer>
-        </>
-      )}
+            
+            {/* File Upload Button */}
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-spring-green transition-colors"
+              disabled={isLoading}
+            >
+              <Paperclip className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Voice Input Button */}
+          <button
+            onClick={handleVoiceInput}
+            className={cn(
+              "p-3 rounded-xl transition-colors",
+              isListening 
+                ? "bg-red-500 text-white" 
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+            )}
+            disabled={isLoading}
+          >
+            {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+          </button>
+
+          {/* Send/Stop Button */}
+          {isLoading ? (
+            <button
+              onClick={handleStopStreaming}
+              className="p-3 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors flex items-center gap-2"
+            >
+              <StopCircle className="w-5 h-5" />
+              Stop
+            </button>
+          ) : (
+            <button
+              onClick={sendMessage}
+              disabled={!input.trim() && attachedFiles.length === 0}
+              className="p-3 bg-spring-green text-white rounded-xl hover:bg-spring-green/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              <Send className="w-5 h-5" />
+            </button>
+          )}
+        </div>
+
+        {/* Hidden File Input */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          multiple
+          accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg"
+          onChange={handleFileChange}
+          className="hidden"
+        />
+      </div>
     </div>
   );
 }; 

@@ -4,7 +4,7 @@
 export { AIAssistantInterface } from './AIAssistantInterface';
 export { AIAssistantChatBubble } from './AIAssistantChatBubble';
 export { ChatWindow } from './chat-window';
-export { ChatMessageItem as ChatMessage } from './chat-message';
+export { ChatMessage } from './chat-message';
 
 // New modern 2025 components
 export { StreamingChatInterface } from './StreamingChatInterface';

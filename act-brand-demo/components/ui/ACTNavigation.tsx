@@ -1,10 +1,10 @@
+"use client";
+
 /**
  * ACT Navigation Component - Alliance for Climate Transition
  * Professional navigation with dropdowns and climate-focused menu structure
  * Location: act-brand-demo/components/ui/ACTNavigation.tsx
  */
-
-"use client";
 
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';

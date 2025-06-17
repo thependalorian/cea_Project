@@ -25,7 +25,10 @@ from typing import (
     Callable,
     Type,
     cast,
+    Protocol,
 )
+from dataclasses import dataclass, field
+from enum import Enum
 
 from langchain_core.messages import (
     AIMessage,
@@ -45,6 +48,7 @@ from langchain_core.runnables import RunnableConfig, RunnablePassthrough
 from langchain_core.tools import BaseTool, StructuredTool, tool, InjectedToolArg
 from langchain_core.output_parsers import StrOutputParser
 from langchain_openai import ChatOpenAI
+from langchain_groq import ChatGroq
 from langgraph.graph import END
 from langgraph.graph.message import add_messages
 from langgraph.types import Command
@@ -53,8 +57,8 @@ from pydantic import BaseModel, Field, ValidationError
 import json
 import os
 import inspect
-from enum import Enum
 import traceback
+import operator
 
 # Safe import for create_react_agent to prevent startup errors
 try:
@@ -76,15 +80,45 @@ from core.agents.enhanced_intelligence import (
     UserIdentity,
 )
 from core.config import get_settings
+
+# Import AgentState from the models.py file directly
 from core.models import AgentState
 
 settings = get_settings()
 
+# Import new confidence-based dialogue components
+from typing import Protocol
+
+
+# Add confidence level enum if not already imported
+class ConfidenceLevel(Enum):
+    """Confidence levels for agent responses"""
+
+    HIGH = "high"  # 85-100%
+    MEDIUM = "medium"  # 65-84%
+    LOW = "low"  # 45-64%
+    UNCERTAIN = "uncertain"  # 0-44%
+
+
+@dataclass
+class AgentResponse:
+    """Enhanced agent response with confidence and quality metrics"""
+
+    content: str
+    confidence_level: ConfidenceLevel
+    requires_clarification: bool = False
+    quality_score: float = 0.0
+    specialist_recommendations: List[str] = field(default_factory=list)
+    next_actions: List[str] = field(default_factory=list)
+    clarification_questions: List[str] = field(default_factory=list)
+
 
 class EnhancedAgentState(TypedDict):
-    """Enhanced state following LangGraph patterns"""
+    """Enhanced state following LangGraph patterns with concurrent-safe specialist tracking"""
 
     messages: Annotated[list, add_messages]
+    # CONCURRENT-SAFE SPECIALIST TRACKING (Fix for InvalidUpdateError)
+    current_specialist_history: Annotated[List[str], operator.add]
     user_profile: Dict[str, Any]
     user_identities: List[UserIdentity]
     reflection_history: List[ReflectionFeedback]
@@ -227,6 +261,32 @@ Enhanced Intelligence Capabilities:
         error_info = f" - {str(error)}" if error else ""
         self.logger.error(f"[{self.agent_type}] {message}{error_info}")
 
+    # CONCURRENT-SAFE SPECIALIST TRACKING UTILITIES (Fix for InvalidUpdateError)
+    def get_current_specialist(self, state: Dict[str, Any]) -> Optional[str]:
+        """
+        Safely get current specialist from state dict with backward compatibility.
+        Works with both old current_specialist field and new current_specialist_history.
+        """
+        # Try new concurrent-safe approach first
+        history = state.get("current_specialist_history", [])
+        if history:
+            return history[-1]
+
+        # Fallback to old approach for backward compatibility
+        return state.get("current_specialist")
+
+    def set_current_specialist_in_state(self, specialist: str) -> Dict[str, Any]:
+        """Helper to create state update dict for setting current specialist"""
+        return {"current_specialist_history": [specialist]}
+
+    def update_state_with_specialist(
+        self, state: Dict[str, Any], specialist: str
+    ) -> Dict[str, Any]:
+        """Update state with new specialist using concurrent-safe approach"""
+        updated_state = dict(state)
+        updated_state.update(self.set_current_specialist_in_state(specialist))
+        return updated_state
+
     def extract_latest_message(self, state: AgentState) -> Optional[str]:
         """
         Extract the latest user message from the state
@@ -279,7 +339,7 @@ Enhanced Intelligence Capabilities:
         self, state: AgentState, response_content: str, metadata: Dict[str, Any] = None
     ) -> AgentState:
         """
-        Update the agent state with a response
+        Update the agent state with a response using concurrent-safe specialist tracking
 
         Args:
             state: Current state
@@ -296,10 +356,13 @@ Enhanced Intelligence Capabilities:
         updated_messages = list(state.get("messages", []))
         updated_messages.append(response_message)
 
-        # Create updated state
+        # Create updated state with concurrent-safe specialist tracking
         updated_state = dict(state)
         updated_state["messages"] = updated_messages
         updated_state["next"] = "FINISH"
+
+        # Use concurrent-safe specialist tracking
+        updated_state.update(self.set_current_specialist_in_state(self.agent_type))
 
         # Add CEA.md enhanced metadata to state
         updated_state.update(
@@ -619,9 +682,9 @@ Enhanced Intelligence Capabilities:
         user_id: str,
         conversation_id: str,
         context: Dict[str, Any] = None,
-    ) -> Dict[str, Any]:
+    ) -> AgentResponse:
         """
-        Handle a user message (to be implemented by subclasses)
+        Handle a user message with enhanced confidence-based response
 
         Args:
             message: User message
@@ -630,15 +693,364 @@ Enhanced Intelligence Capabilities:
             context: Additional context for the message
 
         Returns:
-            Response data
+            Enhanced AgentResponse with confidence assessment
         """
-        return {
-            "content": f"Base agent response for: {message}",
-            "metadata": {
+        # Default implementation - to be overridden by subclasses
+        base_response = f"Base agent response for: {message}"
+
+        user_context = {
+            "user_id": user_id,
+            "conversation_id": conversation_id,
+            "identities": self.identify_user_characteristics(message).get(
+                "identities", []
+            ),
+            **(context or {}),
+        }
+
+        return self.create_enhanced_response(
+            content=base_response,
+            user_message=message,
+            user_context=user_context,
+            metadata={
                 "agent_type": self.agent_type,
                 "cea_mission": self.cea_mission,
             },
+        )
+
+    def should_request_clarification(
+        self,
+        user_message: str,
+        user_context: Dict[str, Any] = None,
+        confidence_threshold: float = 0.65,
+    ) -> bool:
+        """
+        Determine if clarification should be requested before providing response
+
+        This implements the Confidence-Based Dialogue pattern from the research
+        """
+        # Assess identity confidence
+        user_characteristics = self.identify_user_characteristics(user_message)
+        identity_confidence = max(
+            user_characteristics.get("confidence_scores", {}).values(), default=0.0
+        )
+
+        # Assess message clarity
+        message_clarity = self._assess_message_clarity(user_message)
+
+        # Combined confidence score
+        overall_confidence = (identity_confidence + message_clarity) / 2
+
+        return overall_confidence < confidence_threshold
+
+    def _assess_message_clarity(self, message: str) -> float:
+        """Assess how clear and specific the user message is"""
+        clarity_score = 0.0
+        message_lower = message.lower()
+
+        # Length indicator
+        if len(message) > 50:
+            clarity_score += 0.2
+        if len(message) > 100:
+            clarity_score += 0.2
+
+        # Specific goal indicators
+        goal_words = ["want", "need", "looking for", "interested in", "help with"]
+        if any(word in message_lower for word in goal_words):
+            clarity_score += 0.3
+
+        # Context indicators
+        context_words = ["currently", "background", "experience", "situation"]
+        if any(word in message_lower for word in context_words):
+            clarity_score += 0.3
+
+        return min(clarity_score, 1.0)
+
+    def create_clarification_response(
+        self,
+        user_message: str,
+        tentative_guidance: str = "",
+        user_context: Dict[str, Any] = None,
+    ) -> AgentResponse:
+        """
+        Create a clarification response that asks questions before providing guidance
+
+        This implements the research-backed pattern of asking questions when uncertain
+        """
+        # Generate clarification questions
+        clarification_questions = self.generate_clarification_questions(
+            user_message, ConfidenceLevel.LOW
+        )
+
+        # Create response content
+        response_content = f"""I want to make sure I give you the most relevant guidance for your climate career goals.
+
+{tentative_guidance}
+
+To provide more personalized recommendations, could you help me understand:
+
+"""
+
+        for i, question in enumerate(clarification_questions, 1):
+            response_content += f"{i}. {question}\n"
+
+        response_content += "\nOnce I understand your situation better, I can connect you with specific resources and opportunities that match your background and goals."
+
+        return AgentResponse(
+            content=response_content,
+            confidence_level=ConfidenceLevel.LOW,
+            requires_clarification=True,
+            quality_score=0.6,  # Good structure but requires follow-up
+            clarification_questions=clarification_questions,
+            next_actions=[
+                "Provide requested information",
+                "Answer clarification questions",
+            ],
+        )
+
+    def assess_response_confidence(
+        self, content: str, user_context: Dict[str, Any] = None
+    ) -> ConfidenceLevel:
+        """
+        Assess confidence level of agent response based on content quality
+        and user context alignment
+        """
+        confidence_score = 0.0
+
+        # Content quality indicators
+        quality_indicators = [
+            "contact",
+            "email",
+            "phone",
+            "website",
+            "apply",
+            "enroll",
+            "specific",
+            "exactly",
+            "step",
+            "first",
+            "next",
+        ]
+
+        content_lower = content.lower()
+        quality_matches = sum(
+            1 for indicator in quality_indicators if indicator in content_lower
+        )
+        confidence_score += min(quality_matches * 0.1, 0.4)  # Max 0.4 from content
+
+        # Length and detail assessment
+        if len(content) > 200:
+            confidence_score += 0.2
+        if len(content) > 500:
+            confidence_score += 0.1
+
+        # Specific resource mentions
+        if any(
+            word in content_lower
+            for word in ["massachusetts", "masshire", "act alliance"]
+        ):
+            confidence_score += 0.2
+
+        # User context alignment
+        if user_context:
+            context_alignment = self._assess_context_alignment(content, user_context)
+            confidence_score += context_alignment * 0.3
+
+        # Map to confidence levels
+        if confidence_score >= 0.85:
+            return ConfidenceLevel.HIGH
+        elif confidence_score >= 0.65:
+            return ConfidenceLevel.MEDIUM
+        elif confidence_score >= 0.45:
+            return ConfidenceLevel.LOW
+        else:
+            return ConfidenceLevel.UNCERTAIN
+
+    def _assess_context_alignment(
+        self, content: str, user_context: Dict[str, Any]
+    ) -> float:
+        """Assess how well response aligns with user context"""
+        alignment_score = 0.0
+        content_lower = content.lower()
+
+        # Check identity alignment
+        user_identities = user_context.get("identities", [])
+        if "veteran" in user_identities and any(
+            word in content_lower
+            for word in ["military", "veteran", "service", "transition"]
+        ):
+            alignment_score += 0.3
+        if "international" in user_identities and any(
+            word in content_lower
+            for word in ["credential", "international", "visa", "evaluation"]
+        ):
+            alignment_score += 0.3
+        if "environmental_justice" in user_identities and any(
+            word in content_lower
+            for word in ["community", "environmental", "justice", "equity"]
+        ):
+            alignment_score += 0.3
+
+        # Check geographic alignment
+        if user_context.get("location") and "massachusetts" in content_lower:
+            alignment_score += 0.2
+
+        return min(alignment_score, 1.0)
+
+    def generate_clarification_questions(
+        self, user_message: str, confidence_level: ConfidenceLevel
+    ) -> List[str]:
+        """
+        Generate appropriate clarification questions based on confidence level
+        and message content
+        """
+        questions = []
+
+        if confidence_level == ConfidenceLevel.UNCERTAIN:
+            # Basic clarification questions
+            questions.extend(
+                [
+                    "Could you tell me more about your current career situation?",
+                    "What specific aspect of clean energy careers interests you most?",
+                    "Are you looking to change careers or enhance your current role?",
+                ]
+            )
+
+        elif confidence_level == ConfidenceLevel.LOW:
+            # More targeted questions
+            user_lower = user_message.lower()
+
+            if "veteran" in user_lower or "military" in user_lower:
+                questions.append(
+                    "Are you currently serving in the military or are you a veteran?"
+                )
+
+            if any(
+                word in user_lower
+                for word in ["international", "foreign", "credentials"]
+            ):
+                questions.append(
+                    "Do you have credentials or education from outside the United States?"
+                )
+
+            if "job" in user_lower or "career" in user_lower:
+                questions.append(
+                    "What type of role or career path are you most interested in pursuing?"
+                )
+
+        return questions[:2]  # Limit to 2 questions to avoid overwhelming
+
+    def create_enhanced_response(
+        self,
+        content: str,
+        user_message: str = "",
+        user_context: Dict[str, Any] = None,
+        metadata: Dict[str, Any] = None,
+    ) -> AgentResponse:
+        """
+        Create enhanced response with confidence assessment and quality metrics
+        """
+        # Assess confidence level
+        confidence_level = self.assess_response_confidence(content, user_context)
+
+        # Determine if clarification is needed
+        requires_clarification = confidence_level in [
+            ConfidenceLevel.LOW,
+            ConfidenceLevel.UNCERTAIN,
+        ]
+
+        # Generate clarification questions if needed
+        clarification_questions = []
+        if requires_clarification:
+            clarification_questions = self.generate_clarification_questions(
+                user_message, confidence_level
+            )
+
+        # Calculate quality score (simplified)
+        quality_score = self._calculate_quality_score(content)
+
+        # Generate next actions based on content
+        next_actions = self._extract_next_actions(content)
+
+        # Enhanced metadata
+        enhanced_metadata = {
+            "agent_type": self.agent_type,
+            "confidence_level": confidence_level.value,
+            "quality_score": quality_score,
+            "cea_mission": self.cea_mission,
+            "timestamp": datetime.now().isoformat(),
+            **(metadata or {}),
         }
+
+        return AgentResponse(
+            content=content,
+            confidence_level=confidence_level,
+            requires_clarification=requires_clarification,
+            quality_score=quality_score,
+            clarification_questions=clarification_questions,
+            next_actions=next_actions,
+        )
+
+    def _calculate_quality_score(self, content: str) -> float:
+        """Calculate response quality score"""
+        score = 0.0
+        content_lower = content.lower()
+
+        # Actionability score
+        action_words = [
+            "contact",
+            "apply",
+            "visit",
+            "call",
+            "email",
+            "enroll",
+            "register",
+        ]
+        score += min(
+            sum(1 for word in action_words if word in content_lower) * 0.1, 0.3
+        )
+
+        # Specificity score
+        specific_words = [
+            "phone",
+            "email",
+            "website",
+            "address",
+            "deadline",
+            "requirement",
+        ]
+        score += min(
+            sum(1 for word in specific_words if word in content_lower) * 0.1, 0.3
+        )
+
+        # Personalization score
+        personal_words = ["your", "you", "based on", "for you", "in your situation"]
+        score += min(
+            sum(1 for word in personal_words if word in content_lower) * 0.1, 0.2
+        )
+
+        # Length bonus for comprehensive responses
+        if len(content) > 300:
+            score += 0.2
+
+        return min(score, 1.0)
+
+    def _extract_next_actions(self, content: str) -> List[str]:
+        """Extract actionable next steps from response content"""
+        next_actions = []
+        content_lower = content.lower()
+
+        if "contact" in content_lower:
+            next_actions.append("Contact recommended organizations")
+        if "apply" in content_lower:
+            next_actions.append("Submit applications")
+        if "visit" in content_lower or "website" in content_lower:
+            next_actions.append("Visit recommended websites")
+        if "enroll" in content_lower or "register" in content_lower:
+            next_actions.append("Register for programs")
+        if "resume" in content_lower:
+            next_actions.append("Update resume")
+
+        return next_actions
 
 
 class SupervisorAgent(BaseAgent):
@@ -759,15 +1171,17 @@ Target: 47% women, 50% Black respondents, 72% Hispanic/Latino geographic barrier
             Enhanced routing decision with coordination strategy
         """
         # Use enhanced intelligence for routing
-        intelligence_result = await (
-            self.intelligence_coordinator.process_with_enhanced_intelligence(
-                message,
-                (
-                    user_context.get("user_id", "anonymous")
-                    if user_context
-                    else "anonymous"
-                ),
-                user_context,
+        intelligence_result = (
+            await (
+                self.intelligence_coordinator.process_with_enhanced_intelligence(
+                    message,
+                    (
+                        user_context.get("user_id", "anonymous")
+                        if user_context
+                        else "anonymous"
+                    ),
+                    user_context,
+                )
             )
         )
 
@@ -925,7 +1339,9 @@ Target: 47% women, 50% Black respondents, 72% Hispanic/Latino geographic barrier
                 user_context.update(context)
 
             # Enhanced routing decision
-            enhanced_routing = await self.determine_enhanced_routing(message, user_context)
+            enhanced_routing = await self.determine_enhanced_routing(
+                message, user_context
+            )
 
             # Determine response strategy based on routing complexity
             if (

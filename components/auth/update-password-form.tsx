@@ -1,35 +1,30 @@
 /**
- * Update Password Form - Climate Economy Assistant
- * Form to update password after reset email verification
+ * Update Password Form Component
+ * Allows users to set a new password after password reset
  * Location: components/auth/update-password-form.tsx
  */
 
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Eye, EyeOff, Lock, CheckCircle } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Eye, EyeOff, Lock, CheckCircle, AlertCircle } from 'lucide-react';
 import { cn } from "@/lib/utils";
+
+interface UpdatePasswordFormProps extends React.ComponentPropsWithoutRef<"div"> {}
 
 export function UpdatePasswordForm({
   className,
   ...props
-}: React.ComponentPropsWithoutRef<"div">) {
+}: UpdatePasswordFormProps) {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -38,15 +33,25 @@ export function UpdatePasswordForm({
   const [isValidSession, setIsValidSession] = useState(false);
 
   useEffect(() => {
-    // Check if user has a valid session (came from password reset email)
+    // Check if user has a valid session using secure API
     const checkSession = async () => {
-      const supabase = createClient();
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (session) {
-        setIsValidSession(true);
-      } else {
-        // If no session, redirect to forgot password
+      try {
+        const response = await fetch('/api/v1/auth/check-session', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (response.ok) {
+          const { valid } = await response.json();
+          setIsValidSession(valid);
+        } else {
+          // If no valid session, redirect to forgot password
+          router.push('/auth/forgot-password');
+        }
+      } catch (error) {
+        console.error('Session check error:', error);
         router.push('/auth/forgot-password');
       }
     };
@@ -93,13 +98,21 @@ export function UpdatePasswordForm({
     }
 
     try {
-      const supabase = createClient();
-      
-      const { error } = await supabase.auth.updateUser({
-        password: password
+      // Use secure API endpoint for password update
+      const response = await fetch('/api/v1/auth/update-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          password: password
+        }),
       });
 
-      if (error) throw error;
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to update password');
+      }
 
       setSuccess(true);
       
@@ -165,6 +178,14 @@ export function UpdatePasswordForm({
         <CardContent>
           <form onSubmit={handleUpdatePassword}>
             <div className="flex flex-col gap-6">
+              {/* Error Alert */}
+              {error && (
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
+
               {/* New Password Field */}
               <div className="grid gap-2">
                 <Label htmlFor="password">New Password</Label>
@@ -235,10 +256,13 @@ export function UpdatePasswordForm({
                 </ul>
               </div>
 
-              {error && <p className="text-sm text-red-500">{error}</p>}
-
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Updating Password..." : "Update Password"}
+              {/* Submit Button */}
+              <Button 
+                type="submit" 
+                className="w-full"
+                disabled={isLoading}
+              >
+                {isLoading ? "Updating..." : "Update Password"}
               </Button>
             </div>
           </form>

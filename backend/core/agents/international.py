@@ -23,6 +23,8 @@ from core.prompts import (
     INTERNATIONAL_SPECIALIST_PROMPT,
     MA_CLIMATE_CONTEXT,
     POPULATION_CONTEXTS,
+    LIV_CONFIDENCE_PROMPT,
+    CONFIDENCE_BASED_DIALOGUE_PROMPTS,
 )
 from tools.analytics import log_specialist_interaction
 from tools.credentials import evaluate_credentials

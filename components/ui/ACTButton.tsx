@@ -15,6 +15,7 @@ interface ACTButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'accent' | 'outline' | 'ghost' | 'minimal' | 'glass';
   size?: 'sm' | 'md' | 'lg' | 'xl';
   href?: string;
+  target?: string;
   className?: string;
   icon?: React.ReactNode;
   iconPosition?: 'left' | 'right';
@@ -30,6 +31,7 @@ export const ACTButton = forwardRef<HTMLButtonElement, ACTButtonProps>(
     variant = 'primary', 
     size = 'md', 
     href, 
+    target,
     className, 
     icon, 
     iconPosition = 'left',
@@ -110,7 +112,7 @@ export const ACTButton = forwardRef<HTMLButtonElement, ACTButtonProps>(
     // Return as link if href is provided
     if (href) {
       return (
-        <Link href={href} className={buttonClasses}>
+        <Link href={href} target={target} className={buttonClasses}>
           <motion.div
             {...motionProps}
           >

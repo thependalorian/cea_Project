@@ -1,10 +1,10 @@
+"use client";
+
 /**
  * AI Insights Dashboard - Alliance for Climate Transition
  * Real-time AI predictions, insights, and interactive climate intelligence
  * Location: act-brand-demo/components/ui/AIInsightsDashboard.tsx
  */
-
-"use client";
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';

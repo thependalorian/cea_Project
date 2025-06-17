@@ -1,10 +1,10 @@
+"use client";
+
 /**
  * Feedback Widget Component - Alliance for Climate Transition
  * Modern feedback collection widget with iOS-inspired design
  * Location: act-brand-demo/components/ui/FeedbackWidget.tsx
  */
-
-'use client';
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';

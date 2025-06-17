@@ -30,7 +30,11 @@ from core.tools.resume_processor import ResumeProcessor
 from core.tools.skills_translator import SkillsTranslator
 from core.tools.vector_search import VectorSearchTool
 
-TEST_USER_ID = "30eedd6a-0771-444e-90d2-7520c1eb03f0"
+# George Nekwaya's details for testing
+TEST_USER_ID = "gnekwaya-test-user-001"
+TEST_USER_NAME = "George Nekwaya"
+TEST_USER_EMAIL = "gnekwaya@joinact.org"
+TEST_USER_PHONE = "+1-857-123-4567"
 
 
 class TestToolCallChains:
@@ -45,92 +49,71 @@ class TestToolCallChains:
         """Test complete resume processing tool chain"""
         print("\n🔧 Testing Resume Processing Chain")
 
-        # Mock resume file upload scenario
-        with patch("core.tools.resume_processor.ResumeProcessor") as mock_processor:
-            # Mock resume parsing results
-            mock_processor.return_value.parse_resume.return_value = {
-                "sections": {
-                    "contact_info": {
-                        "name": "John Doe",
-                        "email": "john.doe@email.com",
-                        "phone": "555-0123",
-                    },
-                    "experience": [
-                        {
-                            "title": "Software Engineer",
-                            "company": "TechCorp",
-                            "duration": "2020-2024",
-                            "description": "Developed cloud infrastructure and automated deployment pipelines",
-                        }
-                    ],
+        # Mock resume file upload scenario using George's profile
+        with patch("core.tools.resume_processor.ResumeProcessor") as # Test data should use real database fixtures,
                     "education": [
                         {
-                            "degree": "BS Computer Science",
-                            "school": "MIT",
+                            "degree": "BS Engineering & Computer Science",
+                            "school": "Massachusetts Institute of Technology",
                             "year": "2020",
                         }
                     ],
-                    "skills": ["Python", "AWS", "Docker", "Kubernetes", "CI/CD"],
+                    "skills": [
+                        "Python",
+                        "AI/ML",
+                        "Climate Tech",
+                        "Fintech",
+                        "Project Management",
+                        "Strategic Planning",
+                    ],
                 },
-                "confidence_score": 0.94,
-                "parsing_time": 1.2,
+                "confidence_score": 0.96,
+                "parsing_time": 1.1,
             }
 
             with patch(
                 "core.tools.skills_translator.SkillsTranslator"
-            ) as mock_translator:
-                # Mock skills translation
-                mock_translator.return_value.translate_to_climate.return_value = {
-                    "technical_translations": {
-                        "Python": {
-                            "climate_skill": "Clean energy data analysis and modeling",
-                            "relevance_score": 0.89,
+            ) as # Test data should use real database fixtures,
+                        },
+                        "AI/ML": {
+                            "climate_skill": "Climate tech artificial intelligence applications",
+                            "relevance_score": 0.95,
                             "example_applications": [
-                                "Solar farm performance analytics",
-                                "Grid optimization algorithms",
+                                "Climate risk assessment algorithms",
+                                "Renewable energy optimization systems",
                             ],
                         },
-                        "AWS": {
-                            "climate_skill": "Renewable energy cloud infrastructure",
-                            "relevance_score": 0.85,
+                        "Climate Tech": {
+                            "climate_skill": "Climate technology strategy and implementation",
+                            "relevance_score": 0.98,
                             "example_applications": [
-                                "Wind farm monitoring systems",
-                                "Smart grid data platforms",
+                                "Climate economy transition platforms",
+                                "Green finance technology solutions",
                             ],
                         },
                     },
-                    "overall_climate_readiness": 0.87,
+                    "overall_climate_readiness": 0.95,
                 }
 
-                with patch("core.tools.job_matcher.JobMatcher") as mock_matcher:
-                    # Mock job matching results
-                    mock_matcher.return_value.find_matches.return_value = {
-                        "matches": [
-                            {
-                                "job_id": "job_001",
-                                "title": "Clean Energy Data Analyst",
-                                "company": "Sunrun",
-                                "location": "Boston, MA",
-                                "relevance_score": 0.92,
-                                "matching_skills": [
-                                    "Python",
-                                    "Data Analysis",
-                                    "Cloud Infrastructure",
-                                ],
-                                "salary_range": "$75,000 - $95,000",
+                with patch("core.tools.job_matcher.JobMatcher") as # Test data should use real database fixtures,
+                                "salary_range": "$120,000 - $180,000",
                             },
                             {
                                 "job_id": "job_002",
-                                "title": "Renewable Energy Software Engineer",
+                                "title": "Climate Fintech Product Manager",
                                 "company": "Nexamp",
                                 "location": "Cambridge, MA",
-                                "relevance_score": 0.88,
-                                "matching_skills": ["Python", "AWS", "System Design"],
-                                "salary_range": "$85,000 - $110,000",
+                                "relevance_score": 0.93,
+                                "matching_skills": [
+                                    "Fintech",
+                                    "Python",
+                                    "Strategic Planning",
+                                ],
+                                "salary_range": "$110,000 - $160,000",
                             },
                         ],
-                        "total_matches": 12,
-                        "geographic_matches": 8,
+                        "total_matches": 18,
+                        "geographic_matches": 14,
                     }
 
                     # Execute the tool chain
@@ -144,16 +127,17 @@ class TestToolCallChains:
                     assert "content" in response
                     content = response["content"]
 
-                    # Verify resume parsing occurred
+                    # Verify resume parsing occurred with George's data
                     assert (
-                        "software engineer" in content.lower()
-                        or "python" in content.lower()
+                        "buffr" in content.lower()
+                        or "climate tech" in content.lower()
+                        or "fintech" in content.lower()
                     )
 
                     # Verify skills translation
-                    assert (
-                        "clean energy" in content.lower()
-                        or "renewable energy" in content.lower()
+                    assert "climate" in content.lower() and (
+                        "ai" in content.lower()
+                        or "artificial intelligence" in content.lower()
                     )
 
                     # Verify job matching
@@ -172,10 +156,7 @@ class TestToolCallChains:
         """Test vector search and knowledge retrieval chain"""
         print("\n🔍 Testing Vector Search Chain")
 
-        with patch("core.tools.vector_search.VectorSearchTool") as mock_vector:
-            # Mock vector search results
-            mock_vector.return_value.search.return_value = {
-                "query_embedding": [0.1, 0.2, 0.3, 0.4, 0.5],  # Simplified
+        with patch("core.tools.vector_search.VectorSearchTool") as # Test data should use real database fixtures,  # Simplified
                 "results": [
                     {
                         "content": "Massachusetts Clean Energy Center offers solar installer training programs with job placement assistance. The 6-week program covers safety, electrical fundamentals, and hands-on installation experience.",
@@ -225,17 +206,7 @@ class TestToolCallChains:
         """Test career pathway analysis tool chain"""
         print("\n🛤️ Testing Career Pathway Analysis Chain")
 
-        with patch("core.tools.career_analyzer.CareerPathwayAnalyzer") as mock_analyzer:
-            # Mock career pathway analysis
-            mock_analyzer.return_value.analyze_pathways.return_value = {
-                "current_profile": {
-                    "background": "Military logistics coordinator",
-                    "experience_years": 8,
-                    "transferable_skills": [
-                        "project management",
-                        "supply chain",
-                        "team leadership",
-                    ],
+        with patch("core.tools.career_analyzer.CareerPathwayAnalyzer") as # Test data should use real database fixtures,
                     "climate_readiness_score": 0.73,
                 },
                 "recommended_pathways": [
@@ -299,21 +270,7 @@ class TestToolCallChains:
         print("\n🚨 Testing Tool Error Handling")
 
         # Test resume processing failure
-        with patch("core.tools.resume_processor.ResumeProcessor") as mock_processor:
-            # Simulate tool failure
-            mock_processor.side_effect = Exception(
-                "Resume parsing service temporarily unavailable"
-            )
-
-            response = await self.supervisor.handle_message(
-                message="Please analyze my resume",
-                user_id=TEST_USER_ID,
-                conversation_id="tool_error_test",
-            )
-
-            # Verify graceful error handling
-            assert "content" in response
-            content = response["content"].lower()
+        with patch("core.tools.resume_processor.ResumeProcessor") as # Test data should use real database fixtures.lower()
 
             # Should acknowledge the issue without exposing technical details
             error_indicators = [
@@ -380,21 +337,7 @@ class TestToolCallChains:
         """Test quality of tool result integration into responses"""
         print("\n🎯 Testing Tool Result Integration Quality")
 
-        with patch("core.tools.job_matcher.JobMatcher") as mock_matcher:
-            # Mock detailed job matching results
-            mock_matcher.return_value.find_matches.return_value = {
-                "matches": [
-                    {
-                        "job_id": "job_solar_001",
-                        "title": "Solar Project Coordinator",
-                        "company": "Sunpower",
-                        "location": "Framingham, MA",
-                        "relevance_score": 0.91,
-                        "matching_skills": [
-                            "Project Management",
-                            "Site Assessment",
-                            "Stakeholder Communication",
-                        ],
+        with patch("core.tools.job_matcher.JobMatcher") as # Test data should use real database fixtures,
                         "salary_range": "$65,000 - $80,000",
                         "job_description": "Coordinate residential solar installations from initial site assessment through project completion.",
                         "requirements": [
@@ -454,21 +397,8 @@ class TestToolCallChains:
         and what the salary prospects look like in Massachusetts.
         """
 
-        with patch(
-            "core.tools.skills_translator.SkillsTranslator"
-        ) as mock_translator, patch(
-            "core.tools.job_matcher.JobMatcher"
-        ) as mock_matcher, patch(
-            "core.tools.training_finder.TrainingFinder"
-        ) as mock_training:
-            # Mock coordinated tool responses
-            mock_translator.return_value.translate_military_skills.return_value = {
-                "nuclear_technician": {
-                    "transferable_skills": [
-                        "Systems monitoring",
-                        "Safety protocols",
-                        "Technical troubleshooting",
-                    ],
+        with (
+            patch("core.tools.skills_translator.SkillsTranslator") as # Test data should use real database fixtures,
                     "climate_applications": [
                         "Grid operations",
                         "Power plant maintenance",
@@ -477,30 +407,10 @@ class TestToolCallChains:
                 }
             }
 
-            mock_matcher.return_value.find_matches.return_value = {
-                "matches": [
-                    {
-                        "title": "Wind Turbine Technician",
-                        "salary_range": "$52,000 - $68,000",
-                        "skill_match": 0.84,
-                    },
-                    {
-                        "title": "Solar Operations Specialist",
-                        "salary_range": "$58,000 - $75,000",
-                        "skill_match": 0.79,
-                    },
-                ]
+            # Test data should use real database fixtures
             }
 
-            mock_training.return_value.find_programs.return_value = {
-                "programs": [
-                    {
-                        "name": "Wind Turbine Technology Certificate",
-                        "provider": "Massachusetts Maritime Academy",
-                        "duration": "6 months",
-                        "cost": "GI Bill eligible",
-                    }
-                ]
+            # Test data should use real database fixtures
             }
 
             response = await self.supervisor.handle_message(

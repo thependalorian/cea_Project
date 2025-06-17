@@ -9,7 +9,7 @@ export * from './auth'
 
 // === Chat & Communication Features ===
 export { ChatWindow } from './chat/chat-window'
-export { ChatMessageItem } from './chat/chat-message'
+export { ChatMessage } from './chat/chat-message'
 
 // === Resume & Skills Analysis ===
 export { default as EnhancedResumeAnalysis } from './resume/enhanced-resume-analysis'

@@ -5,7 +5,7 @@ import { ACTCard } from '@/components/ui';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { createClient } from '@/lib/supabase/client';
+import { useAuth } from '@/contexts/auth-context';
 import { useToast } from '@/hooks/use-toast';
 import { MapPin, Briefcase, Target, DollarSign, Clock, Save } from 'lucide-react';
 
@@ -58,7 +58,7 @@ export function CareerPreferencesSection({ userId, currentPreferences }: CareerP
   const [isSaving, setIsSaving] = useState(false);
   const [newLocation, setNewLocation] = useState('');
   const { toast } = useToast();
-  const supabase = createClient();
+  const { user } = useAuth();
 
   const handleAddLocation = () => {
     if (newLocation.trim() && !preferences.preferred_locations.includes(newLocation.trim())) {
@@ -98,16 +98,21 @@ export function CareerPreferencesSection({ userId, currentPreferences }: CareerP
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      const { error } = await supabase
-        .from('job_seeker_profiles')
-        .upsert({
+      const response = await fetch('/api/v1/profile/career-preferences', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           user_id: userId,
           ...preferences,
           preferences_updated_at: new Date().toISOString()
-        });
+        }),
+      });
 
-      if (error) {
-        throw error;
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to save preferences');
       }
 
       toast({

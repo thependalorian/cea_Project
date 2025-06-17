@@ -3,15 +3,20 @@
 import { useState, useEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useAuth } from '@/contexts/auth-context'
 import { createClient } from '@/lib/supabase/client'
-import { User } from '@supabase/supabase-js'
+
+interface User {
+  id: string;
+  email?: string;
+}
 
 export default function ResumeDebug() {
-  const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(false)
   const [results, setResults] = useState<Record<string, unknown>[]>([])
   const [resume, setResume] = useState<Record<string, unknown> | null>(null)
   const [pyBackendRunning, setPyBackendRunning] = useState<boolean | null>(null)
+  const { user } = useAuth()
   const supabase = createClient()
   
   // Get current user on component mount
@@ -19,7 +24,6 @@ export default function ResumeDebug() {
     const getUser = async () => {
       const { data } = await supabase.auth.getUser()
       if (data?.user) {
-        setUser(data.user)
         addResult('Auth check', 'User found', { id: data.user.id })
       } else {
         addResult('Auth check', 'No user found', {})
@@ -27,7 +31,7 @@ export default function ResumeDebug() {
     }
     
     getUser()
-  }, [supabase])
+  }, [])
   
   const addResult = (title: string, message: string, data: Record<string, unknown> = {}) => {
     setResults(prev => [

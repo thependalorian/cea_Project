@@ -334,7 +334,7 @@ class MAResourceAnalystAgent(BaseAgent):
                 return {
                     **state,
                     "messages": updated_messages,
-                    "current_specialist": "jasmine_ma_resource_analyst",
+                    "current_specialist_history": ["jasmine_ma_resource_analyst"],
                     "metadata": response_data.get("metadata", {}),
                 }
 

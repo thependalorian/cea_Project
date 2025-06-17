@@ -1,364 +1,492 @@
 /**
- * Partners Dashboard - Climate Economy Assistant
- * Comprehensive partner dashboard with resource management and analytics
+ * Partners Page - Climate Economy Assistant
+ * Showcase partner organizations and their opportunities
  * Location: app/partners/page.tsx
  */
 
-import { createClient } from "@/lib/supabase/server";
+'use client';
+
+import { AuthGuard } from '@/components/AuthGuard';
+import { useAuth } from '@/contexts/auth-context';
+import { ACTButton } from '@/components/ui/ACTButton';
+import { ACTCard } from '@/components/ACTCard';
+import { SimpleLayout } from '@/components/SimpleLayout';
 import { 
+  Building2, 
+  MapPin, 
+  Users, 
+  Globe, 
   Briefcase, 
-  GraduationCap, 
-  BookOpen, 
-  Settings, 
-  Plus,
+  GraduationCap,
+  Calendar,
+  Award,
+  ExternalLink,
+  Search,
+  Filter,
+  Star,
+  Heart,
+  Zap,
+  Target,
   TrendingUp,
-  Users,
-  BarChart3,
-  CheckCircle,
-  Clock,
-  AlertTriangle,
-  FileText,
-  Eye
-} from "lucide-react";
+  CheckCircle2,
+  ArrowRight,
+  Phone,
+  Mail,
+  Linkedin,
+  Twitter,
+  Facebook,
+  Youtube
+} from 'lucide-react';
 
-export default async function PartnersDashboard() {
-  const supabase = await createClient();
-  
-  // Get current user and verify partner access
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) throw new Error('Unauthorized');
+function PartnersContent() {
+  const { user } = useAuth();
 
-  // Get partner profile
-  const { data: partnerProfile } = await supabase
-    .from('partner_profiles')
-    .select('*')
-    .eq('user_id', user.id)
-    .single();
+  // Mock partner data based on partner_profiles schema
+  const featuredPartners = [
+    {
+      id: 1,
+      organization_name: "Massachusetts Clean Energy Center",
+      organization_type: "government_agency",
+      description: "Leading the clean energy transformation in Massachusetts through innovation, investment, and industry development.",
+      climate_focus: ["renewable_energy", "energy_storage", "green_building"],
+      employee_count: 150,
+      founded_year: 2009,
+      headquarters_location: "Boston, MA",
+      website: "https://masscec.com",
+      linkedin_url: "https://linkedin.com/company/masscec",
+      hiring_actively: true,
+      offers_certification: true,
+      offers_mentorship: true,
+      offers_funding: true,
+      partnership_level: "premium",
+      verified: true,
+      logo: "🏛️"
+    },
+    {
+      id: 2,
+      organization_name: "Vineyard Wind",
+      organization_type: "private_company",
+      description: "Developing America's first commercial-scale offshore wind energy facility, creating jobs and clean energy for Massachusetts.",
+      climate_focus: ["offshore_wind", "renewable_energy", "marine_energy"],
+      employee_count: 75,
+      founded_year: 2018,
+      headquarters_location: "New Bedford, MA",
+      website: "https://vineyardwind.com",
+      linkedin_url: "https://linkedin.com/company/vineyard-wind",
+      hiring_actively: true,
+      offers_certification: false,
+      offers_mentorship: true,
+      offers_funding: false,
+      partnership_level: "premium",
+      verified: true,
+      logo: "🌊"
+    },
+    {
+      id: 3,
+      organization_name: "Green City Growers",
+      organization_type: "social_enterprise",
+      description: "Creating sustainable food systems through urban agriculture, education, and community engagement.",
+      climate_focus: ["sustainable_agriculture", "urban_farming", "food_security"],
+      employee_count: 25,
+      founded_year: 2008,
+      headquarters_location: "Somerville, MA",
+      website: "https://greencitygrowers.com",
+      linkedin_url: "https://linkedin.com/company/green-city-growers",
+      hiring_actively: true,
+      offers_certification: true,
+      offers_mentorship: true,
+      offers_funding: false,
+      partnership_level: "standard",
+      verified: true,
+      logo: "🌱"
+    },
+    {
+      id: 4,
+      organization_name: "Boston University Climate Solutions",
+      organization_type: "educational_institution",
+      description: "Advancing climate science research and training the next generation of climate professionals.",
+      climate_focus: ["climate_science", "policy_research", "education"],
+      employee_count: 200,
+      founded_year: 2019,
+      headquarters_location: "Boston, MA",
+      website: "https://bu.edu/climate",
+      linkedin_url: "https://linkedin.com/school/boston-university",
+      hiring_actively: true,
+      offers_certification: true,
+      offers_mentorship: true,
+      offers_funding: true,
+      partnership_level: "premium",
+      verified: true,
+      logo: "🎓"
+    },
+    {
+      id: 5,
+      organization_name: "Tesla Gigafactory",
+      organization_type: "private_company",
+      description: "Manufacturing sustainable energy products and electric vehicles to accelerate the world's transition to sustainable energy.",
+      climate_focus: ["electric_vehicles", "battery_technology", "solar_energy"],
+      employee_count: 500,
+      founded_year: 2021,
+      headquarters_location: "Fremont, CA",
+      website: "https://tesla.com",
+      linkedin_url: "https://linkedin.com/company/tesla-motors",
+      hiring_actively: true,
+      offers_certification: false,
+      offers_mentorship: false,
+      offers_funding: false,
+      partnership_level: "premium",
+      verified: true,
+      logo: "⚡"
+    },
+    {
+      id: 6,
+      organization_name: "Climate Action Business Association",
+      organization_type: "nonprofit",
+      description: "Mobilizing the business community to take meaningful climate action through advocacy, education, and collaboration.",
+      climate_focus: ["business_sustainability", "carbon_reduction", "policy_advocacy"],
+      employee_count: 15,
+      founded_year: 2015,
+      headquarters_location: "Cambridge, MA",
+      website: "https://caba.org",
+      linkedin_url: "https://linkedin.com/company/climate-action-business",
+      hiring_actively: false,
+      offers_certification: true,
+      offers_mentorship: true,
+      offers_funding: true,
+      partnership_level: "standard",
+      verified: true,
+      logo: "🤝"
+    }
+  ];
 
-  if (!partnerProfile) throw new Error('Partner profile not found');
+  const partnerStats = {
+    totalPartners: 67,
+    activelyHiring: 34,
+    offeringCertification: 23,
+    providingMentorship: 45,
+    offeringFunding: 12
+  };
 
-  // Get resource counts and recent data
-  const [
-    jobsResult,
-    programsResult,
-    resourcesResult,
-    recentJobsResult,
-    applicationsResult
-  ] = await Promise.allSettled([
-    supabase
-      .from('job_listings')
-      .select('id, title, created_at, is_active, application_count')
-      .eq('partner_id', user.id)
-      .order('created_at', { ascending: false }),
-    supabase
-      .from('education_programs')
-      .select('id, title, created_at, is_active, participant_count')
-      .eq('partner_id', user.id)
-      .order('created_at', { ascending: false }),
-    supabase
-      .from('knowledge_resources')
-      .select('id, title, created_at, is_published, view_count')
-      .eq('partner_id', user.id)
-      .order('created_at', { ascending: false }),
-    supabase
-      .from('job_listings')
-      .select('id, title, created_at, application_count')
-      .eq('partner_id', user.id)
-      .eq('is_active', true)
-      .order('created_at', { ascending: false })
-      .limit(5),
-    supabase
-      .from('job_applications')
-      .select('id, created_at, status, job_listing_id')
-      .in('job_listing_id', [])
-      .order('created_at', { ascending: false })
-      .limit(10)
-  ]);
-
-  const jobs = jobsResult.status === 'fulfilled' ? (jobsResult.value.data || []) : [];
-  const programs = programsResult.status === 'fulfilled' ? (programsResult.value.data || []) : [];
-  const resources = resourcesResult.status === 'fulfilled' ? (resourcesResult.value.data || []) : [];
-  const recentJobs = recentJobsResult.status === 'fulfilled' ? (recentJobsResult.value.data || []) : [];
-
-  const activeJobs = jobs.filter(job => job.is_active).length;
-  const activePrograms = programs.filter(program => program.is_active).length;
-  const publishedResources = resources.filter(resource => resource.is_published).length;
-  const totalApplications = jobs.reduce((sum, job) => sum + (job.application_count || 0), 0);
+  const climateAreas = [
+    "Renewable Energy",
+    "Energy Storage", 
+    "Green Building",
+    "Sustainable Transportation",
+    "Climate Policy",
+    "Carbon Management",
+    "Sustainable Agriculture",
+    "Clean Technology",
+    "Environmental Justice",
+    "Climate Finance"
+  ];
 
   return (
-    <div className="space-y-6">
-      {/* Welcome Header */}
-      <div className="bg-gradient-to-r from-spring-green/10 to-seafoam-blue/10 rounded-2xl p-6 border border-sand-gray/20">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-helvetica font-bold text-midnight-forest mb-2">
-              Welcome back, {partnerProfile.organization_name}!
-            </h1>
-            <p className="text-midnight-forest/70 font-helvetica">
-              Manage your climate economy resources and track your impact on Massachusetts' clean energy transition.
-            </p>
-            <div className="flex items-center space-x-4 mt-3">
-              <div className="flex items-center space-x-2">
-                {partnerProfile.verified ? (
-                  <>
-                    <CheckCircle className="w-4 h-4 text-green-600" />
-                    <span className="text-sm font-helvetica font-medium text-green-600">Verified Partner</span>
-                  </>
-                ) : (
-                  <>
-                    <Clock className="w-4 h-4 text-amber-600" />
-                    <span className="text-sm font-helvetica font-medium text-amber-600">Pending Verification</span>
-                  </>
-                )}
-              </div>
-              <div className="flex items-center space-x-2">
-                <span className="text-sm font-helvetica text-midnight-forest/60 capitalize">
-                  {partnerProfile.organization_type?.replace(/_/g, ' ')}
-                </span>
-              </div>
-            </div>
-          </div>
-          <div className="text-right">
-            <div className="flex items-center space-x-2 text-spring-green">
-              <TrendingUp className="w-5 h-5" />
-              <span className="font-helvetica font-medium">Growing Impact</span>
-            </div>
-            <p className="text-sm text-midnight-forest/60 font-helvetica mt-1">
-              {activeJobs + activePrograms + publishedResources} active resources
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Resource Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white rounded-2xl p-6 border border-sand-gray/20">
-          <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-spring-green/10 rounded-xl flex items-center justify-center">
-              <Briefcase className="w-6 h-6 text-spring-green" />
-            </div>
-            <div>
-              <p className="text-2xl font-helvetica font-bold text-midnight-forest">
-                {activeJobs}
+    <SimpleLayout>
+      <div className="min-h-screen bg-gradient-to-br from-sand-gray/30 via-white to-seafoam-blue/20">
+        
+        {/* Header Section */}
+        <section className="py-16 px-6">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-12">
+              <h1 className="text-4xl lg:text-5xl font-helvetica font-bold text-midnight-forest mb-4">
+                Climate Economy Partners
+              </h1>
+              <p className="text-xl font-inter text-midnight-forest/70 max-w-3xl mx-auto">
+                Discover leading organizations driving Massachusetts' clean energy transition. Connect with employers, educators, and innovators shaping our sustainable future.
               </p>
-              <p className="text-sm text-midnight-forest/60 font-helvetica">Active Jobs</p>
             </div>
-          </div>
-          <div className="mt-3 flex items-center justify-between">
-            <span className="text-xs text-midnight-forest/40 font-helvetica">
-              {totalApplications} applications
-            </span>
-            <span className="text-xs text-spring-green font-helvetica font-medium">
-              +{jobs.length - activeJobs} drafts
-            </span>
-          </div>
-        </div>
 
-        <div className="bg-white rounded-2xl p-6 border border-sand-gray/20">
-          <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-seafoam-blue/10 rounded-xl flex items-center justify-center">
-              <GraduationCap className="w-6 h-6 text-seafoam-blue" />
-            </div>
-            <div>
-              <p className="text-2xl font-helvetica font-bold text-midnight-forest">
-                {activePrograms}
-              </p>
-              <p className="text-sm text-midnight-forest/60 font-helvetica">Education Programs</p>
-            </div>
-          </div>
-          <div className="mt-3 flex items-center justify-between">
-            <span className="text-xs text-midnight-forest/40 font-helvetica">
-              {programs.reduce((sum, p) => sum + (p.participant_count || 0), 0)} participants
-            </span>
-            <span className="text-xs text-seafoam-blue font-helvetica font-medium">
-              +{programs.length - activePrograms} drafts
-            </span>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-2xl p-6 border border-sand-gray/20">
-          <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-moss-green/10 rounded-xl flex items-center justify-center">
-              <BookOpen className="w-6 h-6 text-moss-green" />
-            </div>
-            <div>
-              <p className="text-2xl font-helvetica font-bold text-midnight-forest">
-                {publishedResources}
-              </p>
-              <p className="text-sm text-midnight-forest/60 font-helvetica">Knowledge Resources</p>
-            </div>
-          </div>
-          <div className="mt-3 flex items-center justify-between">
-            <span className="text-xs text-midnight-forest/40 font-helvetica">
-              {resources.reduce((sum, r) => sum + (r.view_count || 0), 0)} views
-            </span>
-            <span className="text-xs text-moss-green font-helvetica font-medium">
-              +{resources.length - publishedResources} pending
-            </span>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-2xl p-6 border border-sand-gray/20">
-          <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-midnight-forest/10 rounded-xl flex items-center justify-center">
-              <Users className="w-6 h-6 text-midnight-forest" />
-            </div>
-            <div>
-              <p className="text-2xl font-helvetica font-bold text-midnight-forest">
-                {totalApplications}
-              </p>
-              <p className="text-sm text-midnight-forest/60 font-helvetica">Total Applications</p>
-            </div>
-          </div>
-          <div className="mt-3 flex items-center justify-between">
-            <span className="text-xs text-midnight-forest/40 font-helvetica">
-              This month
-            </span>
-            <span className="text-xs text-midnight-forest font-helvetica font-medium">
-              +12% vs last month
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* Quick Actions */}
-      <div className="bg-white rounded-2xl p-6 border border-sand-gray/20">
-        <h3 className="text-lg font-helvetica font-semibold text-midnight-forest mb-4">
-          Quick Actions
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <button className="flex items-center space-x-3 p-4 border border-sand-gray/20 rounded-xl hover:bg-spring-green/5 hover:border-spring-green/30 transition-all duration-200">
-            <div className="w-10 h-10 bg-spring-green/10 rounded-lg flex items-center justify-center">
-              <Plus className="w-5 h-5 text-spring-green" />
-            </div>
-            <div className="text-left">
-              <p className="font-helvetica font-medium text-midnight-forest">Post New Job</p>
-              <p className="text-sm text-midnight-forest/60 font-helvetica">Add a climate job opportunity</p>
-            </div>
-          </button>
-
-          <button className="flex items-center space-x-3 p-4 border border-sand-gray/20 rounded-xl hover:bg-seafoam-blue/5 hover:border-seafoam-blue/30 transition-all duration-200">
-            <div className="w-10 h-10 bg-seafoam-blue/10 rounded-lg flex items-center justify-center">
-              <Plus className="w-5 h-5 text-seafoam-blue" />
-            </div>
-            <div className="text-left">
-              <p className="font-helvetica font-medium text-midnight-forest">Create Program</p>
-              <p className="text-sm text-midnight-forest/60 font-helvetica">Add education or training program</p>
-            </div>
-          </button>
-
-          <button className="flex items-center space-x-3 p-4 border border-sand-gray/20 rounded-xl hover:bg-moss-green/5 hover:border-moss-green/30 transition-all duration-200">
-            <div className="w-10 h-10 bg-moss-green/10 rounded-lg flex items-center justify-center">
-              <Plus className="w-5 h-5 text-moss-green" />
-            </div>
-            <div className="text-left">
-              <p className="font-helvetica font-medium text-midnight-forest">Share Resource</p>
-              <p className="text-sm text-midnight-forest/60 font-helvetica">Contribute knowledge content</p>
-            </div>
-          </button>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent Job Listings */}
-        <div className="bg-white rounded-2xl border border-sand-gray/20 overflow-hidden">
-          <div className="p-6 border-b border-sand-gray/20">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-helvetica font-semibold text-midnight-forest">
-                Recent Job Listings
-              </h3>
-              <span className="text-sm text-midnight-forest/60 font-helvetica">
-                {recentJobs.length} active
-              </span>
-            </div>
-          </div>
-          
-          <div className="divide-y divide-sand-gray/10">
-            {recentJobs.slice(0, 5).map((job) => (
-              <div key={job.id} className="p-6 hover:bg-sand-gray/5 transition-colors">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <h4 className="font-helvetica font-medium text-midnight-forest mb-1">
-                      {job.title}
-                    </h4>
-                    <p className="text-sm text-midnight-forest/60 font-helvetica">
-                      Posted {new Date(job.created_at).toLocaleDateString()}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-sm font-helvetica font-medium text-midnight-forest">
-                      {job.application_count || 0} applications
-                    </p>
-                    <div className="flex items-center space-x-2 mt-1">
-                      <Eye className="w-3 h-3 text-midnight-forest/40" />
-                      <span className="text-xs text-midnight-forest/40 font-helvetica">View details</span>
-                    </div>
-                  </div>
+            {/* Partner Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-12">
+              <div className="text-center">
+                <div className="text-3xl font-helvetica font-bold text-midnight-forest">
+                  {partnerStats.totalPartners}
+                </div>
+                <div className="text-sm font-inter text-midnight-forest/60">
+                  Partner Organizations
                 </div>
               </div>
-            ))}
-          </div>
+              <div className="text-center">
+                <div className="text-3xl font-helvetica font-bold text-spring-green">
+                  {partnerStats.activelyHiring}
+                </div>
+                <div className="text-sm font-inter text-midnight-forest/60">
+                  Actively Hiring
+                </div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-helvetica font-bold text-seafoam-blue">
+                  {partnerStats.offeringCertification}
+                </div>
+                <div className="text-sm font-inter text-midnight-forest/60">
+                  Offer Certification
+                </div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-helvetica font-bold text-moss-green">
+                  {partnerStats.providingMentorship}
+                </div>
+                <div className="text-sm font-inter text-midnight-forest/60">
+                  Provide Mentorship
+                </div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-helvetica font-bold text-midnight-forest">
+                  {partnerStats.offeringFunding}
+                </div>
+                <div className="text-sm font-inter text-midnight-forest/60">
+                  Offer Funding
+                </div>
+              </div>
+            </div>
 
-          {recentJobs.length === 0 && (
-            <div className="text-center py-12">
-              <Briefcase className="w-12 h-12 text-midnight-forest/20 mx-auto mb-4" />
-              <p className="text-midnight-forest/60 font-helvetica">No job listings yet</p>
-              <p className="text-sm text-midnight-forest/40 font-helvetica mt-1">
-                Start by posting your first climate job opportunity
+            {/* Search and Filters */}
+            <div className="max-w-4xl mx-auto mb-12">
+              <div className="flex flex-col md:flex-row gap-4 mb-6">
+                <div className="flex-1 relative">
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-midnight-forest/40" />
+                  <input
+                    type="text"
+                    placeholder="Search partners by name, focus area, or location..."
+                    className="w-full pl-12 pr-4 py-4 rounded-2xl border border-white/40 bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-spring-green/50 focus:border-spring-green text-midnight-forest"
+                  />
+                </div>
+                <ACTButton variant="primary" size="lg" className="px-8">
+                  Search Partners
+                </ACTButton>
+              </div>
+
+              {/* Filter Tags */}
+              <div className="flex flex-wrap gap-3 justify-center">
+                <ACTButton variant="outline" size="sm" icon={<Filter className="w-4 h-4" />}>
+                  All Partners
+                </ACTButton>
+                <ACTButton variant="ghost" size="sm">Actively Hiring</ACTButton>
+                <ACTButton variant="ghost" size="sm">Offer Certification</ACTButton>
+                <ACTButton variant="ghost" size="sm">Provide Mentorship</ACTButton>
+                <ACTButton variant="ghost" size="sm">Government</ACTButton>
+                <ACTButton variant="ghost" size="sm">Private Companies</ACTButton>
+                <ACTButton variant="ghost" size="sm">Nonprofits</ACTButton>
+                <ACTButton variant="ghost" size="sm">Educational</ACTButton>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Featured Partners Grid */}
+        <section className="pb-16 px-6">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {featuredPartners.map((partner) => (
+                <ACTCard 
+                  key={partner.id}
+                  variant="default" 
+                  className="p-6 bg-white/90 backdrop-blur-sm border border-white/50 shadow-ios-subtle hover:shadow-ios-normal transition-all duration-300"
+                  hover={true}
+                >
+                  {/* Partner Header */}
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center space-x-3">
+                      <div className="text-3xl">{partner.logo}</div>
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2">
+                          <h3 className="font-helvetica font-semibold text-midnight-forest text-lg leading-tight">
+                            {partner.organization_name}
+                          </h3>
+                          {partner.verified && (
+                            <CheckCircle2 className="w-4 h-4 text-blue-500" />
+                          )}
+                        </div>
+                        <p className="text-sm text-midnight-forest/60 capitalize">
+                          {partner.organization_type.replace('_', ' ')}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-1">
+                      {partner.partnership_level === 'premium' && (
+                        <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Partner Description */}
+                  <p className="text-midnight-forest/70 font-inter text-sm mb-4 leading-relaxed">
+                    {partner.description}
+                  </p>
+
+                  {/* Partner Details */}
+                  <div className="space-y-2 mb-4">
+                    <div className="flex items-center space-x-2 text-sm text-midnight-forest/60">
+                      <MapPin className="w-4 h-4" />
+                      <span>{partner.headquarters_location}</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-sm text-midnight-forest/60">
+                      <Users className="w-4 h-4" />
+                      <span>{partner.employee_count} employees</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-sm text-midnight-forest/60">
+                      <Calendar className="w-4 h-4" />
+                      <span>Founded {partner.founded_year}</span>
+                    </div>
+                  </div>
+
+                  {/* Climate Focus Areas */}
+                  <div className="mb-4">
+                    <div className="flex flex-wrap gap-2">
+                      {partner.climate_focus.slice(0, 3).map((focus, index) => (
+                        <span 
+                          key={index}
+                          className="px-2 py-1 bg-spring-green/10 text-spring-green text-xs font-medium rounded-full"
+                        >
+                          {focus.replace('_', ' ')}
+                        </span>
+                      ))}
+                      {partner.climate_focus.length > 3 && (
+                        <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-full">
+                          +{partner.climate_focus.length - 3} more
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Partner Offerings */}
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {partner.hiring_actively && (
+                      <div className="flex items-center space-x-1 px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">
+                        <Briefcase className="w-3 h-3" />
+                        <span>Hiring</span>
+                      </div>
+                    )}
+                    {partner.offers_certification && (
+                      <div className="flex items-center space-x-1 px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">
+                        <Award className="w-3 h-3" />
+                        <span>Certification</span>
+                      </div>
+                    )}
+                    {partner.offers_mentorship && (
+                      <div className="flex items-center space-x-1 px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">
+                        <Users className="w-3 h-3" />
+                        <span>Mentorship</span>
+                      </div>
+                    )}
+                    {partner.offers_funding && (
+                      <div className="flex items-center space-x-1 px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded-full">
+                        <Target className="w-3 h-3" />
+                        <span>Funding</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex space-x-3">
+                    <ACTButton 
+                      variant="primary" 
+                      className="flex-1"
+                      href={`/partners/${partner.id}`}
+                    >
+                      View Details
+                    </ACTButton>
+                    <ACTButton 
+                      variant="outline" 
+                      className="flex-1"
+                      icon={<ExternalLink className="w-4 h-4" />}
+                      href={partner.website}
+                      target="_blank"
+                    >
+                      Website
+                    </ACTButton>
+                  </div>
+                </ACTCard>
+              ))}
+            </div>
+
+            {/* Load More */}
+            <div className="text-center pt-12">
+              <ACTButton variant="outline" size="lg">
+                Load More Partners
+              </ACTButton>
+            </div>
+          </div>
+        </section>
+
+        {/* Climate Focus Areas */}
+        <section className="py-16 px-6 bg-white/50">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-helvetica font-bold text-midnight-forest mb-4">
+                Climate Focus Areas
+              </h2>
+              <p className="text-lg font-inter text-midnight-forest/70">
+                Explore partners by their climate specialization
               </p>
             </div>
-          )}
-        </div>
 
-        {/* Performance Analytics Preview */}
-        <div className="bg-white rounded-2xl border border-sand-gray/20 overflow-hidden">
-          <div className="p-6 border-b border-sand-gray/20">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-helvetica font-semibold text-midnight-forest">
-                Performance Overview
-              </h3>
-              <BarChart3 className="w-5 h-5 text-midnight-forest/40" />
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+              {climateAreas.map((area, index) => (
+                <ACTButton 
+                  key={index}
+                  variant="outline" 
+                  fullWidth
+                  className="h-16 text-center justify-center border-spring-green/20 hover:border-spring-green hover:bg-spring-green/5"
+                >
+                  <div>
+                    <div className="font-semibold text-sm">{area}</div>
+                    <div className="text-xs text-midnight-forest/60">
+                      {Math.floor(Math.random() * 15) + 3} partners
+                    </div>
+                  </div>
+                </ACTButton>
+              ))}
             </div>
           </div>
-          
-          <div className="p-6">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-helvetica text-midnight-forest/70">Profile Views</span>
-                <span className="text-sm font-helvetica font-medium text-midnight-forest">142 this month</span>
+        </section>
+
+        {/* Call to Action */}
+        <section className="py-16 px-6">
+          <div className="max-w-4xl mx-auto text-center">
+            <ACTCard variant="default" className="p-12 bg-gradient-to-r from-spring-green/10 to-seafoam-blue/10 border border-spring-green/20">
+              <h2 className="text-3xl font-helvetica font-bold text-midnight-forest mb-4">
+                Become a Climate Economy Partner
+              </h2>
+              <p className="text-lg font-inter text-midnight-forest/70 mb-8">
+                Join our network of leading organizations committed to building Massachusetts' clean energy future. Connect with top talent and showcase your climate impact.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <ACTButton 
+                  variant="primary" 
+                  size="lg"
+                  icon={<ArrowRight className="w-5 h-5" />}
+                  iconPosition="right"
+                >
+                  Apply for Partnership
+                </ACTButton>
+                <ACTButton 
+                  variant="outline" 
+                  size="lg"
+                  icon={<Phone className="w-5 h-5" />}
+                >
+                  Schedule a Call
+                </ACTButton>
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-helvetica text-midnight-forest/70">Application Rate</span>
-                <span className="text-sm font-helvetica font-medium text-midnight-forest">8.3% avg</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-helvetica text-midnight-forest/70">Resource Engagement</span>
-                <span className="text-sm font-helvetica font-medium text-midnight-forest">65% completion</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-helvetica text-midnight-forest/70">Partner Score</span>
-                <span className="text-sm font-helvetica font-medium text-spring-green">Excellent</span>
-              </div>
-            </div>
-            
-            {partnerProfile.verified && (
-              <div className="mt-6 p-4 bg-spring-green/5 rounded-xl border border-spring-green/20">
-                <p className="text-sm font-helvetica font-medium text-spring-green mb-1">
-                  Verified Partner Benefits
-                </p>
-                <p className="text-xs text-midnight-forest/60 font-helvetica">
-                  Access to advanced analytics, priority listing placement, and direct candidate messaging.
-                </p>
-              </div>
-            )}
+            </ACTCard>
           </div>
-        </div>
+        </section>
       </div>
-    </div>
+    </SimpleLayout>
   );
 }
 
-export const metadata = {
-  title: "Partner Dashboard - Climate Economy Assistant",
-  description: "Resource management dashboard for climate economy partners",
-}; 
+export default function PartnersPage() {
+  return (
+    <AuthGuard>
+      <PartnersContent />
+    </AuthGuard>
+  );
+}
+
+// Removing metadata export as it's not allowed with 'use client' directive
+// // Removing metadata export as it is not allowed with use client directive
+// export const metadata = {
+//   title: "Climate Economy Partners - Climate Economy Assistant",
+//   description: "Discover leading organizations driving Massachusetts' clean energy transition",
+// }; 

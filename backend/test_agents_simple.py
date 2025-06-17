@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 """
-Simple Agent Testing Script
-
-Tests all agents with the same user to analyze workflow, supervisor routing logic, 
-and knowledge resources access without circular import issues.
+Simplified agent testing script for the Climate Economy Assistant
 """
 
 import asyncio
@@ -14,17 +11,149 @@ from datetime import datetime
 from typing import Any, Dict, List
 import time
 
-# Add backend to path
+# Add backend directory to path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-# Direct imports to avoid circular dependencies
-from supabase import Client, create_client
-
+from core.agents.base import SupervisorAgent, BaseAgent
+from core.agents.empathy_agent import EmpathyAgent
+from core.agents.environmental import EnvironmentalJusticeSpecialist
+from core.agents.international import InternationalAgent
 from core.agents.ma_resource_analyst import MAResourceAnalystAgent
+from core.agents.veteran import VeteranAgent
 from core.config import get_settings
+from supabase import create_client
 
-# Test user ID - using the known user from previous tests
-TEST_USER_ID = "30eedd6a-0771-444e-90d2-7520c1eb03f0"
+# George Nekwaya's test configuration from comprehensive seed script
+TEST_USER_ID = "gnekwaya-test-001"  # Consistent with seed script pattern
+TEST_USER_EMAIL = (
+    "george.n.p.nekwaya@gmail.com"  # Personal email for job seeker testing
+)
+TEST_ADMIN_EMAIL = "gnekwaya@joinact.org"  # Admin email for ACT role
+TEST_PARTNER_EMAIL = "buffr_inc@buffr.ai"  # Partner email for Buffr Inc.
+
+# George Nekwaya's comprehensive test profile
+GEORGE_NEKWAYA_PROFILE = {
+    "full_name": "George Nekwaya",
+    "location": "Indianapolis, IN",
+    "phone": "+1-206-530-8433",
+    "linkedin_url": "https://www.linkedin.com/in/george-nekwaya/",
+    "personal_website": "https://georgenekwaya.com/",
+    "nationality": "Namibian",
+    "current_title": "Project Manager, DEIJ & Workforce Development",
+    "company": "Alliance for Climate Transition (ACT)",
+    "education": [
+        "MBA (STEM-Designated) - Brandeis International Business School",
+        "B.Sc. Civil & Environmental Engineering - Namibia University of Science & Technology",
+    ],
+    "skills": [
+        "Python",
+        "Data Analytics",
+        "Machine Learning",
+        "AI Application Development",
+        "Strategic Planning",
+        "Business Development",
+        "Project Management",
+        "Workforce Development",
+        "Fintech Strategy",
+        "Climate Tech Strategy",
+    ],
+    "companies": [
+        "Alliance for Climate Transition (ACT)",
+        "Buffr Inc.",
+        "Aquasaic Corporation",
+    ],
+    "climate_interests": [
+        "clean_energy_workforce",
+        "ai_climate_solutions",
+        "fintech_sustainability",
+        "diversity_inclusion",
+        "workforce_development",
+        "data_analytics",
+    ],
+    "triple_role": {
+        "admin": "Super Admin at ACT with 19 platform capabilities",
+        "partner": "Founder of Buffr Inc. - AI-native climate tech strategy company",
+        "job_seeker": "Senior-level professional seeking climate tech opportunities",
+    },
+}
+
+# Test user profile data for George Nekwaya
+GEORGE_TEST_PROFILE = {
+    "id": TEST_USER_ID,
+    "email": TEST_USER_EMAIL,
+    "first_name": "George",
+    "last_name": "Nekwaya",
+    "user_type": "job_seeker",
+    "role": "founder",
+    "organization_name": "Buffr Inc.",
+    "organization_type": "Climate Tech Startup",
+    "contact_info": {
+        "phone": "+1-857-123-4567",
+        "linkedin": "https://www.linkedin.com/in/george-nekwaya/",
+        "website": "https://georgenekwaya.com/",
+    },
+    "created_at": "2024-01-01T00:00:00Z",
+    "updated_at": "2024-12-01T00:00:00Z",
+}
+
+GEORGE_JOB_SEEKER_PROFILE = {
+    "id": TEST_USER_ID,
+    "user_id": TEST_USER_ID,
+    "email": TEST_USER_EMAIL,
+    "full_name": TEST_USER_ID,
+    "phone": "+1-857-123-4567",
+    "location": "Boston, MA",
+    "current_title": "Founder & CEO",
+    "experience_level": "senior",
+    "desired_roles": [
+        "Climate Tech Strategy",
+        "AI Product Management",
+        "Climate Fintech",
+    ],
+    "climate_focus_areas": ["Climate Tech", "Green Finance", "AI for Climate"],
+    "employment_types": ["full-time", "consulting"],
+    "preferred_locations": ["Boston, MA", "Cambridge, MA", "Remote"],
+    "remote_work_preference": "hybrid",
+    "salary_range_min": 120000,
+    "salary_range_max": 200000,
+    "profile_completed": True,
+    "created_at": "2024-01-01T00:00:00Z",
+    "updated_at": "2024-12-01T00:00:00Z",
+}
+
+GEORGE_USER_INTERESTS = {
+    "user_id": TEST_USER_ID,
+    "climate_focus": [
+        "Climate Technology",
+        "Green Finance",
+        "AI for Climate Solutions",
+    ],
+    "target_roles": [
+        "Climate Tech Strategy Director",
+        "AI Product Manager",
+        "Climate Fintech Lead",
+    ],
+    "preferred_location": "Boston Metro Area",
+    "skills_to_develop": [
+        "Climate Risk Assessment",
+        "ESG Analytics",
+        "Green Bond Markets",
+    ],
+    "employment_preferences": {
+        "work_type": "hybrid",
+        "company_size": "startup_to_enterprise",
+        "industry_focus": "climate_tech_fintech",
+    },
+    "social_profile_analysis_enabled": True,
+    "data_sharing_enabled": False,
+    "marketing_emails_enabled": True,
+    "newsletter_enabled": True,
+    "email_notifications": True,
+    "job_alerts_enabled": True,
+    "partner_updates_enabled": True,
+    "created_at": "2024-01-01T00:00:00Z",
+    "updated_at": "2024-12-01T00:00:00Z",
+}
 
 # Test queries for each agent type
 TEST_QUERIES = {
@@ -334,16 +463,19 @@ class SimpleAgentTester:
 
         try:
             # Test resumes table access (correct table name)
-            self.supabase.table("resumes")
+            print("   Testing resumes table...")
+            resume_result = (
+                self.supabase.table("resumes").select("*").limit(5).execute()
+            )
 
             knowledge_tests["resumes_table"] = {
                 "success": True,
                 "table": "resumes",
-                "records_found": 0,
+                "records_found": len(resume_result.data) if resume_result.data else 0,
                 "error": None,
             }
             print(
-                f"      ✅ Found {len(knowledge_result.data) if knowledge_result.data else 0} resumes"
+                f"      ✅ Found {len(resume_result.data) if resume_result.data else 0} resumes"
             )
 
         except Exception as e:

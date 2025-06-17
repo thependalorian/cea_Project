@@ -5,7 +5,7 @@ George Nekwaya Triple Access Backend Testing
 
 Comprehensive backend testing for George Nekwaya's three distinct access profiles:
 1. Admin Profile (ACT Project Manager) - Super Admin Access
-2. Partner Profile (Buffr Inc. Founder) - Partner Collaboration Access  
+2. Partner Profile (Buffr Inc. Founder) - Partner Collaboration Access
 3. Job Seeker Profile (Individual) - Career Development Access
 
 Tests actual database integration, profile switching, permission validation,

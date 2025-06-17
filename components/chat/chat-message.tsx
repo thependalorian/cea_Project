@@ -13,7 +13,7 @@ interface ChatMessageProps {
   onInterruptAction?: (interruptId: string, action: 'resolve' | 'reject') => void
 }
 
-export function ChatMessageItem({ message, showHeader = true, onFeedback, onInterruptAction }: ChatMessageProps) {
+export function ChatMessage({ message, showHeader = true, onFeedback, onInterruptAction }: ChatMessageProps) {
   const isAssistant = message.user.id === 'assistant'
   const isHuman = message.is_human
   const status = message.status

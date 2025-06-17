@@ -49,7 +49,7 @@ def web_search_for_credential_evaluation(credentials: str, country: str = "") ->
                 {
                     "success": False,
                     "error": "Enhanced search not available. TAVILY_API_KEY is not configured.",
-                    "results": generate_mock_credential_results(credentials, country),
+                    "results": # Mock data removed for production,
                 }
             )
 
@@ -104,7 +104,7 @@ def web_search_for_credential_evaluation(credentials: str, country: str = "") ->
             {
                 "success": False,
                 "error": str(e),
-                "results": generate_mock_credential_results(credentials, country),
+                "results": # Mock data removed for production,
             }
         )
 
@@ -131,7 +131,7 @@ def web_search_for_mos_translation(
                 {
                     "success": False,
                     "error": "Enhanced search not available. TAVILY_API_KEY is not configured.",
-                    "results": generate_mock_mos_results(mos_code, military_base),
+                    "results": # Mock data removed for production,
                 }
             )
 
@@ -184,7 +184,7 @@ def web_search_for_mos_translation(
             {
                 "success": False,
                 "error": str(e),
-                "results": generate_mock_mos_results(mos_code, military_base),
+                "results": # Mock data removed for production,
             }
         )
 
@@ -211,7 +211,7 @@ def web_search_for_ej_communities(
                 {
                     "success": False,
                     "error": "Enhanced search not available. TAVILY_API_KEY is not configured.",
-                    "results": generate_mock_ej_results(community, focus_area),
+                    "results": # Mock data removed for production,
                 }
             )
 
@@ -264,7 +264,7 @@ def web_search_for_ej_communities(
             {
                 "success": False,
                 "error": str(e),
-                "results": generate_mock_ej_results(community, focus_area),
+                "results": # Mock data removed for production,
             }
         )
 
@@ -289,7 +289,7 @@ def web_search_for_training_enhancement(skill_area: str) -> str:
                 {
                     "success": False,
                     "error": "Enhanced search not available. TAVILY_API_KEY is not configured.",
-                    "results": generate_mock_training_results(skill_area),
+                    "results": # Mock data removed for production,
                 }
             )
 
@@ -340,7 +340,7 @@ def web_search_for_training_enhancement(skill_area: str) -> str:
             {
                 "success": False,
                 "error": str(e),
-                "results": generate_mock_training_results(skill_area),
+                "results": # Mock data removed for production,
             }
         )
 
@@ -366,7 +366,7 @@ def web_search_for_social_profiles(name: str, links: Optional[List[str]] = None)
                 {
                     "success": False,
                     "error": "Enhanced search not available. TAVILY_API_KEY is not configured.",
-                    "results": generate_mock_social_profile_results(name, links),
+                    "results": # Mock data removed for production,
                 }
             )
 
@@ -463,7 +463,7 @@ def web_search_for_social_profiles(name: str, links: Optional[List[str]] = None)
             {
                 "success": False,
                 "error": str(e),
-                "results": generate_mock_social_profile_results(name, links),
+                "results": # Mock data removed for production,
             }
         )
 
@@ -491,7 +491,7 @@ def web_search_for_veteran_resources(
                 {
                     "success": False,
                     "error": "Enhanced search not available. TAVILY_API_KEY is not configured.",
-                    "results": generate_mock_veteran_resources(location, resource_type),
+                    "results": # Mock data removed for production,
                 }
             )
 
@@ -546,7 +546,7 @@ def web_search_for_veteran_resources(
             {
                 "success": False,
                 "error": str(e),
-                "results": generate_mock_veteran_resources(location, resource_type),
+                "results": # Mock data removed for production,
             }
         )
 
@@ -572,9 +572,7 @@ def web_search_for_education_resources(location: str, education_type: str) -> st
                 {
                     "success": False,
                     "error": "Enhanced search not available. TAVILY_API_KEY is not configured.",
-                    "results": generate_mock_education_resources(
-                        location, education_type
-                    ),
+                    "results": # Mock data removed for production,
                 }
             )
 
@@ -627,14 +625,12 @@ def web_search_for_education_resources(location: str, education_type: str) -> st
             {
                 "success": False,
                 "error": str(e),
-                "results": generate_mock_education_resources(location, education_type),
+                "results": # Mock data removed for production,
             }
         )
 
 
-def generate_mock_credential_results(
-    credentials: str, country: str
-) -> List[Dict[str, str]]:
+def # Mock data removed for production -> List[Dict[str, str]]:
     """Generate mock credential evaluation results when Tavily API is not available"""
     return [
         {
@@ -658,9 +654,7 @@ def generate_mock_credential_results(
     ]
 
 
-def generate_mock_mos_results(
-    mos_code: str, military_base: Optional[str] = None
-) -> List[Dict[str, str]]:
+def # Mock data removed for production -> List[Dict[str, str]]:
     """Generate mock MOS translation results when Tavily API is not available"""
     base_info = ""
     if military_base:
@@ -688,9 +682,7 @@ def generate_mock_mos_results(
     ]
 
 
-def generate_mock_ej_results(
-    community: str, focus_area: Optional[str] = None
-) -> List[Dict[str, str]]:
+def # Mock data removed for production -> List[Dict[str, str]]:
     """Generate mock EJ community results when Tavily API is not available"""
     focus_content = ""
     if focus_area:
@@ -731,7 +723,7 @@ def generate_mock_ej_results(
     ]
 
 
-def generate_mock_training_results(skill_area: str) -> List[Dict[str, str]]:
+def # Mock data removed for production -> List[Dict[str, str]]:
     """Generate mock training enhancement results when Tavily API is not available"""
     return [
         {
@@ -755,9 +747,7 @@ def generate_mock_training_results(skill_area: str) -> List[Dict[str, str]]:
     ]
 
 
-def generate_mock_social_profile_results(
-    name: str, links: Optional[List[str]] = None
-) -> List[Dict[str, str]]:
+def # Mock data removed for production -> List[Dict[str, str]]:
     """Generate mock social profile results when Tavily API is not available"""
     mock_results = [
         {
@@ -807,9 +797,7 @@ def generate_mock_social_profile_results(
     return mock_results
 
 
-def generate_mock_veteran_resources(
-    location: str, resource_type: Optional[str] = None
-) -> List[Dict[str, str]]:
+def # Mock data removed for production -> List[Dict[str, str]]:
     """Generate mock veteran resources results when Tavily API is not available"""
     resource_specific = ""
     if resource_type:
@@ -843,9 +831,7 @@ def generate_mock_veteran_resources(
     ]
 
 
-def generate_mock_education_resources(
-    location: str, education_type: str
-) -> List[Dict[str, str]]:
+def # Mock data removed for production -> List[Dict[str, str]]:
     """Generate mock education resource results when Tavily API is not available"""
     education_specific = ""
     if education_type.lower() == "technical_school":

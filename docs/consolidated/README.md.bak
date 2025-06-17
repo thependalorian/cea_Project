@@ -1,0 +1,127 @@
+# Climate Economy Assistant - Documentation Index
+
+This directory contains comprehensive documentation for the Climate Economy Assistant project. The documentation is organized into the following sections:
+
+## 🏗️ Architecture
+
+- [AGENT_WORKFLOW_INTEGRATION.md](architecture/AGENT_WORKFLOW_INTEGRATION.md) - Integration between agents and workflows
+- [BACKEND_ALIGNMENT_STATUS.md](architecture/BACKEND_ALIGNMENT_STATUS.md) - Backend alignment status
+- [CIRCULAR_IMPORT_RESOLUTION.md](architecture/CIRCULAR_IMPORT_RESOLUTION.md) - Resolution for circular imports
+- [DESIGN_STANDARDS.md](architecture/DESIGN_STANDARDS.md) - Design standards and guidelines
+- [PYDANTIC_MODELS_CRITICAL_DIFFERENCES.md](architecture/PYDANTIC_MODELS_CRITICAL_DIFFERENCES.md) - Critical differences in Pydantic models
+- [architecture.md](architecture/architecture.md) - Comprehensive architecture documentation
+- [buffr_gather_town_comparative_analysis.md](architecture/buffr_gather_town_comparative_analysis.md) - Comparative analysis with Gather Town
+- [modern-frontend-architecture.md](architecture/modern-frontend-architecture.md) - Modern frontend architecture
+- [redis-integration.md](architecture/redis-integration.md) - Redis integration documentation
+
+## 🤖 AI
+
+- [CONFIDENCE_PROMPTS_IMPLEMENTATION_STATUS.md](ai/CONFIDENCE_PROMPTS_IMPLEMENTATION_STATUS.md) - Implementation status of confidence prompts
+- [CONVERSATIONAL_AI_STRATEGY.md](ai/CONVERSATIONAL_AI_STRATEGY.md) - Strategy for conversational AI
+- [CONVERSATIONAL_HUMAN_STEERING.md](ai/CONVERSATIONAL_HUMAN_STEERING.md) - Human steering in conversational AI
+- [EMPATHY_SYSTEM_DESIGN.md](ai/EMPATHY_SYSTEM_DESIGN.md) - Design of the empathy system
+- [KEYWORD_TO_LLM_MIGRATION_SUMMARY.md](ai/KEYWORD_TO_LLM_MIGRATION_SUMMARY.md) - Migration from keywords to LLM
+- [LLM_REASONING_VS_KEYWORDS.md](ai/LLM_REASONING_VS_KEYWORDS.md) - Comparison of LLM reasoning vs keywords
+- [README-chat.md](ai/README-chat.md) - Chat system documentation
+
+## 🔌 API
+
+- [API_VERSIONING_STRATEGY.md](api/API_VERSIONING_STRATEGY.md) - Strategy for API versioning
+- [CHAT_ENDPOINTS.md](api/CHAT_ENDPOINTS.md) - Documentation of chat endpoints
+- [TECHNICAL_API.md](api/TECHNICAL_API.md) - Technical API documentation
+- [V1_API_ALIGNMENT_ANALYSIS.md](api/V1_API_ALIGNMENT_ANALYSIS.md) - Analysis of V1 API alignment
+- [V1_API_ENDPOINTS.md](api/V1_API_ENDPOINTS.md) - Documentation of V1 API endpoints
+
+## 🔐 Authentication
+
+- [AUTH_QUICK_REFERENCE.md](auth/AUTH_QUICK_REFERENCE.md) - Quick reference for authentication
+- [AUTHENTICATION.md](auth/AUTHENTICATION.md) - Comprehensive authentication documentation
+- [ENHANCED_AUTH_IMPLEMENTATION.md](auth/ENHANCED_AUTH_IMPLEMENTATION.md) - Enhanced authentication implementation
+- [ENHANCED_AUTH_WORKFLOW_SUMMARY.md](auth/ENHANCED_AUTH_WORKFLOW_SUMMARY.md) - Summary of enhanced authentication workflow
+
+## 🔄 BackendV1
+
+BackendV1 is the current production backend implementation that uses LangGraph 2025, FastAPI, and a 7-agent ecosystem.
+
+- [BackendV1 Documentation](backendv1/README.md) - Comprehensive documentation for BackendV1
+
+## 💾 Database
+
+- [DATABASE_ALIGNMENT_STATUS.md](database/DATABASE_ALIGNMENT_STATUS.md) - Status of database alignment
+- [DATABASE_CONSOLIDATED_CURRENT_STATE.md](database/DATABASE_CONSOLIDATED_CURRENT_STATE.md) - Current state of consolidated database
+- [DATABASE_SCHEMA.md](database/DATABASE_SCHEMA.md) - Database schema documentation
+- [SEED_SCRIPT_DOCUMENTATION.md](database/SEED_SCRIPT_DOCUMENTATION.md) - Documentation for seed scripts
+
+## 🚀 Deployment
+
+- [CLIMATE_ECONOMY_SETUP_GUIDE.md](deployment/CLIMATE_ECONOMY_SETUP_GUIDE.md) - Guide for setting up Climate Economy Assistant
+- [DETAILED_DEPLOYMENT_GUIDE.md](deployment/DETAILED_DEPLOYMENT_GUIDE.md) - Detailed deployment guide
+- [DOCKER_DEPLOYMENT.md](deployment/DOCKER_DEPLOYMENT.md) - Docker deployment documentation
+- [DOCKER_ENHANCED_SETUP.md](deployment/DOCKER_ENHANCED_SETUP.md) - Enhanced Docker setup
+- [DOCKER_ENHANCEMENTS_SUMMARY.md](deployment/DOCKER_ENHANCEMENTS_SUMMARY.md) - Summary of Docker enhancements
+- [ENVIRONMENT_SETUP.md](deployment/ENVIRONMENT_SETUP.md) - Environment setup documentation
+- [FINAL_LAUNCH_READINESS_REPORT.md](deployment/FINAL_LAUNCH_READINESS_REPORT.md) - Final launch readiness report
+- [FINAL_PRODUCTION_VALIDATION_REPORT.md](deployment/FINAL_PRODUCTION_VALIDATION_REPORT.md) - Final production validation report
+- [PRODUCTION_GRADE_AUDIT_REPORT_2025.md](deployment/PRODUCTION_GRADE_AUDIT_REPORT_2025.md) - Production grade audit report
+- [TECHNICAL_DEPLOYMENT.md](deployment/TECHNICAL_DEPLOYMENT.md) - Technical deployment documentation
+- [verify-deployment.sh](deployment/verify-deployment.sh) - Script for verifying deployment
+
+## 🔄 Migration
+
+- [BACKENDV1_MIGRATION_COMPLETE.md](migration/BACKENDV1_MIGRATION_COMPLETE.md) - Documentation of completed BackendV1 migration
+- [BACKEND_VS_BACKENDV1_MIGRATION_ANALYSIS.md](migration/BACKEND_VS_BACKENDV1_MIGRATION_ANALYSIS.md) - Analysis of Backend vs BackendV1 migration
+- [CLEANUP_SUMMARY.md](migration/CLEANUP_SUMMARY.md) - Summary of cleanup activities
+- [FRONTEND_BACKEND_MIGRATION_MAPPING.md](migration/FRONTEND_BACKEND_MIGRATION_MAPPING.md) - Mapping of frontend to backend migration
+
+## 🔒 Security
+
+- [JWT_AUTHENTICATION_GUIDE.md](security/JWT_AUTHENTICATION_GUIDE.md) - Guide for JWT authentication
+- [PRIVACY_COMPLIANCE.md](security/PRIVACY_COMPLIANCE.md) - Privacy compliance documentation
+- [QUICK_LOGIN_REFERENCE.md](security/QUICK_LOGIN_REFERENCE.md) - Quick reference for login
+- [SECURITY_FIXES_SUMMARY.md](security/SECURITY_FIXES_SUMMARY.md) - Summary of security fixes
+- [SECURITY_HARDENING_FINAL_STATUS.md](security/SECURITY_HARDENING_FINAL_STATUS.md) - Final status of security hardening
+- [SECURITY_SETUP.md](security/SECURITY_SETUP.md) - Security setup documentation
+
+## 🧪 Testing
+
+- [BACKEND_VS_BACKENDV1_TEST_RESULTS.md](testing/BACKEND_VS_BACKENDV1_TEST_RESULTS.md) - Test results for Backend vs BackendV1
+- [FULLSTACK_AUDIT_REPORT_2025.md](testing/FULLSTACK_AUDIT_REPORT_2025.md) - Fullstack audit report for 2025
+- [FULLSTACK_TEST_AUDIT.md](testing/FULLSTACK_TEST_AUDIT.md) - Fullstack test audit
+- [FULLSTACK_TEST_AUDIT_REPORT.md](testing/FULLSTACK_TEST_AUDIT_REPORT.md) - Fullstack test audit report
+- [TESTING_GUIDE.md](testing/TESTING_GUIDE.md) - Guide for testing
+- [test_results_george_profiles.md](testing/test_results_george_profiles.md) - Test results for George's profiles
+
+## 🎨 UI
+
+- [ag-ui-implementation-guide.md](ui/ag-ui-implementation-guide.md) - UI implementation guide
+- [brand.md](ui/brand.md) - Brand guidelines and documentation
+
+## 🔄 Workflows
+
+- [IMPORT_ERROR_INVESTIGATION.md](workflows/IMPORT_ERROR_INVESTIGATION.md) - Investigation of import errors
+- [LANGGRAPH_2025_IMPLEMENTATION.md](workflows/LANGGRAPH_2025_IMPLEMENTATION.md) - Implementation of LangGraph 2025
+- [LANGGRAPH_ISSUES_RESOLUTION.md](workflows/LANGGRAPH_ISSUES_RESOLUTION.md) - Resolution of LangGraph issues
+- [LANGGRAPH_SETUP.md](workflows/LANGGRAPH_SETUP.md) - Setup of LangGraph
+- [LANGGRAPH_WORKFLOWS_V1.md](workflows/LANGGRAPH_WORKFLOWS_V1.md) - V1 of LangGraph workflows
+- [LangGraph_Flow_Control_Implementation_Summary.md](workflows/LangGraph_Flow_Control_Implementation_Summary.md) - Summary of LangGraph flow control implementation
+- [LangGraph_Flow_Control_State_Access_Fix_Summary.md](workflows/LangGraph_Flow_Control_State_Access_Fix_Summary.md) - Summary of LangGraph flow control state access fix
+- [README_LANGGRAPH_FIXES.md](workflows/README_LANGGRAPH_FIXES.md) - README for LangGraph fixes
+- [SUPERVISOR_INTEGRATION.md](workflows/SUPERVISOR_INTEGRATION.md) - Integration of supervisor
+- [TECHNICAL_SUPERVISOR_INTEGRATION.md](workflows/TECHNICAL_SUPERVISOR_INTEGRATION.md) - Technical supervisor integration
+- [WORKFLOW_INTEGRATION_STATUS.md](workflows/WORKFLOW_INTEGRATION_STATUS.md) - Status of workflow integration
+
+## 📚 User Guides
+
+- [getting-started.md](user-guides/getting-started.md) - Getting started guide for users
+
+## 📚 General
+- [API_REFERENCE.md](API_REFERENCE.md) - API reference documentation
+- [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) - Guide for deployment
+- [QUICK_START.md](QUICK_START.md) - Quick start guide
+- [README_ORIGINAL.md](README_ORIGINAL.md) - Original documentation README
+- [SECURITY_SUMMARY.md](SECURITY_SUMMARY.md) - Summary of security features
+- [TECHNICAL_DOCUMENTATION.md](TECHNICAL_DOCUMENTATION.md) - Technical documentation
+- [USER_GUIDE.md](USER_GUIDE.md) - User guide
+
+## 📁 Archive
+The archive directory contains outdated or redundant documentation that has been preserved for historical reference.

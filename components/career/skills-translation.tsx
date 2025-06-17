@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { useAuth } from '@/contexts/auth-context';
 import { API_ENDPOINTS } from "@/lib/config/constants";
 
 /**
@@ -119,7 +119,6 @@ interface SkillTranslationResponse {
 export default function SkillsTranslation() {
   const [translation, setTranslation] = useState<SkillTranslationResponse | null>(null);
   const [loading, setLoading] = useState(false);
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [targetSector, setTargetSector] = useState('general');
   const [currentIndustry, setCurrentIndustry] = useState('');
   const [experienceLevel, setExperienceLevel] = useState('');
@@ -131,24 +130,15 @@ export default function SkillsTranslation() {
   const [languagesSpoken, setLanguagesSpoken] = useState<string[]>([]);
   const [languageInput, setLanguageInput] = useState('');
 
-  const supabase = createClient();
-
-  const getUser = useCallback(async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    setCurrentUser(user);
-  }, [supabase.auth]);
-
-  useEffect(() => {
-    getUser();
-  }, [getUser]);
+  const { user } = useAuth();
 
   const runTranslation = async () => {
-    if (!currentUser) return;
+    if (!user) return;
 
     setLoading(true);
     try {
       const requestBody = {
-        user_id: currentUser.id,
+        user_id: user.id,
         target_climate_sector: targetSector,
         current_industry: currentIndustry || undefined,
         experience_level: experienceLevel || undefined,
@@ -232,7 +222,7 @@ export default function SkillsTranslation() {
     'Army', 'Navy', 'Air Force', 'Marines', 'Coast Guard', 'Space Force'
   ];
 
-  if (!currentUser) {
+  if (!user) {
     return (
       <div className="max-w-4xl mx-auto p-6 text-center">
         <div className="card bg-warning/10 shadow-xl">

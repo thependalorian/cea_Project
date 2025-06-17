@@ -1,0 +1,53 @@
+
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Mermaid Diagram</title>
+                <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+                <style>
+                    body {
+                        background: white;
+                        padding: 20px;
+                        margin: 0;
+                    }
+                    .mermaid {
+                        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="mermaid">
+---
+config:
+  flowchart:
+    curve: linear
+---
+graph TD;
+	__start__([<p>__start__</p>]):::first
+	process_input(process_input)
+	generate_response(generate_response)
+	human_review(human_review)
+	apply_feedback(apply_feedback)
+	__end__([<p>__end__</p>]):::last
+	__start__ -.-> process_input;
+	apply_feedback --> generate_response;
+	human_review -. &nbsp;END&nbsp; .-> __end__;
+	human_review -.-> apply_feedback;
+	process_input -.-> generate_response;
+	process_input -.-> human_review;
+	generate_response --> __end__;
+	classDef default fill:#f2f0ff,line-height:1.2
+	classDef first fill-opacity:0
+	classDef last fill:#bfb6fc
+
+                </div>
+                <script>
+                    mermaid.initialize({
+                        startOnLoad: true,
+                        theme: 'default',
+                        securityLevel: 'loose',
+                    });
+                </script>
+            </body>
+            </html>
+            

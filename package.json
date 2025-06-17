@@ -43,6 +43,9 @@
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/ssr": "^0.1.0",
     "@supabase/supabase-js": "^2.50.0",
+    "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@tailwindcss/forms": "^0.5.10",
+    "@tailwindcss/typography": "^0.5.16",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "daisyui": "^5.0.43",
@@ -59,7 +62,8 @@
     "recharts": "^2.15.3",
     "redis": "^5.5.6",
     "tailwind-merge": "^2.6.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.25.64"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.1.5",
@@ -88,7 +92,7 @@
     "setupFilesAfterEnv": [
       "<rootDir>/__tests__/setup.ts"
     ],
-    "moduleNameMapping": {
+    "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/$1"
     },
     "testMatch": [
@@ -96,7 +100,11 @@
       "**/*.(test|spec).(ts|tsx|js|jsx)"
     ],
     "testTimeout": 30000,
-    "clearMocks": true
+    "clearMocks": true,
+    "preset": "ts-jest",
+    "transform": {
+      "^.+\\.(ts|tsx)$": "ts-jest"
+    }
   },
   "description": "A comprehensive platform connecting job seekers with climate economy opportunities, featuring AI-powered matching, partner organizations, and administrative oversight.",
   "main": ".eslintrc.dev.js",

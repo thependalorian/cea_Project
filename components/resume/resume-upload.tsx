@@ -1,3 +1,9 @@
+/**
+ * Resume Upload Component
+ * Handles secure resume file uploads with drag-and-drop functionality
+ * Location: components/resume/resume-upload.tsx
+ */
+
 "use client";
 
 import { useState, useCallback } from "react";
@@ -6,14 +12,12 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Loader2, Upload, FileText, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { createClient } from "@/lib/supabase/client";
 import { ResumeData } from "@/types/chat";
 
 export function ResumeUpload() {
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [resumeData, setResumeData] = useState<ResumeData | null>(null);
-  const supabase = createClient();
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
@@ -38,7 +42,8 @@ export function ResumeUpload() {
       const formData = new FormData();
       formData.append("file", file);
 
-      const response = await fetch("/api/v1/resume/upload", {
+      // Use secure API endpoint for resume upload
+      const response = await fetch("/api/v1/resume/secure-upload", {
         method: "POST",
         body: formData,
       });

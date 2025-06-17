@@ -1,5 +1,8 @@
 adapters
 api
+auth
 core
+docs
+scripts
 tests
 tools

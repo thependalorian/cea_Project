@@ -3,7 +3,11 @@ pyproject.toml
 setup.py
 backendv1/__init__.py
 backendv1/main.py
+backendv1/settings.py
 backendv1/setup.py
+backendv1/test_human_steering.py
+backendv1/test_human_steering_george.py
+backendv1/v1_aliases.py
 backendv1/webapp.py
 cea_project.egg-info/PKG-INFO
 cea_project.egg-info/SOURCES.txt

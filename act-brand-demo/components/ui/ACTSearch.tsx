@@ -1,10 +1,10 @@
+"use client";
+
 /**
  * ACT Search Component - Alliance for Climate Transition
  * Advanced search with filtering for climate jobs, resources, and professionals
  * Location: act-brand-demo/components/ui/ACTSearch.tsx
  */
-
-"use client";
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';

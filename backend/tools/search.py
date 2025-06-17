@@ -418,34 +418,88 @@ async def semantic_resource_search(
 
         # Get database client for verified sources
         supabase = get_supabase_client()
-        
+
+        # Search knowledge_resources for domain knowledge (NEW - ADDED)
+        knowledge_response = (
+            supabase.table("knowledge_resources")
+            .select(
+                "title, description, content, content_type, domain, "
+                "categories, tags, topics, climate_sectors, target_audience, "
+                "source_url, created_at, is_published"
+            )
+            .eq("is_published", True)
+            .limit(5)  # Limit to top 5 knowledge resources
+            .execute()
+        )
+
         # Search partner profiles for relevant organizations
-        partner_response = supabase.table("partner_profiles").select(
-            "organization_name, description, email, phone, website, "
-            "climate_focus, training_programs, services_offered, "
-            "verification_date, partnership_level, headquarters_location"
-        ).eq("verified", True).execute()
-        
+        partner_response = (
+            supabase.table("partner_profiles")
+            .select(
+                "organization_name, description, email, phone, website, "
+                "climate_focus, training_programs, services_offered, "
+                "verification_date, partnership_level, headquarters_location"
+            )
+            .eq("verified", True)
+            .execute()
+        )
+
         # Search current job listings
-        jobs_response = supabase.table("job_listings").select(
-            "title, description, partner_id, salary_range, location, "
-            "application_url, requirements, created_at, climate_focus"
-        ).eq("is_active", True).execute()
-        
+        jobs_response = (
+            supabase.table("job_listings")
+            .select(
+                "title, description, partner_id, salary_range, location, "
+                "application_url, requirements, created_at, climate_focus"
+            )
+            .eq("is_active", True)
+            .execute()
+        )
+
         # Search education programs
-        programs_response = supabase.table("education_programs").select(
-            "program_name, description, partner_id, cost, duration, "
-            "contact_info, certification_offered, skills_taught, "
-            "application_url, start_date"
-        ).eq("is_active", True).execute()
-        
+        programs_response = (
+            supabase.table("education_programs")
+            .select(
+                "program_name, description, partner_id, cost, duration, "
+                "contact_info, certification_offered, skills_taught, "
+                "application_url, start_date"
+            )
+            .eq("is_active", True)
+            .execute()
+        )
+
         # Build sourced response
         sourced_results = []
-        
+
+        # Process knowledge resources FIRST (NEW - ADDED)
+        if knowledge_response.data:
+            sourced_results.append("## **📚 Domain Knowledge & Resources**\n")
+            for resource in knowledge_response.data:
+                content_preview = (
+                    resource.get("content", "")[:300] + "..."
+                    if len(resource.get("content", "")) > 300
+                    else resource.get("content", "")
+                )
+                sourced_results.append(
+                    f"""
+**📖 Knowledge Resource:** {resource['title']}
+**Description:** {resource.get('description', 'N/A')}
+**Content Preview:** {content_preview}
+**Type:** {resource.get('content_type', 'N/A')}
+**Domain:** {resource.get('domain', 'Climate Economy')}
+**Categories:** {', '.join(resource.get('categories', []))}
+**Climate Sectors:** {', '.join(resource.get('climate_sectors', []))}
+**Target Audience:** {', '.join(resource.get('target_audience', []))}
+**Source:** {resource.get('source_url', 'Internal Knowledge Base')}
+**Published:** {resource.get('created_at', 'N/A')}
+"""
+                )
+
         # Process partners
         if partner_response.data:
+            sourced_results.append("\n## **🏢 Partner Organizations**\n")
             for partner in partner_response.data:
-                sourced_results.append(f"""
+                sourced_results.append(
+                    f"""
 **Organization:** {partner['organization_name']}
 **Description:** {partner['description']}
 **Climate Focus:** {', '.join(partner.get('climate_focus', []))}
@@ -454,12 +508,15 @@ async def semantic_resource_search(
 **Verified:** {partner.get('verification_date', 'N/A')}
 **Location:** {partner.get('headquarters_location', 'Massachusetts')}
 **Services:** {', '.join(partner.get('services_offered', []))}
-""")
-        
+"""
+                )
+
         # Process job listings
         if jobs_response.data:
+            sourced_results.append("\n## **💼 Current Job Opportunities**\n")
             for job in jobs_response.data[:3]:  # Limit to top 3 matches
-                sourced_results.append(f"""
+                sourced_results.append(
+                    f"""
 **Job Title:** {job['title']}
 **Description:** {job['description'][:200]}...
 **Salary Range:** {job.get('salary_range', 'Not specified')}
@@ -467,13 +524,16 @@ async def semantic_resource_search(
 **Apply:** {job.get('application_url', 'Contact partner directly')}
 **Posted:** {job.get('created_at', 'N/A')}
 **Climate Focus:** {', '.join(job.get('climate_focus', []))}
-""")
-        
+"""
+                )
+
         # Process education programs
         if programs_response.data:
+            sourced_results.append("\n## **🎓 Education & Training Programs**\n")
             for program in programs_response.data[:3]:  # Limit to top 3 matches
-                contact_info = program.get('contact_info', {})
-                sourced_results.append(f"""
+                contact_info = program.get("contact_info", {})
+                sourced_results.append(
+                    f"""
 **Program:** {program['program_name']}
 **Description:** {program['description'][:200]}...
 **Duration:** {program.get('duration', 'N/A')}
@@ -482,28 +542,31 @@ async def semantic_resource_search(
 **Skills:** {', '.join(program.get('skills_taught', []))}
 **Contact:** {contact_info.get('email', 'N/A')} | {contact_info.get('phone', 'N/A')}
 **Apply:** {program.get('application_url', 'Contact program directly')}
-""")
-        
+"""
+                )
+
         if not sourced_results:
             return """**No verified resources found in database.**
 Please contact ACT Alliance directly for current opportunities:
 **Contact:** info@act-alliance.org
 **Note:** Database search returned no matches for current query."""
-        
+
         # Combine results with source attribution
-        final_response = f"""## **Massachusetts Climate Economy Resources**
+        final_response = f"""# **Massachusetts Climate Economy Resources**
 **Query:** {query}
-**Source:** ACT Partner Database (Verified Organizations)
+**Source:** ACT Partner Database + Knowledge Base (Verified Sources)
 **Search Date:** {datetime.now().strftime('%B %d, %Y')}
 
 {chr(10).join(sourced_results)}
 
+---
 **Data Sources:**
+- Knowledge resources from verified climate economy knowledge base
 - Partner profiles verified as of their listed verification dates
 - Job listings and education programs updated in real-time
 - All contact information sourced from verified partner database
 - For additional opportunities, contact ACT Alliance: info@act-alliance.org"""
-        
+
         return final_response
 
     except Exception as e:
@@ -578,3 +641,116 @@ async def generate_resource_recommendations(
     except Exception as e:
         logger.error(f"Resource recommendation failed: {e}")
         raise Exception(f"Resource recommendation failed: {str(e)}")
+
+
+@tool
+async def search_knowledge_base(
+    query: str,
+    domain: Optional[str] = None,
+    content_types: Optional[List[str]] = None,
+    climate_sectors: Optional[List[str]] = None,
+    target_audience: Optional[List[str]] = None,
+) -> str:
+    """
+    Search the climate economy knowledge base for domain-specific information
+
+    Args:
+        query: Search query for knowledge content
+        domain: Specific domain to search (e.g., "renewable_energy", "environmental_justice")
+        content_types: Types of content to search for (e.g., ["policy", "research", "guide"])
+        climate_sectors: Climate sectors to focus on (e.g., ["solar", "wind", "efficiency"])
+        target_audience: Target audience filters (e.g., ["veterans", "international", "students"])
+
+    Returns:
+        Knowledge base search results with domain expertise
+    """
+    try:
+        if not query:
+            raise ValueError("Knowledge base search query cannot be empty")
+
+        # Get database client
+        supabase = get_supabase_client()
+
+        # Build query for knowledge_resources table
+        query_builder = (
+            supabase.table("knowledge_resources")
+            .select(
+                "title, description, content, content_type, domain, "
+                "categories, tags, topics, climate_sectors, target_audience, "
+                "source_url, file_path, created_at, is_published"
+            )
+            .eq("is_published", True)
+        )
+
+        # Apply filters if provided
+        if domain:
+            query_builder = query_builder.eq("domain", domain)
+
+        # Execute the query
+        knowledge_response = query_builder.limit(10).execute()
+
+        if not knowledge_response.data:
+            return f"""**No knowledge base resources found for query: "{query}"**
+            
+**Suggestions:**
+- Try broader search terms
+- Contact ACT Alliance for specific domain expertise: info@act-alliance.org
+- Check partner organizations for specialized knowledge"""
+
+        # Process knowledge resources
+        knowledge_results = []
+        knowledge_results.append(f"# **Climate Economy Knowledge Base**")
+        knowledge_results.append(f"**Search Query:** {query}")
+        if domain:
+            knowledge_results.append(f"**Domain Filter:** {domain}")
+        knowledge_results.append(f"**Results Found:** {len(knowledge_response.data)}")
+        knowledge_results.append(
+            f"**Search Date:** {datetime.now().strftime('%B %d, %Y')}\n"
+        )
+
+        for i, resource in enumerate(knowledge_response.data, 1):
+            # Get content preview
+            content = resource.get("content", "")
+            content_preview = content[:400] + "..." if len(content) > 400 else content
+
+            knowledge_results.append(
+                f"""
+## **{i}. {resource['title']}**
+
+**Description:** {resource.get('description', 'No description available')}
+
+**Content Preview:**
+{content_preview}
+
+**Resource Details:**
+- **Type:** {resource.get('content_type', 'N/A')}
+- **Domain:** {resource.get('domain', 'Climate Economy')}
+- **Categories:** {', '.join(resource.get('categories', []))}
+- **Topics:** {', '.join(resource.get('topics', []))}
+- **Climate Sectors:** {', '.join(resource.get('climate_sectors', []))}
+- **Target Audience:** {', '.join(resource.get('target_audience', []))}
+- **Source:** {resource.get('source_url', 'Internal Knowledge Base')}
+- **File:** {resource.get('file_path', 'N/A')}
+- **Published:** {resource.get('created_at', 'N/A')}
+
+---"""
+            )
+
+        # Add search refinement suggestions
+        knowledge_results.append(
+            f"""
+**🔍 Need More Specific Information?**
+- Contact domain experts at ACT Alliance: info@act-alliance.org
+- Request additional resources for your specific use case
+- Access full documents and detailed guides through partner portal
+"""
+        )
+
+        return chr(10).join(knowledge_results)
+
+    except Exception as e:
+        logger.error(f"Knowledge base search failed: {e}")
+        return f"""**Knowledge Base Search Error**
+**Error:** {str(e)}
+**Query:** {query}
+**Fallback:** Contact ACT Alliance for domain expertise: info@act-alliance.org"""

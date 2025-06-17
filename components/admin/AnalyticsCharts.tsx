@@ -29,19 +29,42 @@ export function AnalyticsCharts({ data }: AnalyticsChartsProps) {
   const processDataForChart = (timeRange: string) => {
     const now = new Date();
     const daysBack = timeRange === '7d' ? 7 : timeRange === '30d' ? 30 : 90;
-    const startDate = new Date(now.getTime() - daysBack * 24 * 60 * 60 * 1000);
+    
+    // Use real data from props if available, otherwise show empty state
+    if (!data || !data.conversations) {
+      return [];
+    }
 
-    // Generate daily data points
+    // Generate daily data points from real data
     const days = [];
     for (let i = daysBack - 1; i >= 0; i--) {
       const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+      const dateStr = date.toISOString().split('T')[0];
+      
+      // Count real data for this date
+      const dayConversations = data.conversations.filter(c => 
+        c.created_at && c.created_at.startsWith(dateStr)
+      ).length;
+      
+      const dayUsers = data.users.filter(u => 
+        u.created_at && u.created_at.startsWith(dateStr)
+      ).length;
+      
+      const dayJobs = data.jobs.filter(j => 
+        j.created_at && j.created_at.startsWith(dateStr)
+      ).length;
+      
+      const dayPartners = data.partners.filter(p => 
+        p.created_at && p.created_at.startsWith(dateStr)
+      ).length;
+      
       days.push({
-        date: date.toISOString().split('T')[0],
+        date: dateStr,
         label: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-        conversations: Math.floor(Math.random() * 100) + 20, // Mock data
-        users: Math.floor(Math.random() * 50) + 10,
-        jobs: Math.floor(Math.random() * 20) + 5,
-        partners: Math.floor(Math.random() * 10) + 2
+        conversations: dayConversations,
+        users: dayUsers,
+        jobs: dayJobs,
+        partners: dayPartners
       });
     }
     return days;

@@ -5,7 +5,7 @@ George Nekwaya Profile Creation Script
 
 Creates George Nekwaya's three distinct profiles in the database:
 1. Admin Profile (ACT Project Manager) - Super Admin Access
-2. Partner Profile (Buffr Inc. Founder) - Partner Collaboration Access  
+2. Partner Profile (Buffr Inc. Founder) - Partner Collaboration Access
 3. Job Seeker Profile (Individual) - Career Development Access
 
 Uses the exact Supabase schema structure provided.

@@ -312,14 +312,16 @@ LANGUAGE: Bilingual capacity (English/Spanish), culturally responsive, anti-oppr
         """
         try:
             # Use enhanced intelligence for sophisticated analysis
-            intelligence_result = await (
-                self.intelligence_coordinator.process_with_enhanced_intelligence(
-                    message,
-                    user_id,
-                    {
-                        "conversation_id": conversation_id,
-                        "agent_type": "environmental_justice",
-                    },
+            intelligence_result = (
+                await (
+                    self.intelligence_coordinator.process_with_enhanced_intelligence(
+                        message,
+                        user_id,
+                        {
+                            "conversation_id": conversation_id,
+                            "agent_type": "environmental_justice",
+                        },
+                    )
                 )
             )
 

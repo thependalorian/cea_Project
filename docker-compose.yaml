@@ -204,74 +204,35 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.frontend
-      target: ${DOCKER_TARGET:-development}
-    profiles: ["dev", "prod", "supervisor"]
     ports:
-      - "${FRONTEND_PORT:-3000}:3000"
-    environment:
-      # Supabase Configuration
-      - NEXT_PUBLIC_SUPABASE_URL=${SUPABASE_URL}
-      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
-      
-      # API Configuration - Enhanced for Supervisor Workflow
-      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8000}
-      - API_URL=${API_URL:-http://api:8000}
-      - NEXT_PUBLIC_SUPERVISOR_API_URL=${NEXT_PUBLIC_SUPERVISOR_API_URL:-http://localhost:8000}
-      - NEXT_PUBLIC_LANGGRAPH_API_URL=${NEXT_PUBLIC_LANGGRAPH_API_URL:-http://localhost:8123}
-      
-      # Redis Configuration
-      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
-      
-      # Next.js Configuration
-      - NODE_ENV=${NODE_ENV:-development}
-      - NEXT_TELEMETRY_DISABLED=1
-      - PORT=3000
-      - HOSTNAME=0.0.0.0
-      
-      # Enhanced Features
-      - NEXT_PUBLIC_ENABLE_SUPERVISOR=${NEXT_PUBLIC_ENABLE_SUPERVISOR:-true}
-      - NEXT_PUBLIC_ENHANCED_INTELLIGENCE=${NEXT_PUBLIC_ENHANCED_INTELLIGENCE:-true}
-    depends_on:
-      - api
-      - redis
+      - "3000:3000"
     volumes:
-      # Only mount for development
       - .:/app
       - /app/node_modules
-      - /app/.next
-    restart: unless-stopped
-    develop:
-      watch:
-        - action: sync
-          path: ./app
-          target: /app/app
-        - action: sync
-          path: ./components
-          target: /app/components
-        - action: sync
-          path: ./lib
-          target: /app/lib
-        - action: sync
-          path: ./types
-          target: /app/types
-        - action: sync
-          path: ./hooks
-          target: /app/hooks
-        - action: sync
-          path: ./contexts
-          target: /app/contexts
-        - action: rebuild
-          path: package.json
-        - action: rebuild
-          path: next.config.js
-    networks:
-      - cea-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 15s
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./backend:/app/backend
+      - ./backendv1:/app/backendv1
+      - ./scripts:/app/scripts
+      - ./docs:/app/docs
+      - backend_data:/app/data
+    environment:
+      - PYTHONPATH=/app
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+    depends_on:
+      - redis
+      - langgraph-server
 
   # =====================================================
   # Supervisor Frontend (Dedicated for Supervisor Workflow)
@@ -386,20 +347,16 @@ services:
   # Enhanced Redis Cache Service
   # =====================================================
   redis:
-    image: redis:7-alpine
-    profiles: ["dev", "prod", "gpu", "supervisor"]
+    image: redis:alpine
     ports:
       - "6379:6379"
     volumes:
       - redis_data:/data
-    command: redis-server --appendonly yes --maxmemory 1gb --maxmemory-policy allkeys-lru --bind 0.0.0.0 --port 6379 --protected-mode no
-    restart: unless-stopped
-    networks:
-      - cea-network
+    command: redis-server --appendonly yes
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
-      interval: 30s
-      timeout: 10s
+      interval: 10s
+      timeout: 5s
       retries: 3
 
   # =====================================================
@@ -503,6 +460,27 @@ services:
     networks:
       - cea-network
 
+  langgraph-server:
+    image: python:3.11-slim
+    working_dir: /app
+    volumes:
+      - ./backendv1:/app/backendv1
+      - ./langgraph.json:/app/langgraph.json
+    ports:
+      - "8123:8123"
+    environment:
+      - PYTHONPATH=/app
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+    command: >
+      bash -c "pip install langgraph mcp[cli] langchain_community langchain-openai langchain-anthropic &&
+               langgraph dev"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8123/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
 # =====================================================
 # Enhanced Docker Volumes
 # =====================================================
@@ -518,6 +496,8 @@ volumes:
   loki_data:
     driver: local
   langgraph_studio_data:
+    driver: local
+  backend_data:
     driver: local
 
 # =====================================================

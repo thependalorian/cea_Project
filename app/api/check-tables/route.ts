@@ -5,14 +5,14 @@ export async function GET() {
   try {
     const supabase = await createClient();
     
-    // Check for essential tables
+    // Check for essential tables that actually exist in the database
     const tables = [
-      'users',
+      'profiles',
       'resumes', 
-      'jobs',
+      'job_listings',
       'education_programs',
-      'partners',
-      'knowledge_base'
+      'partner_profiles',
+      'knowledge_resources'
     ];
     
     const tableStatus = await Promise.all(

@@ -635,7 +635,7 @@ class MultiIdentityRecognizer:
             # Enhanced pattern matching with contextual analysis
             for identity, markers in identity_markers.items():
                 total_score = 0
-            evidence = []
+                evidence = []
 
                 for source_type, text in text_sources:
                     if not text:

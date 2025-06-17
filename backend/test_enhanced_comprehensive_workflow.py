@@ -6,7 +6,7 @@ Enhanced Comprehensive Workflow Testing
 Full-stack integration testing that validates:
 - Frontend → Backend message routing
 - Tool call chains and execution
-- Agent workflow completeness  
+- Agent workflow completeness
 - Response quality and persona consistency
 - Skills translation accuracy
 - Job matching and recommendation quality

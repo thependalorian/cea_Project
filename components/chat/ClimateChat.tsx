@@ -1,29 +1,33 @@
 "use client";
 
 /**
- * Climate Chat Component - Climate Economy Assistant
- * Advanced 7-agent AI chat interface for job seekers and career guidance
- * Location: components/chat/ClimateChat.tsx
+ * Climate Chat Component - Secure API-First Implementation
+ * Following rule #16: Secure endpoints with proper authentication
+ * Following rule #2: Create modular UI components
+ * 
+ * Location: /components/chat/ClimateChat.tsx
  */
 
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   MessageCircle, 
   Send, 
+  X, 
   User, 
-  Shield, 
+  Bot, 
+  Heart, 
   Globe, 
   Leaf, 
+  MapPin, 
+  Shield, 
   FileText, 
-  Heart, 
   Briefcase, 
   PenTool,
   Upload,
   Maximize2,
   Minimize2
 } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
 
 interface ClimateChatProps {
   variant?: 'sidebar' | 'modal' | 'fullscreen' | 'embedded';
@@ -54,17 +58,39 @@ export function ClimateChat({
   const [agentStatus, setAgentStatus] = useState<'idle' | 'thinking' | 'responding'>('idle');
   const [conversationId] = useState(`conv_${Date.now()}`);
   const [isMaximized, setIsMaximized] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
   // Client-side timestamp rendering to fix hydration issues
   const [isClient, setIsClient] = useState(false);
   
-  // Supabase client for authentication
-  const supabase = createClient();
-  
   useEffect(() => {
     setIsClient(true);
+    checkAuthStatus();
   }, []);
+
+  // Check authentication status via API
+  const checkAuthStatus = async () => {
+    try {
+      const response = await fetch('/api/auth/status', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include'
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setIsAuthenticated(!!data.user);
+      } else {
+        setIsAuthenticated(false);
+      }
+    } catch (error) {
+      console.error('Auth status check failed:', error);
+      setIsAuthenticated(false);
+    }
+  };
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -95,10 +121,20 @@ How can our team help you navigate your climate economy career today?`,
     }
   }, [messages.length]);
 
-  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
-
   const sendMessage = async () => {
     if (!inputMessage.trim()) return;
+
+    // Check authentication before sending
+    if (!isAuthenticated) {
+      const errorMessage: Message = {
+        type: 'assistant',
+        content: '🔐 Please log in to continue chatting with our climate career specialists.',
+        specialist: 'System',
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorMessage]);
+      return;
+    }
 
     // Add user message
     const userMessage: Message = {
@@ -112,46 +148,20 @@ How can our team help you navigate your climate economy career today?`,
     setAgentStatus('thinking');
 
     try {
-      // Get auth token from Supabase session instead of localStorage
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-      
-      if (sessionError) {
-        console.error('🔐 Session error:', sessionError);
-      }
+      console.log('🔄 Sending message to chat API');
 
-      // Check if user is authenticated
-      if (!session?.access_token) {
-        throw new Error('Authentication required. Please log in to continue.');
-      }
-
-      // Prepare headers with authentication
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${session.access_token}`,
-        'User-Agent': 'ClimateEconomyAssistant/1.0',
-        'X-Requested-With': 'XMLHttpRequest',
-      };
-
-      console.log('🔄 Sending message to backend:', {
-        url: `${backendUrl}/api/chat`,
-        headers: Object.keys(headers),
-        hasAuth: !!session?.access_token,
-        messageLength: inputMessage.length,
-        userEmail: session?.user?.email || 'anonymous'
-      });
-
-      // Call your FastAPI backend directly with correct ChatRequest format
-      const response = await fetch(`${backendUrl}/api/chat`, {
+      // Use secure API endpoint for chat
+      const response = await fetch('/api/v1/chat', {
         method: 'POST',
-        headers,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
         body: JSON.stringify({
-          message: inputMessage, // FastAPI expects 'message' field
+          message: inputMessage,
           conversation_id: conversationId,
           context: {
-            access_token: session.access_token, // Include access token in context
             user_type: userContext?.userType || 'job_seeker',
-            user_id: session?.user?.id,
-            user_email: session?.user?.email,
             profile: userContext?.profile,
             preferences: userContext?.preferences,
             timestamp: new Date().toISOString(),
@@ -161,29 +171,28 @@ How can our team help you navigate your climate economy career today?`,
         })
       });
 
-      console.log('📡 Backend response:', {
+      console.log('📡 Chat API response:', {
         status: response.status,
         statusText: response.statusText,
-        ok: response.ok,
-        headers: Object.fromEntries(response.headers.entries())
+        ok: response.ok
       });
 
       if (!response.ok) {
         if (response.status === 401) {
-          throw new Error(`Authentication failed. Please log in again. Status: ${response.status}`);
+          throw new Error('Authentication required. Please log in again.');
         } else if (response.status === 403) {
-          throw new Error(`Access denied. Please ensure you're logged in as a job seeker. Status: ${response.status}`);
+          throw new Error('Access denied. Please ensure you have proper permissions.');
         } else if (response.status === 404) {
-          throw new Error(`Backend endpoint not found. Status: ${response.status}. Ensure FastAPI server is running on ${backendUrl}`);
+          throw new Error('Chat service not available. Please try again later.');
         } else if (response.status >= 500) {
-          throw new Error(`Backend server error. Status: ${response.status}. Check FastAPI logs for details.`);
+          throw new Error('Server error. Please try again later.');
         } else {
-          throw new Error(`Backend error: ${response.status} - ${response.statusText}`);
+          throw new Error(`Chat error: ${response.status} - ${response.statusText}`);
         }
       }
 
       const data = await response.json();
-      console.log('✅ Backend data received:', {
+      console.log('✅ Chat response received:', {
         hasContent: !!data.content,
         specialist: data.specialist,
         responseLength: data.content?.length || 0
@@ -203,41 +212,29 @@ How can our team help you navigate your climate economy career today?`,
     } catch (error) {
       console.error('❌ Chat error:', error);
       
-      let errorContent = `I'm having trouble connecting to our backend system. `;
+      let errorContent = `I'm having trouble processing your request. `;
       
       if (error instanceof Error && (error.message.includes('401') || error.message.includes('403'))) {
         errorContent += `
 
 🔐 **Authentication Issue:**
-- You may need to log in as a job seeker
+- You may need to log in again
 - Session may have expired
-- Check if auth token is present in your browser
+- Please refresh the page and try again
 
-🛠️ **Debug Info:**
-- Backend URL: ${backendUrl}
-- Auth Token Present: ${!!(await supabase.auth.getSession()).data.session?.access_token}
-- User Context: ${userContext?.userType || 'none'}
-
-**For Developers:**
-JWT token authentication is now properly configured. Check FastAPI logs for detailed error information.`;
-      } else if (error instanceof Error && error.message.includes('fetch')) {
-        errorContent += `
-
-🌐 **Connection Issue:**
-- Backend server may not be running
-- Check if FastAPI is running on ${backendUrl}
-- Verify network connectivity
-
-**For Developers:**
-Start the FastAPI backend with: \`uvicorn main:app --reload --port 8000\``;
+🛠️ **Troubleshooting:**
+- Check your internet connection
+- Try logging out and back in
+- Contact support if the issue persists`;
       } else {
         errorContent += `
 
-❌ **Unexpected Error:**
-${error instanceof Error ? error.message : 'Unknown error occurred'}
+🛠️ **Troubleshooting:**
+- Check your internet connection
+- Try refreshing the page
+- Contact support if the issue persists
 
-**For Developers:**
-Check browser console and FastAPI logs for more details.`;
+Error: ${error instanceof Error ? error.message : 'Unknown error'}`;
       }
 
       const errorMessage: Message = {
@@ -256,34 +253,43 @@ Check browser console and FastAPI logs for more details.`;
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // Handle resume upload
-    if (file.type === 'application/pdf' || file.name.endsWith('.pdf')) {
+    // Use secure API endpoint for file upload
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('conversation_id', conversationId);
+
+    try {
+      const response = await fetch('/api/v1/upload', {
+        method: 'POST',
+        body: formData,
+        credentials: 'include'
+      });
+
+      if (!response.ok) {
+        throw new Error('File upload failed');
+      }
+
+      const result = await response.json();
+      
       const uploadMessage: Message = {
-        type: 'user',
-        content: `📄 Uploaded resume: ${file.name}`,
+        type: 'assistant',
+        content: `📎 File uploaded successfully: ${file.name}\n\n${result.message || 'File processed and ready for analysis.'}`,
+        specialist: 'System',
         timestamp: new Date()
       };
-      
+
       setMessages(prev => [...prev, uploadMessage]);
+    } catch (error) {
+      console.error('File upload error:', error);
       
-      // Simulate AI response for resume upload
-      setTimeout(() => {
-        const responseMessage: Message = {
-          type: 'assistant',
-          content: `✅ I've received your resume "${file.name}". Let me analyze it for climate economy opportunities...
+      const errorMessage: Message = {
+        type: 'assistant',
+        content: `❌ Failed to upload file: ${file.name}. Please try again or contact support.`,
+        specialist: 'System',
+        timestamp: new Date()
+      };
 
-🔍 **Resume Analysis:**
-- Extracting skills and experience
-- Matching with climate job opportunities
-- Identifying skill gaps and training recommendations
-- Preparing personalized career guidance
-
-This may take a moment. I'll provide detailed feedback shortly!`,
-          specialist: 'Mai',
-          timestamp: new Date()
-        };
-        setMessages(prev => [...prev, responseMessage]);
-      }, 1000);
+      setMessages(prev => [...prev, errorMessage]);
     }
   };
 

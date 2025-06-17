@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { ACTCard } from '@/components/ui';
 import { Upload, FileText, CheckCircle, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { createClient } from '@/lib/supabase/client';
+import { useAuth } from '@/contexts/auth-context';
 import { useToast } from '@/hooks/use-toast';
 
 interface ResumeUploadSectionProps {
@@ -17,7 +17,7 @@ export function ResumeUploadSection({ userId, hasExistingResume, currentResumeDa
   const [isUploading, setIsUploading] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const { toast } = useToast();
-  const supabase = createClient();
+  const { user } = useAuth();
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
@@ -52,32 +52,21 @@ export function ResumeUploadSection({ userId, hasExistingResume, currentResumeDa
 
     setIsUploading(true);
     try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${userId}-resume-${Date.now()}.${fileExt}`;
+      const formData = new FormData();
+      formData.append('resume', file);
+      formData.append('user_id', userId);
 
-      // Upload file to Supabase storage
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('resumes')
-        .upload(fileName, file);
+      const response = await fetch('/api/v1/resume/secure-upload', {
+        method: 'POST',
+        body: formData,
+      });
 
-      if (uploadError) {
-        throw uploadError;
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to upload resume');
       }
 
-      // Update job seeker profile with resume info
-      const { error: updateError } = await supabase
-        .from('job_seeker_profiles')
-        .upsert({
-          user_id: userId,
-          resume_filename: file.name,
-          resume_storage_path: uploadData.path,
-          resume_uploaded_at: new Date().toISOString(),
-          profile_completed: true
-        });
-
-      if (updateError) {
-        throw updateError;
-      }
+      const result = await response.json();
 
       toast({
         title: "Resume uploaded successfully",

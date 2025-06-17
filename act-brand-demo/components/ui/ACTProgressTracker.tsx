@@ -1,10 +1,10 @@
+"use client";
+
 /**
  * ACT Progress Tracker Component - Alliance for Climate Transition
  * Track climate goals, milestones, and sustainability progress
  * Location: act-brand-demo/components/ui/ACTProgressTracker.tsx
  */
-
-"use client";
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';

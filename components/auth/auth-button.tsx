@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { createClient } from "@/lib/supabase/server";
 import { LogoutButton } from "./logout-button";
+import { createClient } from "@/lib/supabase/server";
 
 export async function AuthButton() {
+  // Use server-side Supabase client with proper cookie handling
   const supabase = await createClient();
 
   const {

@@ -1,4 +1,4 @@
-# Multi-stage Dockerfile for Climate Economy Assistant FastAPI Backend
+# Multi-stage Dockerfile for Climate Economy Assistant FastAPI BackendV1
 # Enhanced for LangGraph Supervisor Workflow + Multi-Agent System
 # Optimized for LangGraph/LangChain + Supabase + OpenAI + Redis + Enhanced Intelligence
 
@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for better Docker layer caching
-COPY backend/requirements.txt .
+COPY backendv1/requirements.txt .
 
 # Install Python dependencies with enhanced caching
 RUN pip install --no-cache-dir --user -r requirements.txt
@@ -42,8 +42,8 @@ COPY --from=builder /root/.local /root/.local
 RUN useradd --create-home --shell /bin/bash --user-group cea
 
 # Copy application code and configuration
-COPY backend/ .
-COPY backend/langgraph.json ./langgraph.json
+COPY backendv1/ .
+COPY langgraph.json ./langgraph.json
 
 # Create necessary directories with proper permissions
 RUN mkdir -p logs .langgraph_api && \
@@ -57,7 +57,7 @@ ENV PATH=/root/.local/bin:$PATH
 ENV PYTHONPATH=/app
 ENV PYTHONUNBUFFERED=1
 ENV LANGCHAIN_TRACING_V2=false
-ENV LANGCHAIN_PROJECT=climate-economy-assistant
+ENV LANGCHAIN_PROJECT=climate-economy-assistant-v1
 
 # Configure LangGraph specific settings
 ENV LANGGRAPH_CONFIG_PATH=/app/langgraph.json
@@ -78,7 +78,7 @@ COPY <<EOF /app/entrypoint.sh
 #!/bin/bash
 set -e
 
-echo "🚀 Starting Climate Economy Assistant with Supervisor Workflow..."
+echo "🚀 Starting Climate Economy Assistant V1 with Supervisor Workflow..."
 
 # Function to start services based on mode
 start_service() {
@@ -91,18 +91,18 @@ start_service() {
             echo "📡 LangGraph API started with PID \$LANGGRAPH_PID"
             
             # Start FastAPI with supervisor integration
-            uvicorn main:app --host 0.0.0.0 --port 8000 --workers 1 --access-log
+            uvicorn webapp:cea_app_v1 --host 0.0.0.0 --port 8000 --workers 1 --access-log
             ;;
         "api"|*)
             echo "🌐 Starting in FastAPI mode..."
             # Start FastAPI backend with enhanced features
-            uvicorn main:app --host 0.0.0.0 --port 8000 --workers \${WORKERS:-4} --access-log
+            uvicorn webapp:cea_app_v1 --host 0.0.0.0 --port 8000 --workers \${WORKERS:-4} --access-log
             ;;
     esac
 }
 
 # Check for startup mode
-MODE=\${STARTUP_MODE:-api}
+MODE=\${STARTUP_MODE:-supervisor}
 echo "🔧 Startup mode: \$MODE"
 
 # Start the appropriate service

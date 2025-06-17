@@ -4,6 +4,7 @@ import { ThemeProvider } from 'next-themes'
 import { Toaster } from "@/components/ui/toaster";
 import { ChatProvider } from '@/contexts/ChatContext'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { AuthProvider } from '@/contexts/auth-context'
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,10 +33,12 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <ErrorBoundary>
-            <ChatProvider>
-              {children}
-              <Toaster />
-            </ChatProvider>
+            <AuthProvider>
+              <ChatProvider>
+                {children}
+                <Toaster />
+              </ChatProvider>
+            </AuthProvider>
           </ErrorBoundary>
         </ThemeProvider>
       </body>

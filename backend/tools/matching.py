@@ -15,7 +15,7 @@ async def advanced_job_matching(
     user_background: str,
     location_preference: str = "Massachusetts",
     salary_range: Optional[str] = None,
-    work_format: Optional[str] = "hybrid"
+    work_format: Optional[str] = "hybrid",
 ) -> str:
     """
     Advanced job matching using comprehensive user profile analysis.
@@ -32,7 +32,7 @@ async def advanced_job_matching(
     """
     # Enhanced matching logic with background-specific opportunities
     background_specific_jobs = ""
-    
+
     if user_background == "veteran":
         background_specific_jobs = """
 🎖️ **Veteran-Friendly Climate Opportunities:**
@@ -56,8 +56,12 @@ async def advanced_job_matching(
 """
 
     skills_match = f"Based on your skills in {', '.join(user_skills[:3])}"
-    location_note = f"in {location_preference}" if location_preference != "Massachusetts" else "across Massachusetts"
-    
+    location_note = (
+        f"in {location_preference}"
+        if location_preference != "Massachusetts"
+        else "across Massachusetts"
+    )
+
     salary_info = ""
     if salary_range:
         salary_info = f"\n💰 **Salary Range Match**: Positions matching {salary_range} highlighted with 💰"
@@ -91,7 +95,7 @@ async def advanced_job_matching(
 async def skills_gap_analysis(
     current_skills: List[str],
     target_position: str,
-    industry_focus: str = "climate_economy"
+    industry_focus: str = "climate_economy",
 ) -> str:
     """
     Analyze skills gaps for target climate economy positions.
@@ -106,26 +110,52 @@ async def skills_gap_analysis(
     """
     # Simplified gap analysis logic
     position_lower = target_position.lower()
-    
+
     # Define required skills for common climate positions
     required_skills = {}
     if "analyst" in position_lower or "data" in position_lower:
-        required_skills = ["Data Analysis", "Python/R", "Excel", "Report Writing", "Statistical Modeling"]
+        required_skills = [
+            "Data Analysis",
+            "Python/R",
+            "Excel",
+            "Report Writing",
+            "Statistical Modeling",
+        ]
     elif "manager" in position_lower or "coordinator" in position_lower:
-        required_skills = ["Project Management", "Team Leadership", "Budget Management", "Stakeholder Communication"]
+        required_skills = [
+            "Project Management",
+            "Team Leadership",
+            "Budget Management",
+            "Stakeholder Communication",
+        ]
     elif "specialist" in position_lower or "consultant" in position_lower:
-        required_skills = ["Subject Matter Expertise", "Client Communication", "Problem Solving", "Technical Writing"]
+        required_skills = [
+            "Subject Matter Expertise",
+            "Client Communication",
+            "Problem Solving",
+            "Technical Writing",
+        ]
     else:
-        required_skills = ["Communication", "Problem Solving", "Adaptability", "Technical Skills"]
+        required_skills = [
+            "Communication",
+            "Problem Solving",
+            "Adaptability",
+            "Technical Skills",
+        ]
 
     # Climate-specific additions
-    climate_skills = ["Climate Science Basics", "Sustainability Principles", "Environmental Regulations", "Green Technology"]
+    climate_skills = [
+        "Climate Science Basics",
+        "Sustainability Principles",
+        "Environmental Regulations",
+        "Green Technology",
+    ]
     required_skills.extend(climate_skills)
-    
+
     # Compare current vs required
     missing_skills = [skill for skill in required_skills if skill not in current_skills]
     existing_strengths = [skill for skill in current_skills if skill in required_skills]
-    
+
     return f"""
 📊 **Skills Gap Analysis for {target_position}**
 

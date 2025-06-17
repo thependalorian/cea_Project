@@ -1,14 +1,13 @@
 "use client";
 
 import { useState, useEffect } from 'react'
-import { createClient } from '@/lib/supabase/client'
-import { useChat } from '@/contexts/ChatContext'
-import { ChatMessage } from '@/components/chat'
-import type { ChatContext } from '@/types/chat'
 import { motion } from 'framer-motion'
-import { Send, MessageCircle, BadgeAlert } from 'lucide-react'
+import { MessageCircle, BadgeAlert } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import type { User } from '@supabase/supabase-js'
+import { useChat } from '@/hooks/use-chat'
+import { ChatMessage } from './chat-message'
+import { useAuth } from '@/contexts/auth-context'
+import type { ChatMessage as ChatMessageType } from '@/types/chat'
 
 interface ChatWindowProps {
   type?: string
@@ -16,29 +15,18 @@ interface ChatWindowProps {
   useEnhancedSearch?: boolean
 }
 
+interface ChatContext {
+  type?: string
+  resume?: Record<string, unknown>
+  enhanced_search?: boolean
+}
+
 export function ChatWindow({ type, resumeData, useEnhancedSearch }: ChatWindowProps) {
-  const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
+  const { user, loading } = useAuth()
   const { messages, isLoading, error, sendMessage, sendFeedback, createInterrupt } = useChat()
   const [input, setInput] = useState('')
-  const supabase = createClient()
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null)
   const [showInterruptBanner, setShowInterruptBanner] = useState(true)
-
-  useEffect(() => {
-    const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      setUser(user)
-      setLoading(false)
-    }
-    getUser()
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user ?? null)
-    })
-
-    return () => subscription.unsubscribe()
-  }, [supabase.auth])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -195,7 +183,7 @@ export function ChatWindow({ type, resumeData, useEnhancedSearch }: ChatWindowPr
           </div>
         ) : (
           <motion.div layout className="space-y-4">
-            {messages.map((message, index) => (
+            {messages.map((message: ChatMessageType, index: number) => (
               <motion.div
                 key={message.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -212,119 +200,52 @@ export function ChatWindow({ type, resumeData, useEnhancedSearch }: ChatWindowPr
             ))}
             {isLoading && (
               <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="flex items-center gap-3 p-4 card-ios rounded-ios-xl"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="flex items-center gap-3 p-4 bg-white/10 rounded-ios-xl backdrop-blur-ios"
               >
                 <div className="w-8 h-8 bg-gradient-to-br from-spring-green to-moss-green rounded-ios-full flex items-center justify-center">
-                  <span className="text-white text-ios-caption-1 font-semibold">AI</span>
+                  <MessageCircle className="w-4 h-4 text-white" />
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="typing-indicator">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </div>
-                  <span className="text-ios-subheadline text-midnight-forest/70 ml-2">
-                    AI is thinking...
-                  </span>
+                  <div className="w-2 h-2 bg-spring-green rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-spring-green rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                  <div className="w-2 h-2 bg-spring-green rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  <span className="text-ios-caption-1 text-midnight-forest/70 ml-2">AI is thinking...</span>
                 </div>
               </motion.div>
             )}
           </motion.div>
         )}
-        
-        {error && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="p-4 bg-ios-red/10 border border-ios-red/20 rounded-ios-xl"
-          >
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-ios-red rounded-full"></div>
-              <span className="text-ios-subheadline text-ios-red">{error}</span>
-            </div>
-          </motion.div>
-        )}
       </div>
 
-      {/* Input Form */}
-      <motion.form 
-        onSubmit={handleSubmit} 
-        className="p-4 border-t border-white/20 bg-white/10 backdrop-blur-ios"
-        layout
-      >
-        <div className="flex gap-3 items-end">
-          <div className="flex-1">
-            <textarea
+      {/* Input Area */}
+      <div className="p-4 border-t border-white/20 bg-white/10 backdrop-blur-ios">
+        <form onSubmit={handleSubmit} className="flex gap-3">
+          <div className="flex-1 relative">
+            <input
+              type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask about climate careers, job opportunities, or get personalized advice..."
+              placeholder="Type your message..."
+              className="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-ios-xl text-midnight-forest placeholder-midnight-forest/50 focus:outline-none focus:ring-2 focus:ring-spring-green focus:border-transparent backdrop-blur-ios"
               disabled={isLoading}
-              rows={1}
-              className={cn(
-                "input-ios w-full resize-none max-h-32 min-h-[44px] text-ios-body",
-                "transition-all duration-300 ease-out",
-                "focus:ring-2 focus:ring-spring-green/30 focus:border-spring-green/50"
-              )}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault()
-                  handleSubmit(e)
-                }
-              }}
             />
           </div>
-          <motion.button
+          <button
             type="submit"
-            disabled={isLoading || !input.trim()}
-            className={cn(
-              "btn-ios-primary flex items-center justify-center w-12 h-12 rounded-ios-full p-0",
-              "disabled:opacity-50 disabled:cursor-not-allowed",
-              "shadow-ios-subtle hover:shadow-ios-normal",
-              "transition-all duration-200"
-            )}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            disabled={!input.trim() || isLoading}
+            className="px-6 py-3 bg-gradient-to-r from-spring-green to-moss-green text-white rounded-ios-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-ios-subtle transition-all duration-200"
           >
-            <Send className="w-5 h-5" />
-          </motion.button>
-        </div>
-        
-        {/* Suggested prompts */}
-        {messages.length === 0 && (
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="mt-3 flex flex-wrap gap-2"
-          >
-            {[
-              "Help me find climate jobs",
-              "Analyze my resume",
-              "Climate career paths",
-              "Skill recommendations"
-            ].map((suggestion) => (
-              <motion.button
-                key={suggestion}
-                type="button"
-                onClick={() => setInput(suggestion)}
-                className="px-3 py-2 bg-spring-green/10 hover:bg-spring-green/20 text-ios-caption-1 text-spring-green rounded-ios-full border border-spring-green/20 transition-all duration-200"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                {suggestion}
-              </motion.button>
-            ))}
-          </motion.div>
+            Send
+          </button>
+        </form>
+        {error && (
+          <div className="mt-3 p-3 bg-red-500/20 border border-red-500/30 rounded-ios-lg">
+            <p className="text-red-600 text-sm">{error}</p>
+          </div>
         )}
-      </motion.form>
-      {/*
-        To test feedback/interrupt flows:
-        - Trigger a message with an interrupt (status: 'pending') and verify the banner appears.
-        - Submit feedback via the FeedbackWidget and check for correct UI/UX.
-        - Use real-time updates in context/hook to see live changes.
-      */}
+      </div>
     </motion.div>
   )
 } 

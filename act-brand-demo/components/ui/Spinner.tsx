@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Spinner Component - Alliance for Climate Transition
  * Modern 2025 loading spinner with iOS-inspired design

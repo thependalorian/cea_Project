@@ -47,7 +47,7 @@ export type Database = {
       };
     };
   };
-};
+}; 
 
 // Simple AnalyticsService for testing database connections
 export class AnalyticsService {

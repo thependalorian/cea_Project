@@ -1,432 +1,352 @@
-/**
- * Enhanced Sign Up Form Component
- * Multi-role sign up with user type selection and role-specific fields
- * Location: components/auth/SignUpForm.tsx
- */
-
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/hooks/useAuth';
-import { ACTCard, ACTButton, useACTToast } from '@/components/ui';
-import { Eye, EyeOff, User, Building, Shield, ArrowRight, CheckCircle } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import type { UserType, SignUpData } from '@/types/user';
+import { Eye, EyeOff, User, Briefcase, Building } from 'lucide-react';
 
 interface SignUpFormProps {
-  className?: string;
-  onSuccess?: () => void;
-  defaultUserType?: UserType;
-  redirectTo?: string;
+  defaultUserType?: 'job_seeker' | 'partner';
 }
 
-const USER_TYPE_OPTIONS = [
-  {
-    value: 'job_seeker' as UserType,
-    label: 'Job Seeker',
-    description: 'Looking for climate economy opportunities',
-    icon: User,
-    color: 'text-spring-green',
-    bgColor: 'bg-spring-green/10',
-  },
-  {
-    value: 'partner' as UserType,
-    label: 'Partner Organization',
-    description: 'Hiring for climate economy roles',
-    icon: Building,
-    color: 'text-moss-green',
-    bgColor: 'bg-moss-green/10',
-  },
-  {
-    value: 'admin' as UserType,
-    label: 'Administrator',
-    description: 'Platform administration access',
-    icon: Shield,
-    color: 'text-seafoam-blue',
-    bgColor: 'bg-seafoam-blue/10',
-  },
-];
-
-export function SignUpForm({ className, onSuccess, defaultUserType = 'job_seeker', redirectTo }: SignUpFormProps) {
-  const router = useRouter();
-  const { signUp, error: authError } = useAuth();
-  const { addToast } = useACTToast();
-
-  // Form state
-  const [formData, setFormData] = useState<SignUpData>({
+export const SignUpForm = ({ defaultUserType = 'job_seeker' }: SignUpFormProps) => {
+  const [formData, setFormData] = useState({
     email: '',
     password: '',
-    user_type: defaultUserType,
-    full_name: '',
-    organization_name: '',
+    confirmPassword: '',
+    firstName: '',
+    lastName: '',
+    userType: defaultUserType,
+    organizationName: '',
     phone: '',
-    location: '',
-    company_size: '',
-    industry: '',
-    website_url: '',
+    location: ''
   });
-
-  const [loading, setLoading] = useState(false);
+  
   const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [step, setStep] = useState<'type' | 'details' | 'confirmation'>('type');
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
+  
+  const router = useRouter();
 
-  // Validation rules
-  const validateForm = (): boolean => {
-    const newErrors: Record<string, string> = {};
-
-    // Email validation
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
+  const validateForm = () => {
+    if (!formData.email || !formData.password || !formData.firstName || !formData.lastName) {
+      setError('Please fill in all required fields');
+      return false;
     }
 
-    // Password validation
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 8) {
-      newErrors.password = 'Password must be at least 8 characters';
-    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
-      newErrors.password = 'Password must contain uppercase, lowercase, and number';
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
+      return false;
     }
 
-    // Role-specific validation
-    switch (formData.user_type) {
-      case 'job_seeker':
-        if (!formData.full_name) newErrors.full_name = 'Full name is required';
-        break;
-
-      case 'partner':
-        if (!formData.organization_name) newErrors.organization_name = 'Organization name is required';
-        break;
-
-      case 'admin':
-        if (!formData.full_name) newErrors.full_name = 'Full name is required';
-        break;
+    if (formData.password.length < 8) {
+      setError('Password must be at least 8 characters long');
+      return false;
     }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    if (formData.userType === 'partner' && !formData.organizationName) {
+      setError('Organization name is required for partner accounts');
+      return false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setError('Please enter a valid email address');
+      return false;
+    }
+
+    return true;
   };
 
-  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!validateForm()) return;
+    setLoading(true);
+    setError('');
+
+    if (!validateForm()) {
+      setLoading(false);
+      return;
+    }
 
     try {
-      setLoading(true);
-      
-      // ✅ Use the existing signUp function that already creates profiles
-      const { data, error } = await signUp(formData);
-
-      if (error) {
-        addToast({
-          type: 'error',
-          message: error.message || 'Failed to create account',
-        });
-        return;
-      }
-
-      // Show success message
-      addToast({
-        type: 'success',
-        message: 'Account created successfully! Please check your email to verify your account.',
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+          user_type: formData.userType,
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          organization_name: formData.organizationName,
+          phone: formData.phone,
+          location: formData.location
+        }),
       });
 
-      setStep('confirmation');
-      
-      // Call success callback if provided
-      if (onSuccess) {
-        onSuccess();
-      } else {
-        // Default redirect after a delay
-        setTimeout(() => {
-          if (redirectTo) {
-            router.push(redirectTo);
-          } else {
-            // Redirect based on user type
-            switch (formData.user_type) {
-              case 'job_seeker':
-                router.push('/job-seekers/setup');
-                break;
-              case 'partner':
-                router.push('/partners/setup');
-                break;
-              case 'admin':
-                router.push('/admin');
-                break;
-              default:
-                router.push('/dashboard');
-            }
-          }
-        }, 3000);
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to create account');
       }
 
-    } catch (error) {
-      console.error('Signup error:', error);
-      addToast({
-        type: 'error',
-        message: 'An unexpected error occurred. Please try again.',
-      });
+      setSuccess(true);
+      
+      // Redirect to login after showing success message
+      setTimeout(() => {
+        router.push('/auth/login?message=Account created successfully! Please check your email to verify your account.');
+      }, 3000);
+
+    } catch (error: any) {
+      setError(error.message || 'Failed to create account');
     } finally {
       setLoading(false);
     }
   };
 
-  // Handle input changes
-  const handleInputChange = (field: keyof SignUpData, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    
-    // Clear error when user starts typing
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
-    }
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
-  // Render user type selection
-  if (step === 'type') {
+  if (success) {
     return (
-      <ACTCard variant="glass" className={cn("p-8 w-full max-w-md", className)}>
-        <div className="text-center mb-8">
-          <h2 className="text-act-title font-helvetica font-medium text-midnight-forest mb-2">
-            Join the Climate Economy
-          </h2>
-          <p className="text-act-body font-inter text-midnight-forest/70">
-            Choose your account type to get started
-          </p>
+      <div className="text-center space-y-4">
+        <div className="w-16 h-16 bg-spring-green/20 rounded-full flex items-center justify-center mx-auto">
+          <User className="w-8 h-8 text-spring-green" />
         </div>
-
-        <div className="space-y-4">
-          {USER_TYPE_OPTIONS.map((option) => {
-            const Icon = option.icon;
-            const isSelected = formData.user_type === option.value;
-            
-            return (
-              <button
-                key={option.value}
-                onClick={() => handleInputChange('user_type', option.value)}
-                className={cn(
-                  "w-full p-4 rounded-ios-xl border-2 transition-all text-left",
-                  isSelected
-                    ? "border-spring-green bg-spring-green/5 shadow-ios-subtle"
-                    : "border-sand-gray/20 hover:border-spring-green/30"
-                )}
-              >
-                <div className="flex items-center gap-4">
-                  <div className={cn("w-12 h-12 rounded-ios-lg flex items-center justify-center", option.bgColor)}>
-                    <Icon className={cn("w-6 h-6", option.color)} />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className={cn("text-act-body font-helvetica font-medium", 
-                      isSelected ? "text-spring-green" : "text-midnight-forest"
-                    )}>
-                      {option.label}
-                    </h3>
-                    <p className="text-act-small font-inter text-midnight-forest/60">
-                      {option.description}
-                    </p>
-                  </div>
-                  {isSelected && (
-                    <CheckCircle className="w-5 h-5 text-spring-green flex-shrink-0" />
-                  )}
-                </div>
-              </button>
-            );
-          })}
-        </div>
-
-        <ACTButton
-          onClick={() => setStep('details')}
-          className="w-full mt-8"
-          variant="primary"
-          size="lg"
-          icon={<ArrowRight className="ml-2 h-5 w-5" />}
-        >
-          Continue
-        </ACTButton>
-      </ACTCard>
-    );
-  }
-
-  // Render confirmation step
-  if (step === 'confirmation') {
-    return (
-      <ACTCard variant="default" className={cn("p-8 w-full max-w-md text-center", className)}>
-        <div className="w-16 h-16 bg-spring-green/10 rounded-full flex items-center justify-center mx-auto mb-6">
-          <CheckCircle className="w-8 h-8 text-spring-green" />
-        </div>
-        
-        <h2 className="text-act-title font-helvetica font-medium text-midnight-forest mb-2">
-          Welcome to Climate Economy!
-        </h2>
-        
-        <p className="text-act-body font-inter text-midnight-forest/70 mb-6">
-          Your account has been created successfully. Please check your email to verify your account.
+        <h3 className="text-xl font-helvetica font-medium text-midnight-forest">
+          Account Created Successfully!
+        </h3>
+        <p className="text-midnight-forest/70">
+          Please check your email to verify your account. You'll be redirected to the login page shortly.
         </p>
-        
-        <div className="text-act-small font-inter text-midnight-forest/60">
-          Redirecting you to your dashboard...
-        </div>
-      </ACTCard>
+      </div>
     );
   }
-
-  // Render details form
-  const selectedOption = USER_TYPE_OPTIONS.find(opt => opt.value === formData.user_type)!;
 
   return (
-    <ACTCard variant="default" className={cn("p-8 w-full max-w-md", className)}>
-      <div className="text-center mb-8">
-        <div className="flex items-center justify-center gap-3 mb-4">
-          <div className={cn("w-12 h-12 rounded-ios-lg flex items-center justify-center", selectedOption.bgColor)}>
-            <selectedOption.icon className={cn("w-6 h-6", selectedOption.color)} />
-          </div>
-          <div>
-            <h2 className="text-act-title font-helvetica font-medium text-midnight-forest">
-              {selectedOption.label}
-            </h2>
-            <p className="text-act-small font-inter text-midnight-forest/60">
-              Complete your profile
-            </p>
-          </div>
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {/* User Type Selection */}
+      <div className="space-y-2">
+        <label className="block text-sm font-inter font-medium text-midnight-forest">
+          Account Type
+        </label>
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            type="button"
+            onClick={() => setFormData(prev => ({ ...prev, userType: 'job_seeker' }))}
+            className={`p-4 rounded-xl border-2 transition-all duration-200 ${
+              formData.userType === 'job_seeker'
+                ? 'border-spring-green bg-spring-green/10 text-midnight-forest'
+                : 'border-sage-green/30 bg-white text-moss-green hover:border-spring-green/50'
+            }`}
+          >
+            <User className="w-6 h-6 mx-auto mb-2" />
+            <div className="text-sm font-medium">Job Seeker</div>
+          </button>
+          <button
+            type="button"
+            onClick={() => setFormData(prev => ({ ...prev, userType: 'partner' }))}
+            className={`p-4 rounded-xl border-2 transition-all duration-200 ${
+              formData.userType === 'partner'
+                ? 'border-spring-green bg-spring-green/10 text-midnight-forest'
+                : 'border-sage-green/30 bg-white text-moss-green hover:border-spring-green/50'
+            }`}
+          >
+            <Building className="w-6 h-6 mx-auto mb-2" />
+            <div className="text-sm font-medium">Partner/Employer</div>
+          </button>
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Role-specific fields */}
-        {formData.user_type === 'job_seeker' && (
-          <div>
-            <label className="block text-act-small font-helvetica font-medium text-midnight-forest mb-2">
-              Full Name *
-            </label>
-            <input
-              type="text"
-              value={formData.full_name}
-              onChange={(e) => handleInputChange('full_name', e.target.value)}
-              className="input-act"
-              placeholder="Enter your full name"
-            />
-            {errors.full_name && (
-              <p className="text-act-small text-red-500 mt-1">{errors.full_name}</p>
-            )}
-          </div>
-        )}
-
-        {formData.user_type === 'partner' && (
-          <div>
-            <label className="block text-act-small font-helvetica font-medium text-midnight-forest mb-2">
-              Organization Name *
-            </label>
-            <input
-              type="text"
-              value={formData.organization_name}
-              onChange={(e) => handleInputChange('organization_name', e.target.value)}
-              className="input-act"
-              placeholder="Enter your organization name"
-            />
-            {errors.organization_name && (
-              <p className="text-act-small text-red-500 mt-1">{errors.organization_name}</p>
-            )}
-          </div>
-        )}
-
-        {formData.user_type === 'admin' && (
-          <div>
-            <label className="block text-act-small font-helvetica font-medium text-midnight-forest mb-2">
-              Full Name *
-            </label>
-            <input
-              type="text"
-              value={formData.full_name}
-              onChange={(e) => handleInputChange('full_name', e.target.value)}
-              className="input-act"
-              placeholder="Enter your full name"
-            />
-            {errors.full_name && (
-              <p className="text-act-small text-red-500 mt-1">{errors.full_name}</p>
-            )}
-          </div>
-        )}
-
-        {/* Email field */}
-        <div>
-          <label className="block text-act-small font-helvetica font-medium text-midnight-forest mb-2">
-            Email Address *
+      {/* Name Fields */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <label htmlFor="firstName" className="block text-sm font-inter font-medium text-midnight-forest">
+            First Name *
           </label>
           <input
-            type="email"
-            value={formData.email}
-            onChange={(e) => handleInputChange('email', e.target.value)}
-            className="input-act"
-            placeholder="Enter your email address"
+            id="firstName"
+            name="firstName"
+            type="text"
+            value={formData.firstName}
+            onChange={handleInputChange}
+            className="w-full px-4 py-3 bg-white border border-sage-green/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-spring-green focus:border-transparent transition-all duration-200 text-midnight-forest font-inter placeholder-moss-green/60"
+            placeholder="First name"
+            required
           />
-          {errors.email && (
-            <p className="text-act-small text-red-500 mt-1">{errors.email}</p>
-          )}
         </div>
-
-        {/* Password field */}
-        <div>
-          <label className="block text-act-small font-helvetica font-medium text-midnight-forest mb-2">
-            Password *
+        <div className="space-y-2">
+          <label htmlFor="lastName" className="block text-sm font-inter font-medium text-midnight-forest">
+            Last Name *
           </label>
-          <div className="relative">
-            <input
-              type={showPassword ? 'text' : 'password'}
-              value={formData.password}
-              onChange={(e) => handleInputChange('password', e.target.value)}
-              className="input-act pr-12"
-              placeholder="Create a secure password"
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-midnight-forest/60 hover:text-midnight-forest"
-            >
-              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-            </button>
-          </div>
-          {errors.password && (
-            <p className="text-act-small text-red-500 mt-1">{errors.password}</p>
-          )}
-          <p className="text-act-small text-midnight-forest/60 mt-1">
-            Must be at least 8 characters with uppercase, lowercase, and number
-          </p>
+          <input
+            id="lastName"
+            name="lastName"
+            type="text"
+            value={formData.lastName}
+            onChange={handleInputChange}
+            className="w-full px-4 py-3 bg-white border border-sage-green/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-spring-green focus:border-transparent transition-all duration-200 text-midnight-forest font-inter placeholder-moss-green/60"
+            placeholder="Last name"
+            required
+          />
         </div>
+      </div>
 
-        {/* Form actions */}
-        <div className="flex gap-3 pt-4">
-          <ACTButton
+      {/* Email */}
+      <div className="space-y-2">
+        <label htmlFor="email" className="block text-sm font-inter font-medium text-midnight-forest">
+          Email Address *
+        </label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          value={formData.email}
+          onChange={handleInputChange}
+          className="w-full px-4 py-3 bg-white border border-sage-green/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-spring-green focus:border-transparent transition-all duration-200 text-midnight-forest font-inter placeholder-moss-green/60"
+          placeholder="your.email@example.com"
+          required
+        />
+      </div>
+
+      {/* Organization Name (for partners) */}
+      {formData.userType === 'partner' && (
+        <div className="space-y-2">
+          <label htmlFor="organizationName" className="block text-sm font-inter font-medium text-midnight-forest">
+            Organization Name *
+          </label>
+          <input
+            id="organizationName"
+            name="organizationName"
+            type="text"
+            value={formData.organizationName}
+            onChange={handleInputChange}
+            className="w-full px-4 py-3 bg-white border border-sage-green/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-spring-green focus:border-transparent transition-all duration-200 text-midnight-forest font-inter placeholder-moss-green/60"
+            placeholder="Your organization name"
+            required
+          />
+        </div>
+      )}
+
+      {/* Password */}
+      <div className="space-y-2">
+        <label htmlFor="password" className="block text-sm font-inter font-medium text-midnight-forest">
+          Password *
+        </label>
+        <div className="relative">
+          <input
+            id="password"
+            name="password"
+            type={showPassword ? 'text' : 'password'}
+            value={formData.password}
+            onChange={handleInputChange}
+            className="w-full px-4 py-3 bg-white border border-sage-green/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-spring-green focus:border-transparent transition-all duration-200 text-midnight-forest font-inter placeholder-moss-green/60 pr-12"
+            placeholder="Create a secure password"
+            required
+          />
+          <button
             type="button"
-            onClick={() => setStep('type')}
-            variant="outline"
-            className="flex-1"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-moss-green hover:text-midnight-forest transition-colors"
           >
-            Back
-          </ACTButton>
-          
-          <ACTButton
-            type="submit"
-            variant="primary"
-            className="flex-1"
-            loading={loading}
-            disabled={loading}
-          >
-            {loading ? 'Creating Account...' : 'Create Account'}
-          </ACTButton>
+            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+          </button>
         </div>
+      </div>
 
-        {/* Auth error display */}
-        {authError && (
-          <div className="text-center text-act-small text-red-500 bg-red-50 p-3 rounded-ios-lg">
-            {String(authError)}
-          </div>
-        )}
-      </form>
-    </ACTCard>
+      {/* Confirm Password */}
+      <div className="space-y-2">
+        <label htmlFor="confirmPassword" className="block text-sm font-inter font-medium text-midnight-forest">
+          Confirm Password *
+        </label>
+        <div className="relative">
+          <input
+            id="confirmPassword"
+            name="confirmPassword"
+            type={showConfirmPassword ? 'text' : 'password'}
+            value={formData.confirmPassword}
+            onChange={handleInputChange}
+            className="w-full px-4 py-3 bg-white border border-sage-green/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-spring-green focus:border-transparent transition-all duration-200 text-midnight-forest font-inter placeholder-moss-green/60 pr-12"
+            placeholder="Confirm your password"
+            required
+          />
+          <button
+            type="button"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-moss-green hover:text-midnight-forest transition-colors"
+          >
+            {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+          </button>
+        </div>
+      </div>
+
+      {/* Optional Fields */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <label htmlFor="phone" className="block text-sm font-inter font-medium text-midnight-forest">
+            Phone Number
+          </label>
+          <input
+            id="phone"
+            name="phone"
+            type="tel"
+            value={formData.phone}
+            onChange={handleInputChange}
+            className="w-full px-4 py-3 bg-white border border-sage-green/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-spring-green focus:border-transparent transition-all duration-200 text-midnight-forest font-inter placeholder-moss-green/60"
+            placeholder="(555) 123-4567"
+          />
+        </div>
+        <div className="space-y-2">
+          <label htmlFor="location" className="block text-sm font-inter font-medium text-midnight-forest">
+            Location
+          </label>
+          <input
+            id="location"
+            name="location"
+            type="text"
+            value={formData.location}
+            onChange={handleInputChange}
+            className="w-full px-4 py-3 bg-white border border-sage-green/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-spring-green focus:border-transparent transition-all duration-200 text-midnight-forest font-inter placeholder-moss-green/60"
+            placeholder="Boston, MA"
+          />
+        </div>
+      </div>
+
+      {/* Error Message */}
+      {error && (
+        <div className="p-4 bg-red-50 border border-red-200 rounded-xl">
+          <p className="text-sm text-red-600">{error}</p>
+        </div>
+      )}
+
+      {/* Submit Button */}
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full bg-spring-green hover:bg-spring-green/90 text-midnight-forest font-inter font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {loading ? 'Creating Account...' : 'Create Account'}
+      </button>
+
+      {/* Login Link */}
+      <div className="text-center">
+        <p className="text-sm font-inter text-moss-green/80">
+          Already have an account?{' '}
+          <a href="/auth/login" className="text-midnight-forest font-semibold hover:text-spring-green transition-colors">
+            Sign in here
+          </a>
+        </p>
+      </div>
+    </form>
   );
-} 
+};
+
+export default SignUpForm;

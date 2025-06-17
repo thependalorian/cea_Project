@@ -1,365 +1,156 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800&display=swap');
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
-/* Import climate chat styles */
-@import '../styles/climate-chat.css';
-
-/* ACT Brand Foundation - Following Brand Guidelines */
+/* ACT Brand Typography System */
 @layer base {
-  /* Root Variables for ACT Brand Colors */
-  :root {
-    --spring-green: #B2DE26;
-    --moss-green: #394816;
-    --midnight-forest: #001818;
-    --seafoam-blue: #E0FFFF;
-    --sand-gray: #EBE9E1;
-  }
-
-  /* ACT Brand Typography System - Per Brand Guidelines */
+  /* Typography Base Settings */
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Helvetica', 'Helvetica Neue', Arial, sans-serif;
-    font-feature-settings: 'rlig' 1, 'calt' 1;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    @apply font-helvetica;
   }
-
+  
   body {
-    font-family: 'Inter', 'Helvetica', system-ui, sans-serif;
-    font-feature-settings: 'rlig' 1, 'calt' 1;
-    text-rendering: optimizeLegibility;
+    @apply font-inter text-midnight-forest;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    color: var(--midnight-forest);
   }
-
-  /* ACT Brand Selection Styling */
+  
+  /* Selection Styling */
   ::selection {
-    background: var(--spring-green);
-    color: var(--midnight-forest);
-  }
-
-  ::-moz-selection {
-    background: var(--spring-green);
-    color: var(--midnight-forest);
-  }
-
-  /* Focus styles with ACT brand colors */
-  *:focus {
-    outline: 2px solid var(--spring-green);
-    outline-offset: 2px;
-  }
-
-  *:focus-visible {
-    outline: 2px solid var(--spring-green);
-    outline-offset: 2px;
+    @apply bg-spring-green text-midnight-forest;
   }
 }
 
-/* ACT Brand Typography Scale - Exact from Brand Guidelines */
-@layer utilities {
-  /* Headlines - Helvetica with proper tracking and leading */
-  .text-act-hero {
-    font-family: 'Helvetica', 'Helvetica Neue', Arial, sans-serif;
-    font-size: 4rem; /* 64px */
-    font-weight: 500;
-    line-height: 1.1;
-    letter-spacing: -0.025em;
-  }
-  
-  .text-act-display {
-    font-family: 'Helvetica', 'Helvetica Neue', Arial, sans-serif;
-    font-size: 3rem; /* 48px */
-    font-weight: 500;
-    line-height: 1.1;
-    letter-spacing: -0.02em; /* -20 tracking from brand guidelines */
-  }
-  
-  .text-act-title {
-    font-family: 'Helvetica', 'Helvetica Neue', Arial, sans-serif;
-    font-size: 1.75rem; /* 28px */
-    font-weight: 500;
-    line-height: 1.14; /* 32pt leading for 28pt text */
-    letter-spacing: -0.02em; /* -20 tracking from brand guidelines */
-  }
-  
-  /* Body Text - Inter with proper tracking and leading */
-  .text-act-body-large {
-    font-family: 'Inter', system-ui, sans-serif;
-    font-size: 1.5rem; /* 24px */
-    font-weight: 400;
-    line-height: 1.33; /* 32pt leading for 24pt text */
-    letter-spacing: -0.02em; /* -20 tracking from brand guidelines */
-  }
-  
-  .text-act-body {
-    font-family: 'Inter', system-ui, sans-serif;
-    font-size: 1rem; /* 16px */
-    font-weight: 400;
-    line-height: 1.5; /* 15pt leading for 12pt text scaled */
-    letter-spacing: 0; /* 0 tracking for body text */
-  }
-  
-  .text-act-small {
-    font-family: 'Inter', system-ui, sans-serif;
-    font-size: 0.875rem; /* 14px */
-    font-weight: 400;
-    line-height: 1.4;
-    letter-spacing: 0;
-  }
-
-  @media (min-width: 768px) {
-    .text-act-hero {
-      font-size: 5rem; /* 80px on larger screens */
-    }
-    
-    .text-act-display {
-      font-size: 4rem; /* 64px on larger screens */
-    }
-    
-    .text-act-title {
-      font-size: 2rem; /* 32px on larger screens */
-    }
-    
-    .text-act-body-large {
-      font-size: 1.75rem; /* 28px on larger screens */
-    }
-  }
-}
-
-/* ACT Brand Component Classes */
+/* Typography Classes */
 @layer components {
-  /* Button Components with ACT Brand Colors */
-  .btn-act-primary {
-    @apply bg-spring-green text-midnight-forest hover:bg-spring-green/90 font-helvetica font-medium;
-    @apply border-none shadow-ios-button transition-all duration-200;
-    @apply rounded-ios-button px-6 py-3 tracking-normal;
+  .text-hero {
+    @apply text-4xl font-medium tracking-tight leading-tight;
   }
   
-  .btn-act-secondary {
-    @apply bg-moss-green text-white hover:bg-moss-green/90 font-helvetica font-medium;
-    @apply border-none shadow-ios-button transition-all duration-200;
-    @apply rounded-ios-button px-6 py-3 tracking-normal;
+  .text-display {
+    @apply text-3xl font-medium tracking-tight leading-tight;
   }
   
-  .btn-act-outline {
-    @apply border-3 border-spring-green text-midnight-forest hover:bg-spring-green/10;
-    @apply font-helvetica font-medium transition-all duration-200;
-    @apply rounded-ios-button px-6 py-3 tracking-normal bg-transparent;
-  }
-
-  /* Card Components with ACT Branding */
-  .card-act {
-    @apply bg-white border border-sand-gray/20 rounded-ios-xl shadow-ios-subtle;
-    @apply transition-all duration-300 hover:shadow-ios-normal hover:-translate-y-1;
+  .text-title {
+    @apply text-xl font-medium tracking-tight leading-tight;
   }
   
-  .card-act-framed {
-    @apply bg-white border-l-4 border-spring-green rounded-ios-lg shadow-ios-subtle;
-    @apply pl-6 transition-all duration-300;
-  }
-
-  /* ACT Frame Elements - Direct from Brand Guidelines */
-  .act-frame {
-    @apply border-3 border-spring-green rounded-ios-lg p-6;
-    position: relative;
+  .text-body-large {
+    @apply text-lg tracking-tight leading-relaxed;
   }
   
-  .act-frame-open {
-    @apply border-l-3 border-t-3 border-b-3 border-spring-green rounded-l-ios-lg p-6;
-    position: relative;
+  .text-body {
+    @apply text-base leading-relaxed;
   }
   
-  /* ACT Brackets Implementation */
+  .text-small {
+    @apply text-sm leading-normal;
+  }
+  
+  /* Responsive Typography */
+  @media (min-width: 768px) {
+    .text-hero {
+      @apply text-6xl;
+    }
+    
+    .text-display {
+      @apply text-5xl;
+    }
+    
+    .text-title {
+      @apply text-2xl;
+    }
+    
+    .text-body-large {
+      @apply text-xl;
+    }
+  }
+  
+  /* ACT Button Styles */
+  .btn-primary {
+    @apply bg-spring-green text-midnight-forest hover:bg-spring-green/90 transition-colors;
+  }
+  
+  .btn-secondary {
+    @apply bg-moss-green text-white hover:bg-moss-green/90 transition-colors;
+  }
+  
+  .btn-outline {
+    @apply border-2 border-spring-green text-midnight-forest hover:bg-spring-green/10 transition-colors;
+  }
+  
+  .card-title {
+    @apply text-title font-medium text-midnight-forest mb-2;
+  }
+  
+  .badge-act {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-spring-green/10 text-moss-green;
+  }
+  
+  /* Frame Elements */
   .act-brackets {
-    @apply relative p-8;
-  }
-  
-  .act-brackets::before,
-  .act-brackets::after,
-  .act-brackets .corner-tl,
-  .act-brackets .corner-tr,
-  .act-brackets .corner-bl,
-  .act-brackets .corner-br {
-    position: absolute;
-    width: 48px;
-    height: 48px;
-    border: 3px solid var(--spring-green);
-    border-radius: 4px;
+    @apply relative;
   }
   
   .act-brackets .corner-tl {
-    top: 0;
-    left: 0;
-    border-right: none;
-    border-bottom: none;
+    @apply absolute top-0 left-0 w-6 h-6 border-t-2 border-l-2 border-spring-green;
   }
   
   .act-brackets .corner-tr {
-    top: 0;
-    right: 0;
-    border-left: none;
-    border-bottom: none;
+    @apply absolute top-0 right-0 w-6 h-6 border-t-2 border-r-2 border-spring-green;
   }
   
   .act-brackets .corner-bl {
-    bottom: 0;
-    left: 0;
-    border-right: none;
-    border-top: none;
+    @apply absolute bottom-0 left-0 w-6 h-6 border-b-2 border-l-2 border-spring-green;
   }
   
   .act-brackets .corner-br {
-    bottom: 0;
-    right: 0;
-    border-left: none;
-    border-top: none;
+    @apply absolute bottom-0 right-0 w-6 h-6 border-b-2 border-r-2 border-spring-green;
   }
-
-  /* ACT Gradient Classes */
+  
+  /* Gradient Classes */
   .act-gradient-primary {
-    background: linear-gradient(135deg, var(--spring-green), var(--moss-green));
+    @apply bg-gradient-to-r from-spring-green to-moss-green;
   }
   
   .act-gradient-secondary {
-    background: linear-gradient(135deg, var(--seafoam-blue), var(--sand-gray));
+    @apply bg-gradient-to-r from-seafoam-blue to-sand-gray;
   }
   
   .act-gradient-accent {
-    background: linear-gradient(135deg, var(--moss-green), var(--spring-green));
-  }
-
-  /* Form Components with ACT Styling */
-  .input-act {
-    @apply w-full px-4 py-3 border border-sand-gray/30 rounded-ios-lg;
-    @apply font-inter text-midnight-forest placeholder:text-midnight-forest/50;
-    @apply focus:outline-none focus:ring-2 focus:ring-spring-green/50 focus:border-spring-green;
-    @apply transition-all duration-200 bg-white;
-  }
-
-  /* Content Layout Classes */
-  .layout-act-section {
-    @apply py-16 px-4 max-w-7xl mx-auto;
+    @apply bg-gradient-to-r from-moss-green to-spring-green;
   }
   
-  .layout-act-container {
-    @apply container mx-auto px-4;
+  /* Animation Helpers */
+  .typing-indicator {
+    @apply flex space-x-1;
   }
-  
-  .layout-act-grid {
-    @apply grid gap-8;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  }
-}
 
-/* Animation Classes with ACT Brand Integration */
-@layer utilities {
-  .animate-act-glow {
-    animation: actGlow 2s ease-in-out infinite;
+  .typing-indicator span {
+    @apply h-2 w-2 bg-spring-green rounded-full animate-bounce;
+    animation-duration: 1.4s;
+    animation-iteration-count: infinite;
+    animation-fill-mode: both;
   }
-  
-  .animate-act-bounce {
-    animation: actBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  .typing-indicator span:nth-child(2) {
+    animation-delay: 0.16s;
   }
-  
-  .animate-act-fade-in {
-    animation: actFadeIn 0.5s ease-out;
-  }
-  
-  .animate-act-slide-up {
-    animation: actSlideUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  .typing-indicator span:nth-child(3) {
+    animation-delay: 0.32s;
   }
 }
 
-/* Keyframe Animations */
-@keyframes actGlow {
-  0%, 100% { 
-    box-shadow: 0 0 10px rgba(178, 222, 38, 0.3);
-  }
-  50% { 
-    box-shadow: 0 0 20px rgba(178, 222, 38, 0.5);
-  }
+/* CSS Custom Properties for ACT Brand */
+:root {
+  --color-midnight-forest: #001818;
+  --color-spring-green: #B2DE26;
+  --color-moss-green: #394816;
+  --color-seafoam-blue: #E0FFFF;
+  --color-sand-gray: #EBE9E1;
 }
 
-@keyframes actBounce {
-  0% { transform: scale(0.3); opacity: 0; }
-  50% { transform: scale(1.05); }
-  70% { transform: scale(0.9); }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-@keyframes actFadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes actSlideUp {
-  from { transform: translateY(100%); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-/* Climate Economy Typing Indicator */
-.typing-indicator {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.typing-indicator span {
-  height: 8px;
-  width: 8px;
-  background-color: var(--moss-green);
-  border-radius: 50%;
-  display: inline-block;
-  opacity: 0.4;
-  animation: pulse 1.5s infinite ease-in-out;
-}
-
-.typing-indicator span:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.typing-indicator span:nth-child(3) {
-  animation-delay: 0.4s;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 0.4;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.2);
-  }
-}
-
-/* iOS-Enhanced Compatibility Classes */
-.shadow-ios-subtle { box-shadow: 0 1px 3px rgba(0, 24, 24, 0.1); }
-.shadow-ios-normal { box-shadow: 0 4px 12px rgba(0, 24, 24, 0.15); }
-.shadow-ios-prominent { box-shadow: 0 8px 25px rgba(0, 24, 24, 0.15); }
-.shadow-ios-elevated { box-shadow: 0 12px 35px rgba(0, 24, 24, 0.18); }
-.shadow-ios-button { box-shadow: 0 2px 8px rgba(178, 222, 38, 0.15); }
-
-.rounded-ios { border-radius: 10px; }
-.rounded-ios-lg { border-radius: 14px; }
-.rounded-ios-xl { border-radius: 18px; }
-.rounded-ios-2xl { border-radius: 22px; }
-.rounded-ios-button { border-radius: 16px; }
-.rounded-ios-full { border-radius: 9999px; }
-
-.backdrop-blur-ios { backdrop-filter: blur(10px); }
-.backdrop-blur-ios-light { backdrop-filter: blur(5px); }
-.backdrop-blur-ios-heavy { backdrop-filter: blur(20px); }
-
-/* Ensure proper page background */
 body {
-  min-height: 100vh;
-  background: linear-gradient(
-    to bottom,
-    rgb(250, 250, 250),
-    rgb(255, 255, 255)
-  );
-}
+  color: var(--color-midnight-forest);
+} 

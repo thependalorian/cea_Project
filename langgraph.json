@@ -1,17 +1,28 @@
 {
   "python_version": "3.11",
   "dependencies": [
-    "./backend"
+    "./backendv1"
   ],
   "graphs": {
-    "climate_supervisor": "./backend/api/workflows/climate_supervisor_workflow.py:climate_supervisor_graph",
-    "climate_agent": "./backend/api/workflows/climate_workflow.py:climate_graph",
-    "resume_agent": "./backend/api/workflows/resume_workflow.py:resume_graph", 
-    "career_agent": "./backend/api/workflows/career_workflow.py:career_graph",
-    "interactive_chat": "./backend/api/chat/interactive_chat.py:chat_graph"
+    "climate_supervisor": "./backendv1/workflows/climate_supervisor.py:climate_supervisor_graph",
+    "interactive_chat": "./backendv1/chat/interactive_chat.py:chat_graph"
   },
-  "env": "./backend/.env",
+  "env": "./.env",
   "http": {
-    "app": "./backend/webapp.py:app"
-  }
+    "host": "0.0.0.0",
+    "port": 8123
+  },
+  "rate_limits": {
+    "requests_per_minute": 60,
+    "burst_limit": 10,
+    "timeout_seconds": 30,
+    "error_threshold": 5
+  },
+  "webapp": "./backendv1/webapp.py:cea_app_v1",
+  "agent_count": 7,
+  "specialists": [
+    "Pendo (Supervisor)", "Marcus (Veterans)", "Liv (International)", 
+    "Miguel (Environmental Justice)", "Jasmine (MA Resources)", 
+    "Alex (Empathy)", "Lauren (Climate Careers)", "Mai (Resume Expert)"
+  ]
 } 

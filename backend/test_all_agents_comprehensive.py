@@ -1,522 +1,953 @@
 #!/usr/bin/env python3
 """
-Comprehensive Agent Testing Script
+Comprehensive Climate Economy Assistant Testing Suite - Updated for George Nekwaya
+================================================================================
 
-Tests all agents (Pendo, Jasmine, Marcus, Liv, Miguel) with the same user
-to analyze workflow, supervisor routing logic, and knowledge resources access.
+Testing all climate agents with real-world climate economy scenarios using George Nekwaya's
+professional profile and realistic climate job seekers data from the actual seed script.
+
+Key Test Cases:
+- Agent workflow orchestration with proper state management
+- Real climate economy job matching and career guidance
+- Resume analysis and skills assessment for climate careers
+- Partner integration and resource recommendation
+- Error handling and graceful degradation
 """
 
 import asyncio
 import json
 import os
 import sys
-from datetime import datetime
-from typing import Any, Dict, List
+import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional, Union
+from unittest.mock import AsyncMock, MagicMock, patch
+
+import pytest
 
 # Add backend to path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from adapters.supabase import get_cached_supabase_client
-from core.agents.base import (
-    EnvironmentalJusticeSpecialistAgent,
-    InternationalSpecialistAgent,
-    MAResourceAnalystAgent,
-    SupervisorAgent,
-    VeteranSpecialistAgent,
-)
+from core.agents.base import SupervisorAgent, BaseAgent
+from core.agents.empathy_agent import EmpathyAgent
+from core.agents.environmental import EnvironmentalJusticeSpecialist
+from core.agents.international import InternationalAgent
+from core.agents.ma_resource_analyst import MAResourceAnalystAgent
+from core.agents.veteran import VeteranAgent
+from core.config import settings
 
-# Test user ID - using the known user from previous tests
-TEST_USER_ID = "30eedd6a-0771-444e-90d2-7520c1eb03f0"
-TEST_CONVERSATION_ID = f"test_comprehensive_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-
-# Test queries for each agent type
-TEST_QUERIES = {
-    "supervisor_general": "I'm looking for climate career opportunities in Massachusetts",
-    "supervisor_routing_veteran": "I'm a military veteran interested in clean energy careers",
-    "supervisor_routing_international": "I'm from Germany and want to work in renewable energy in Massachusetts",
-    "supervisor_routing_ej": "I'm interested in environmental justice work in my community",
-    "supervisor_routing_resume": "Can you analyze my resume for climate career opportunities?",
-    "jasmine_direct": "I need help with my resume for clean energy jobs",
-    "jasmine_skills": "What skills do I need for solar energy careers?",
-    "jasmine_training": "What training programs are available for wind energy?",
-    "marcus_direct": "I'm a Navy veteran transitioning to renewable energy",
-    "marcus_skills": "How can I use my military logistics experience in clean energy?",
-    "marcus_programs": "What veteran programs exist for clean energy careers?",
-    "liv_direct": "I have engineering credentials from Tel Aviv and want to work in Massachusetts",
-    "liv_credentials": "How do I get my foreign engineering degree recognized?",
-    "liv_visa": "What visa options exist for international clean energy professionals?",
-    "miguel_direct": "I want to work on environmental justice in Gateway Cities",
-    "miguel_community": "How can I organize my community around clean energy equity?",
-    "miguel_policy": "What environmental justice policies affect clean energy in Massachusetts?",
+# GEORGE NEKWAYA'S COMPREHENSIVE TEST DATA FROM SEED SCRIPT
+GEORGE_NEKWAYA_TEST_DATA = {
+    "user_id": "gnekwaya-test-001",  # Consistent with seed script pattern
+    "email": "george.n.p.nekwaya@gmail.com",  # Personal email for job seeker role
+    "admin_email": "gnekwaya@joinact.org",  # Admin email for ACT role
+    "partner_email": "buffr_inc@buffr.ai",  # Partner email for Buffr Inc.
+    "profile": {
+        "full_name": "George Nekwaya",
+        "location": "Indianapolis, IN",
+        "phone": "+1-206-530-8433",
+        "linkedin_url": "https://www.linkedin.com/in/george-nekwaya/",
+        "personal_website": "https://georgenekwaya.com/",
+        "nationality": "Namibian",
+    },
+    "professional_summary": "George Nekwaya is a fintech founder and project manager with a robust background in engineering, data analytics, and workforce development. As the founder of Buffr Inc., he is dedicated to enhancing financial inclusion in Southern Africa by developing digital payment solutions inspired by global systems like India's UPI. His tenure at the Alliance for Climate Transition (ACT) involves leading workforce development assessments in collaboration with entities like MassCEC, focusing on clean energy sector hiring needs and diversity initiatives. George's academic journey includes an MBA with concentrations in Data Analytics and Strategy & Innovation from Brandeis International Business School, where he also served as Vice President of the International Business School Student Association. His engineering foundation was laid at the Namibia University of Science & Technology, complemented by international exposure through programs in Israel and India. George's multifaceted experience positions him at the intersection of technology, business strategy, and social impact.",
+    "education": [
+        {
+            "institution": "Brandeis International Business School",
+            "location": "Waltham, MA, USA",
+            "degree": "Master of Business Administration (STEM-Designated)",
+            "concentrations": ["Data Analytics", "Strategy & Innovation"],
+            "gpa": "3.45/4.0",
+            "graduation_year": 2024,
+            "relevant_coursework": [
+                "Business in Global Markets",
+                "Business and Economic Strategies in Emerging Markets",
+                "Advanced Data Analytics",
+                "Machine Learning and Data Analysis for Business and Finance",
+                "Forecasting in Finance and Economics",
+                "Entrepreneurship and Rapid Prototyping",
+                "Competition and Strategy",
+                "Business Dynamics",
+            ],
+            "honors": [
+                "Hassenfeld Fellow: Gained global business insights through immersive experiences in Israel and India (2023-2024)"
+            ],
+        },
+        {
+            "institution": "Namibia University of Science & Technology",
+            "location": "Windhoek, Namibia",
+            "degree": "Bachelor of Engineering: Civil & Environmental Engineering",
+            "graduation_year": 2018,
+        },
+    ],
+    "work_experience": [
+        {
+            "title": "Project Manager, DEIJ & Workforce Development",
+            "company": "The Alliance for Climate Transition (ACT)",
+            "start_date": "Oct 2024",
+            "end_date": "Present",
+            "current": True,
+            "location": "Indianapolis, IN",
+            "responsibilities": [
+                "Lead workforce development assessment in partnership with MassCEC, focusing on clean energy sector hiring needs",
+                "Collaborate with educational institutions to enhance student engagement in clean energy programs",
+                "Develop strategies to increase diversity and inclusion in the clean energy workforce",
+            ],
+        },
+        {
+            "title": "Founder",
+            "company": "Buffr Inc.",
+            "start_date": "Jan 2023",
+            "end_date": "Present",
+            "current": True,
+            "location": "Massachusetts, USA",
+            "responsibilities": [
+                "Founded digital financial inclusion startup inspired by global payment systems",
+                "Conducted comprehensive field studies on digital payment ecosystems across multiple countries",
+                "Developed infrastructure for instant payment solutions to improve financial accessibility in emerging markets",
+            ],
+        },
+        {
+            "title": "Business Development Consultant",
+            "company": "Aquasaic Corporation",
+            "start_date": "Oct 2024",
+            "end_date": "Mar 2025",
+            "current": False,
+            "location": "Remote",
+            "responsibilities": [
+                "Conducted comprehensive commercial and technical research on cutting-edge water treatment technologies",
+                "Designed the initial architecture for the Aquasaic-water-platform, focusing on democratizing access to water quality data using AI and machine learning",
+                "Led the development of pitch decks tailored for different funding opportunities",
+            ],
+        },
+    ],
+    "projects": [
+        {
+            "title": "Time Series Analysis and Sentiment Impact on AMD Stock Prices (1984–2024)",
+            "description": "Analyzed the influence of news and annual report sentiment on AMD stock prices using time series techniques",
+            "technologies": ["Python", "Time Series Analysis", "Sentiment Analysis"],
+        },
+        {
+            "title": "Machine Learning Project in Peer-to-Peer Lending",
+            "description": "Optimized loan investments in peer-to-peer lending, analyzing over 1.8 million loans",
+            "technologies": ["Machine Learning", "Python", "Financial Modeling"],
+        },
+    ],
+    "skills": {
+        "technical": [
+            "Python",
+            "Data Analytics",
+            "Machine Learning",
+            "AI Application Development",
+            "Financial Modeling",
+            "Business Intelligence",
+            "Statistical Analysis",
+            "Time Series Analysis",
+            "LangGraph",
+            "Multi-agent Systems",
+        ],
+        "business": [
+            "Strategic Planning",
+            "Business Development",
+            "Project Management",
+            "Workforce Development",
+            "Fintech Strategy",
+            "Market Research",
+            "Partnership Development",
+            "Startup Operations",
+        ],
+    },
+    "certifications": [
+        "Agentic AI & Generative AI Bootcamp",
+        "Open Banking & Platforms Specialization",
+        "Rearchitecting the Finance System",
+        "Fintech for Africa",
+        "Operations Management",
+    ],
+    "leadership": [
+        "Vice President, International Business School Student Association, Brandeis University",
+        "Graduate Student Affairs Senator, Brandeis University",
+    ],
+    "climate_interests": [
+        "clean_energy_workforce",
+        "ai_climate_solutions",
+        "fintech_sustainability",
+        "diversity_inclusion",
+        "workforce_development",
+        "data_analytics",
+    ],
+    "job_preferences": {
+        "desired_roles": [
+            "Project Manager",
+            "Business Development Manager",
+            "Data Analyst",
+            "AI/ML Engineer",
+            "Fintech Product Manager",
+            "Sustainability Consultant",
+            "Workforce Development Specialist",
+        ],
+        "industries": [
+            "Climate Tech",
+            "Fintech",
+            "Clean Energy",
+            "AI/Machine Learning",
+            "Workforce Development",
+            "Data Analytics",
+        ],
+        "employment_type": ["full_time", "contract", "consulting"],
+        "location_preferences": ["Indianapolis, IN", "Massachusetts", "Remote"],
+        "salary_expectation": "$75,000 - $120,000",
+        "open_to_relocation": True,
+    },
+    "triple_role_access": {
+        "admin": {
+            "email": "gnekwaya@joinact.org",
+            "admin_level": "super",
+            "organization": "Alliance for Climate Transition (ACT)",
+            "capabilities": [
+                "manage_users",
+                "manage_partners",
+                "manage_content",
+                "view_analytics",
+                "manage_system",
+                "user_impersonation",
+                "audit_access",
+                "role_management",
+                "platform_configuration",
+                "agent_configurator",
+                "partner_portal",
+                "skills_taxonomy_management",
+                "translation_management",
+                "ai_model_configuration",
+            ],
+        },
+        "partner": {
+            "email": "buffr_inc@buffr.ai",
+            "company": "Buffr Inc.",
+            "role": "Founder",
+            "partnership_level": "founding",
+            "website": "https://buffr.ai/",
+        },
+        "job_seeker": {
+            "email": "george.n.p.nekwaya@gmail.com",
+            "experience_level": "senior",
+            "years_experience": 6,
+            "skills_count": 16,
+        },
+    },
 }
 
+# REALISTIC CLIMATE JOB SEEKER TEST SCENARIOS
+CLIMATE_JOB_SEEKER_SCENARIOS = [
+    {
+        "name": "Maria Rodriguez - Transitioning Teacher",
+        "user_id": str(uuid.uuid4()),
+        "background": "High school science teacher interested in environmental education roles",
+        "location": "Springfield, MA",
+        "experience_level": "mid_level",
+        "climate_interests": [
+            "environmental_education",
+            "renewable_energy",
+            "community_outreach",
+        ],
+        "target_roles": [
+            "Environmental Education Coordinator",
+            "Sustainability Program Manager",
+        ],
+        "challenge": "Limited private sector experience, needs skills bridge training",
+    },
+    {
+        "name": "James Chen - Software Engineer",
+        "user_id": str(uuid.uuid4()),
+        "background": "Senior software engineer wanting to apply tech skills to climate solutions",
+        "location": "Cambridge, MA",
+        "experience_level": "senior",
+        "climate_interests": [
+            "cleantech_software",
+            "energy_management",
+            "ai_climate_solutions",
+        ],
+        "target_roles": [
+            "Climate Tech Software Engineer",
+            "Clean Energy Data Scientist",
+        ],
+        "challenge": "Lack of domain knowledge in energy/climate sectors",
+    },
+    {
+        "name": "Sarah Johnson - Military Veteran",
+        "user_id": str(uuid.uuid4()),
+        "background": "Navy veteran with logistics and project management experience",
+        "location": "Boston, MA",
+        "experience_level": "mid_level",
+        "military_background": {
+            "branch": "Navy",
+            "mos": "Logistics Specialist",
+            "years_served": 8,
+        },
+        "climate_interests": ["wind_energy", "project_management", "operations"],
+        "target_roles": [
+            "Wind Farm Operations Manager",
+            "Clean Energy Project Coordinator",
+        ],
+        "challenge": "Military to civilian transition in new industry",
+    },
+]
 
-class ComprehensiveAgentTester:
-    """Comprehensive testing of all agents with detailed analysis"""
+
+class ComprehensiveClimateAgentTester:
+    """Comprehensive testing framework for climate economy agents with George Nekwaya's data."""
 
     def __init__(self):
-        self.supabase = None
-        self.test_results = {}
         self.agents = {}
+        self.test_results = {}
+        self.conversation_id = str(uuid.uuid4())
+        self.session_id = str(uuid.uuid4())
 
-    async def initialize(self):
-        """Initialize database connection and agents"""
-        print("🔧 Initializing comprehensive agent testing...")
-
-        # Use our fixed Supabase adapter instead of direct get_supabase_client
+    async def initialize_agents(self):
+        """Initialize all climate agents with proper configuration."""
         try:
-            from adapters.supabase import get_cached_supabase_client
+            # Initialize core agents
+            self.agents = {
+                "supervisor": SupervisorAgent(
+                    agent_id="supervisor",
+                    name="Pendo",
+                    description="Climate Economy Supervisor",
+                ),
+                "empathy": EmpathyAgent(
+                    agent_id="empathy_agent",
+                    name="Alex",
+                    description="Empathy and Emotional Support Specialist",
+                ),
+                "environmental_justice": EnvironmentalJusticeSpecialist(
+                    agent_id="environmental_justice",
+                    name="Miguel",
+                    description="Environmental Justice Specialist",
+                ),
+                "international": InternationalAgent(
+                    agent_id="international_agent",
+                    name="Liv",
+                    description="International Professional Specialist",
+                ),
+                "ma_resource": MAResourceAnalystAgent(
+                    agent_id="ma_resource_analyst",
+                    name="Jasmine",
+                    description="Massachusetts Resource Analyst",
+                ),
+                "veteran": VeteranAgent(
+                    agent_id="veteran_agent",
+                    name="Marcus",
+                    description="Veteran Transition Specialist",
+                ),
+            }
 
-            self.supabase = get_cached_supabase_client()
-            if self.supabase:
-                print("✅ Supabase connection established")
-            else:
-                print("⚠️  Supabase connection failed, proceeding without database")
+            print("✅ All climate agents initialized successfully")
+            return True
+
         except Exception as e:
-            print(f"⚠️  Supabase connection error: {e}")
-            print("Proceeding without database connection...")
-            self.supabase = None
+            print(f"❌ Agent initialization failed: {e}")
+            return False
 
-        # Initialize all agents
-        self.agents = {
-            "pendo": SupervisorAgent(),
-            "jasmine": MAResourceAnalystAgent(),
-            "marcus": VeteranSpecialistAgent(),
-            "liv": InternationalSpecialistAgent(),
-            "miguel": EnvironmentalJusticeSpecialistAgent(),
+    async def test_george_nekwaya_comprehensive_scenario(self) -> Dict[str, Any]:
+        """Test comprehensive climate career guidance for George Nekwaya."""
+
+        scenario_results = {
+            "user": "George Nekwaya",
+            "test_type": "comprehensive_climate_career_guidance",
+            "tests": {},
+            "overall_success": False,
         }
 
-        print("✅ Initialization complete")
+        # Test 1: Resume Analysis and Skills Assessment
+        scenario_results["tests"][
+            "resume_analysis"
+        ] = await self.test_resume_analysis_for_george()
 
-    async def get_user_context(self) -> Dict[str, Any]:
-        """Get comprehensive user context for testing"""
+        # Test 2: Climate Career Pathway Mapping
+        scenario_results["tests"][
+            "career_pathways"
+        ] = await self.test_climate_career_pathways()
+
+        # Test 3: Partner Resource Matching
+        scenario_results["tests"][
+            "partner_matching"
+        ] = await self.test_partner_resource_matching()
+
+        # Test 4: Skills Gap Analysis
+        scenario_results["tests"]["skills_gap"] = await self.test_skills_gap_analysis()
+
+        # Test 5: Salary and Location Optimization
+        scenario_results["tests"][
+            "salary_location"
+        ] = await self.test_salary_location_optimization()
+
+        # Test 6: AI/ML Climate Tech Specialization
+        scenario_results["tests"][
+            "ai_climate_specialization"
+        ] = await self.test_ai_climate_specialization()
+
+        # Calculate overall success
+        successful_tests = sum(
+            1
+            for test in scenario_results["tests"].values()
+            if test.get("success", False)
+        )
+        total_tests = len(scenario_results["tests"])
+        scenario_results["success_rate"] = successful_tests / total_tests
+        scenario_results["overall_success"] = scenario_results["success_rate"] >= 0.7
+
+        return scenario_results
+
+    async def test_resume_analysis_for_george(self) -> Dict[str, Any]:
+        """Test resume analysis specifically for George Nekwaya's profile."""
+
         try:
-            # Get user profile
-            profile_result = (
-                self.supabase.table("profiles")
-                .select("*")
-                .eq("id", TEST_USER_ID)
-                .execute()
+            # Simulate George's resume content
+            george_resume_content = f"""
+            George Nekwaya - Fintech Founder & Climate Tech Project Manager
+            
+            Email: {GEORGE_NEKWAYA_TEST_DATA['email']}
+            Location: {GEORGE_NEKWAYA_TEST_DATA['profile']['location']}
+            LinkedIn: {GEORGE_NEKWAYA_TEST_DATA['profile']['linkedin_url']}
+            Website: {GEORGE_NEKWAYA_TEST_DATA['profile']['personal_website']}
+            
+            PROFESSIONAL SUMMARY:
+            Fintech founder and project manager with expertise in AI-powered climate solutions.
+            Leading workforce development assessments with MassCEC focusing on clean energy
+            sector hiring needs and diversity initiatives. MBA in Data Analytics from Brandeis
+            with engineering background from Namibia University of Science & Technology.
+            
+            CURRENT ROLE:
+            Project Manager, DEIJ & Workforce Development
+            Alliance for Climate Transition (ACT) | Oct 2024 - Present
+            • Leading workforce development assessment with MassCEC
+            • Developing strategies for diversity in clean energy workforce
+            • Collaborating with educational institutions on clean energy programs
+            
+            ENTREPRENEURSHIP:
+            Founder, Buffr Inc. | Jan 2023 - Present
+            • AI-native strategy and technology company for climate tech solutions
+            • Building GenAI platforms for climate impact and workforce development
+            • Developing modular systems and multi-agent copilots
+            
+            EDUCATION:
+            MBA (STEM), Brandeis International Business School (2024)
+            Concentrations: Data Analytics, Strategy & Innovation
+            
+            B.Sc. Civil & Environmental Engineering
+            Namibia University of Science & Technology (2018)
+            
+            SKILLS:
+            Technical: Python, Machine Learning, Data Analytics, LangGraph, Multi-agent Systems
+            Business: Strategic Planning, Workforce Development, Climate Tech Strategy
+            """
+
+            # Test with MA Resource Analyst (Jasmine)
+            jasmine_response = await self.agents["ma_resource"].handle_message(
+                message=f"Please analyze this resume for climate career opportunities: {george_resume_content}",
+                user_id=GEORGE_NEKWAYA_TEST_DATA["user_id"],
+                conversation_id=self.conversation_id,
             )
 
-            # Get resume data
-            resume_result = (
-                self.supabase.table("resume_data")
-                .select("*")
-                .eq("user_id", TEST_USER_ID)
-                .execute()
+            # Validate response quality
+            analysis_quality = self.validate_resume_analysis(
+                jasmine_response, george_resume_content
             )
 
-            # Get job seeker profile
-            job_seeker_result = (
-                self.supabase.table("job_seeker_profiles")
-                .select("*")
-                .eq("user_id", TEST_USER_ID)
-                .execute()
-            )
-
-            user_context = {
-                "user_id": TEST_USER_ID,
-                "profile": profile_result.data[0] if profile_result.data else None,
-                "resume": resume_result.data[0] if resume_result.data else None,
-                "job_seeker": (
-                    job_seeker_result.data[0] if job_seeker_result.data else None
-                ),
-            }
-
-            print(f"📋 User Context Retrieved:")
-            print(f"   Profile: {'✅' if user_context['profile'] else '❌'}")
-            print(f"   Resume: {'✅' if user_context['resume'] else '❌'}")
-            print(f"   Job Seeker: {'✅' if user_context['job_seeker'] else '❌'}")
-
-            return user_context
-
-        except Exception as e:
-            print(f"❌ Error getting user context: {e}")
             return {
-                "user_id": TEST_USER_ID,
-                "profile": None,
-                "resume": None,
-                "job_seeker": None,
-            }
-
-    async def test_agent(
-        self, agent_name: str, agent: Any, query: str, user_context: Dict[str, Any]
-    ) -> Dict[str, Any]:
-        """Test individual agent with comprehensive analysis"""
-        print(f"\n🧪 Testing {agent_name.upper()} Agent")
-        print(f"   Query: {query}")
-
-        start_time = datetime.now()
-
-        try:
-            # Test agent response
-            response = await agent.handle_message(
-                message=query,
-                user_id=TEST_USER_ID,
-                conversation_id=TEST_CONVERSATION_ID,
-            )
-
-            end_time = datetime.now()
-            response_time = (end_time - start_time).total_seconds()
-
-            # Analyze response
-            analysis = {
-                "agent_name": agent_name,
-                "query": query,
-                "response_time_seconds": response_time,
-                "response_length": len(response.get("content", "")),
-                "has_content": bool(response.get("content")),
-                "has_metadata": bool(response.get("metadata")),
-                "agent_type": response.get("metadata", {}).get("agent_type"),
-                "agent_persona": response.get("metadata", {}).get("agent_name"),
-                "tools_used": response.get("metadata", {}).get("tools_used", []),
-                "sources": response.get("sources", []),
-                "knowledge_resources_accessed": self.analyze_knowledge_access(response),
-                "personalization_score": self.analyze_personalization(
-                    response, user_context
+                "success": analysis_quality["score"] >= 7.0,
+                "agent": "Jasmine (MA Resource Analyst)",
+                "response_length": len(jasmine_response.get("response", "")),
+                "analysis_quality": analysis_quality,
+                "climate_relevance": self.assess_climate_relevance(jasmine_response),
+                "actionable_recommendations": self.count_actionable_items(
+                    jasmine_response
                 ),
-                "success": True,
-                "error": None,
-                "full_response": response,
             }
-
-            print(f"   ✅ Success - {response_time:.2f}s")
-            print(f"   📝 Response Length: {analysis['response_length']} chars")
-            print(f"   🤖 Agent Persona: {analysis['agent_persona']}")
-            print(f"   🔧 Tools Used: {len(analysis['tools_used'])}")
-            print(f"   📚 Knowledge Access: {analysis['knowledge_resources_accessed']}")
-            print(f"   🎯 Personalization: {analysis['personalization_score']}/10")
-
-            return analysis
 
         except Exception as e:
-            end_time = datetime.now()
-            response_time = (end_time - start_time).total_seconds()
-
-            analysis = {
-                "agent_name": agent_name,
-                "query": query,
-                "response_time_seconds": response_time,
+            return {
                 "success": False,
                 "error": str(e),
-                "full_response": None,
+                "agent": "Jasmine (MA Resource Analyst)",
             }
 
-            print(f"   ❌ Error - {response_time:.2f}s: {e}")
-            return analysis
+    async def test_climate_career_pathways(self) -> Dict[str, Any]:
+        """Test climate career pathway recommendations for George."""
 
-    def analyze_knowledge_access(self, response: Dict[str, Any]) -> str:
-        """Analyze how agent accessed knowledge resources"""
-        content = response.get("content", "").lower()
-        metadata = response.get("metadata", {})
+        try:
+            query = f"""
+            Based on George Nekwaya's background (MBA in Data Analytics, Civil Engineering degree,
+            current role in workforce development at ACT, founder of AI climate tech company),
+            what are the best climate career pathways? He's interested in: {', '.join(GEORGE_NEKWAYA_TEST_DATA['professional_background']['climate_interests'])}
+            
+            Current location: {GEORGE_NEKWAYA_TEST_DATA['profile']['location']}
+            Target salary: {GEORGE_NEKWAYA_TEST_DATA['professional_background']['career_goals']['salary_range']}
+            """
 
-        knowledge_indicators = []
+            # Test with Environmental Justice Specialist (Miguel)
+            miguel_response = await self.agents["environmental_justice"].handle_message(
+                message=query,
+                user_id=GEORGE_NEKWAYA_TEST_DATA["user_id"],
+                conversation_id=self.conversation_id,
+            )
 
-        # Check for specific knowledge resource mentions
-        if "training program" in content or "education" in content:
-            knowledge_indicators.append("training_resources")
-        if "job" in content and ("posting" in content or "opportunity" in content):
-            knowledge_indicators.append("job_resources")
-        if "organization" in content or "partner" in content:
-            knowledge_indicators.append("partner_resources")
-        if "funding" in content or "grant" in content:
-            knowledge_indicators.append("funding_resources")
+            pathway_quality = self.validate_career_pathways(miguel_response)
 
-        # Check metadata for tool usage
-        tools_used = metadata.get("tools_used", [])
-        if "search_knowledge_base" in tools_used:
-            knowledge_indicators.append("knowledge_base_search")
-        if "search_resources" in tools_used:
-            knowledge_indicators.append("resource_search")
+            return {
+                "success": pathway_quality["score"] >= 7.0,
+                "agent": "Miguel (Environmental Justice Specialist)",
+                "pathways_identified": pathway_quality["pathways_count"],
+                "salary_alignment": pathway_quality["salary_alignment"],
+                "location_relevance": pathway_quality["location_relevance"],
+                "skills_integration": pathway_quality["skills_integration"],
+            }
 
-        return (
-            ", ".join(knowledge_indicators) if knowledge_indicators else "none_detected"
+        except Exception as e:
+            return {
+                "success": False,
+                "error": str(e),
+                "agent": "Miguel (Environmental Justice Specialist)",
+            }
+
+    async def test_partner_resource_matching(self) -> Dict[str, Any]:
+        """Test partner resource matching for George's profile."""
+
+        try:
+            query = f"""
+            George Nekwaya is looking for climate tech opportunities that leverage his AI/ML 
+            background and fintech experience. He has an MBA in Data Analytics and is currently
+            working on workforce development with MassCEC. What partner organizations and 
+            resources would be most relevant?
+            
+            Skills: {', '.join(GEORGE_NEKWAYA_TEST_DATA['professional_background']['skills']['technical'][:5])}
+            Interests: {', '.join(GEORGE_NEKWAYA_TEST_DATA['professional_background']['climate_interests'])}
+            """
+
+            # Test with MA Resource Analyst
+            jasmine_response = await self.agents["ma_resource"].handle_message(
+                message=query,
+                user_id=GEORGE_NEKWAYA_TEST_DATA["user_id"],
+                conversation_id=self.conversation_id,
+            )
+
+            partner_quality = self.validate_partner_matching(jasmine_response)
+
+            return {
+                "success": partner_quality["score"] >= 7.0,
+                "agent": "Jasmine (MA Resource Analyst)",
+                "partners_mentioned": partner_quality["partners_count"],
+                "resource_relevance": partner_quality["resource_relevance"],
+                "actionability": partner_quality["actionability"],
+            }
+
+        except Exception as e:
+            return {
+                "success": False,
+                "error": str(e),
+                "agent": "Jasmine (MA Resource Analyst)",
+            }
+
+    async def test_skills_gap_analysis(self) -> Dict[str, Any]:
+        """Test skills gap analysis for George's climate tech ambitions."""
+
+        try:
+            query = f"""
+            George has strong technical skills in Python, ML, and data analytics, plus an MBA.
+            He wants to transition into climate tech product management or AI for climate solutions.
+            What skills gaps should he address and what training is recommended?
+            
+            Current skills: {', '.join(GEORGE_NEKWAYA_TEST_DATA['professional_background']['skills']['technical'])}
+            Target roles: {', '.join(GEORGE_NEKWAYA_TEST_DATA['professional_background']['career_goals']['target_roles'][:3])}
+            """
+
+            # Test with Supervisor for comprehensive analysis
+            supervisor_response = await self.agents["supervisor"].handle_message(
+                message=query,
+                user_id=GEORGE_NEKWAYA_TEST_DATA["user_id"],
+                conversation_id=self.conversation_id,
+            )
+
+            skills_analysis = self.validate_skills_gap_analysis(supervisor_response)
+
+            return {
+                "success": skills_analysis["score"] >= 7.0,
+                "agent": "Pendo (Supervisor)",
+                "gaps_identified": skills_analysis["gaps_count"],
+                "training_recommendations": skills_analysis["training_count"],
+                "timeline_provided": skills_analysis["timeline_provided"],
+            }
+
+        except Exception as e:
+            return {"success": False, "error": str(e), "agent": "Pendo (Supervisor)"}
+
+    async def test_salary_location_optimization(self) -> Dict[str, Any]:
+        """Test salary and location optimization for George."""
+
+        try:
+            query = f"""
+            George is currently in {GEORGE_NEKWAYA_TEST_DATA['profile']['location']} but open to
+            relocation for the right climate tech opportunity. His target salary is 
+            {GEORGE_NEKWAYA_TEST_DATA['professional_background']['career_goals']['salary_range']}.
+            What locations offer the best climate tech opportunities within his salary range?
+            """
+
+            jasmine_response = await self.agents["ma_resource"].handle_message(
+                message=query,
+                user_id=GEORGE_NEKWAYA_TEST_DATA["user_id"],
+                conversation_id=self.conversation_id,
+            )
+
+            location_analysis = self.validate_location_salary_analysis(jasmine_response)
+
+            return {
+                "success": location_analysis["score"] >= 7.0,
+                "agent": "Jasmine (MA Resource Analyst)",
+                "locations_suggested": location_analysis["locations_count"],
+                "salary_alignment": location_analysis["salary_alignment"],
+                "market_insights": location_analysis["market_insights"],
+            }
+
+        except Exception as e:
+            return {
+                "success": False,
+                "error": str(e),
+                "agent": "Jasmine (MA Resource Analyst)",
+            }
+
+    async def test_ai_climate_specialization(self) -> Dict[str, Any]:
+        """Test AI/ML climate tech specialization guidance for George."""
+
+        try:
+            query = f"""
+            George has strong AI/ML skills and is founder of an AI climate tech company (Buffr Inc.).
+            He's interested in scaling AI solutions for climate impact. What specialized roles and
+            opportunities should he pursue in the AI for climate space?
+            
+            Current AI work: Multi-agent systems, LangGraph, GenAI platforms
+            Company focus: AI-powered climate solutions and workforce development
+            """
+
+            # Test with Environmental Justice specialist for community impact angle
+            miguel_response = await self.agents["environmental_justice"].handle_message(
+                message=query,
+                user_id=GEORGE_NEKWAYA_TEST_DATA["user_id"],
+                conversation_id=self.conversation_id,
+            )
+
+            ai_specialization = self.validate_ai_climate_specialization(miguel_response)
+
+            return {
+                "success": ai_specialization["score"] >= 7.0,
+                "agent": "Miguel (Environmental Justice Specialist)",
+                "ai_opportunities": ai_specialization["opportunities_count"],
+                "community_impact": ai_specialization["community_focus"],
+                "scaling_advice": ai_specialization["scaling_guidance"],
+            }
+
+        except Exception as e:
+            return {
+                "success": False,
+                "error": str(e),
+                "agent": "Miguel (Environmental Justice Specialist)",
+            }
+
+    # Validation helper methods
+    def validate_resume_analysis(
+        self, response: Dict[str, Any], resume_content: str
+    ) -> Dict[str, Any]:
+        """Validate the quality of resume analysis."""
+
+        score = 0.0
+        max_score = 10.0
+
+        response_text = response.get("response", "").lower()
+
+        # Check for key skills identification (2 points)
+        george_skills = ["python", "machine learning", "data analytics", "mba"]
+        skills_mentioned = sum(1 for skill in george_skills if skill in response_text)
+        score += (skills_mentioned / len(george_skills)) * 2
+
+        # Check for climate relevance identification (2 points)
+        climate_keywords = [
+            "climate",
+            "clean energy",
+            "environmental",
+            "sustainability",
+        ]
+        climate_mentions = sum(
+            1 for keyword in climate_keywords if keyword in response_text
+        )
+        score += min(climate_mentions / 2, 2)
+
+        # Check for specific recommendations (3 points)
+        rec_keywords = ["recommend", "suggest", "consider", "pursue", "explore"]
+        recommendations = sum(1 for keyword in rec_keywords if keyword in response_text)
+        score += min(recommendations / 3, 3)
+
+        # Check for Massachusetts focus (2 points)
+        ma_keywords = ["massachusetts", "boston", "cambridge", "masscec"]
+        ma_mentions = sum(1 for keyword in ma_keywords if keyword in response_text)
+        score += min(ma_mentions / 2, 2)
+
+        # Response quality check (1 point)
+        if len(response_text) > 200:
+            score += 1
+
+        return {
+            "score": score,
+            "max_score": max_score,
+            "skills_identified": skills_mentioned,
+            "climate_relevance": climate_mentions,
+            "recommendations_count": recommendations,
+            "ma_focus": ma_mentions > 0,
+        }
+
+    def validate_career_pathways(self, response: Dict[str, Any]) -> Dict[str, Any]:
+        """Validate career pathway recommendations."""
+
+        response_text = response.get("response", "").lower()
+
+        # Count pathway mentions
+        pathway_keywords = ["pathway", "role", "position", "opportunity", "career"]
+        pathways_count = sum(
+            1 for keyword in pathway_keywords if keyword in response_text
         )
 
-    def analyze_personalization(
-        self, response: Dict[str, Any], user_context: Dict[str, Any]
-    ) -> int:
-        """Analyze personalization level (0-10 scale)"""
-        content = response.get("content", "").lower()
-        score = 0
+        # Check salary alignment
+        salary_keywords = ["salary", "$", "compensation", "pay"]
+        salary_alignment = any(keyword in response_text for keyword in salary_keywords)
 
-        # Check for user-specific information usage
-        profile = user_context.get("profile", {}) or {}
-        resume = user_context.get("resume", {}) or {}
+        # Location relevance
+        location_keywords = ["indianapolis", "massachusetts", "remote", "location"]
+        location_relevance = any(
+            keyword in response_text for keyword in location_keywords
+        )
 
-        # Location personalization
-        user_location = profile.get("location", "")
-        if user_location and user_location.lower() in content:
-            score += 2
+        # Skills integration
+        skills_keywords = ["skills", "experience", "background", "analytics"]
+        skills_integration = sum(
+            1 for keyword in skills_keywords if keyword in response_text
+        )
 
-        # Education level personalization
-        education = profile.get("education_level", "")
-        if education and education.lower() in content:
-            score += 1
+        score = min(
+            10.0,
+            (pathways_count * 2)
+            + (2 if salary_alignment else 0)
+            + (2 if location_relevance else 0)
+            + min(skills_integration, 4),
+        )
 
-        # Resume skills personalization
-        skills = resume.get("skills", [])
-        if skills and any(skill.lower() in content for skill in skills):
-            score += 2
+        return {
+            "score": score,
+            "pathways_count": pathways_count,
+            "salary_alignment": salary_alignment,
+            "location_relevance": location_relevance,
+            "skills_integration": skills_integration,
+        }
 
-        # Experience personalization
-        experience = resume.get("experience", [])
-        if experience and any(
-            exp.get("title", "").lower() in content for exp in experience
-        ):
-            score += 2
+    def validate_partner_matching(self, response: Dict[str, Any]) -> Dict[str, Any]:
+        """Validate partner resource matching quality."""
 
-        # Generic personalization indicators
-        if "your" in content or "you" in content:
-            score += 1
-        if "based on" in content:
-            score += 1
-        if "massachusetts" in content:
-            score += 1
+        response_text = response.get("response", "").lower()
 
-        return min(score, 10)
+        # Count partner organizations mentioned
+        partner_keywords = ["masscec", "partner", "organization", "company", "employer"]
+        partners_count = sum(
+            1 for keyword in partner_keywords if keyword in response_text
+        )
 
-    async def test_supervisor_routing(
-        self, user_context: Dict[str, Any]
+        # Resource relevance
+        resource_keywords = ["resource", "program", "training", "certification"]
+        resource_relevance = sum(
+            1 for keyword in resource_keywords if keyword in response_text
+        )
+
+        # Actionability
+        action_keywords = ["apply", "contact", "visit", "register", "join"]
+        actionability = sum(
+            1 for keyword in action_keywords if keyword in response_text
+        )
+
+        score = min(
+            10.0,
+            partners_count * 2 + min(resource_relevance, 3) + min(actionability, 3),
+        )
+
+        return {
+            "score": score,
+            "partners_count": partners_count,
+            "resource_relevance": resource_relevance,
+            "actionability": actionability,
+        }
+
+    def validate_skills_gap_analysis(self, response: Dict[str, Any]) -> Dict[str, Any]:
+        """Validate skills gap analysis quality."""
+
+        response_text = response.get("response", "").lower()
+
+        # Gaps identification
+        gap_keywords = ["gap", "need", "missing", "develop", "learn"]
+        gaps_count = sum(1 for keyword in gap_keywords if keyword in response_text)
+
+        # Training recommendations
+        training_keywords = ["training", "course", "certification", "program"]
+        training_count = sum(
+            1 for keyword in training_keywords if keyword in response_text
+        )
+
+        # Timeline provided
+        timeline_keywords = ["month", "year", "week", "timeline", "duration"]
+        timeline_provided = any(
+            keyword in response_text for keyword in timeline_keywords
+        )
+
+        score = min(
+            10.0, gaps_count * 2 + training_count * 2 + (2 if timeline_provided else 0)
+        )
+
+        return {
+            "score": score,
+            "gaps_count": gaps_count,
+            "training_count": training_count,
+            "timeline_provided": timeline_provided,
+        }
+
+    def validate_location_salary_analysis(
+        self, response: Dict[str, Any]
     ) -> Dict[str, Any]:
-        """Test supervisor routing logic with different query types"""
-        print("\n🎯 Testing Supervisor Routing Logic")
+        """Validate location and salary analysis."""
 
-        supervisor = self.agents["pendo"]
-        routing_tests = {}
+        response_text = response.get("response", "").lower()
 
-        routing_queries = {
-            "veteran": TEST_QUERIES["supervisor_routing_veteran"],
-            "international": TEST_QUERIES["supervisor_routing_international"],
-            "environmental_justice": TEST_QUERIES["supervisor_routing_ej"],
-            "resume": TEST_QUERIES["supervisor_routing_resume"],
-            "general": TEST_QUERIES["supervisor_general"],
+        # Locations suggested
+        location_keywords = [
+            "boston",
+            "cambridge",
+            "massachusetts",
+            "california",
+            "new york",
+        ]
+        locations_count = sum(
+            1 for keyword in location_keywords if keyword in response_text
+        )
+
+        # Salary alignment
+        salary_keywords = [
+            "$75",
+            "$80",
+            "$90",
+            "$100",
+            "$120",
+            "salary",
+            "compensation",
+        ]
+        salary_alignment = any(keyword in response_text for keyword in salary_keywords)
+
+        # Market insights
+        market_keywords = ["market", "industry", "sector", "demand", "growth"]
+        market_insights = sum(
+            1 for keyword in market_keywords if keyword in response_text
+        )
+
+        score = min(
+            10.0,
+            locations_count * 2
+            + (3 if salary_alignment else 0)
+            + min(market_insights, 3),
+        )
+
+        return {
+            "score": score,
+            "locations_count": locations_count,
+            "salary_alignment": salary_alignment,
+            "market_insights": market_insights,
         }
 
-        for query_type, query in routing_queries.items():
-            print(f"   Testing {query_type} routing...")
+    def validate_ai_climate_specialization(
+        self, response: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """Validate AI climate specialization guidance."""
 
-            try:
-                response = await supervisor.handle_message(
-                    message=query,
-                    user_id=TEST_USER_ID,
-                    conversation_id=f"{TEST_CONVERSATION_ID}_{query_type}",
-                )
+        response_text = response.get("response", "").lower()
 
-                routing_decision = response.get("metadata", {}).get("routing_decision")
-                specialist_assigned = response.get("metadata", {}).get(
-                    "specialist_assigned"
-                )
+        # AI opportunities
+        ai_keywords = [
+            "ai",
+            "machine learning",
+            "artificial intelligence",
+            "ml",
+            "algorithm",
+        ]
+        opportunities_count = sum(
+            1 for keyword in ai_keywords if keyword in response_text
+        )
 
-                routing_tests[query_type] = {
-                    "query": query,
-                    "routing_decision": routing_decision,
-                    "specialist_assigned": specialist_assigned,
-                    "response_content": response.get("content", "")[:200] + "...",
-                    "success": True,
-                }
+        # Community impact focus
+        community_keywords = ["community", "impact", "justice", "equity", "access"]
+        community_focus = sum(
+            1 for keyword in community_keywords if keyword in response_text
+        )
 
-                print(
-                    f"      ✅ Routed to: {specialist_assigned or 'General guidance'}"
-                )
+        # Scaling guidance
+        scaling_keywords = ["scale", "grow", "expand", "develop", "build"]
+        scaling_guidance = sum(
+            1 for keyword in scaling_keywords if keyword in response_text
+        )
 
-            except Exception as e:
-                routing_tests[query_type] = {
-                    "query": query,
-                    "success": False,
-                    "error": str(e),
-                }
-                print(f"      ❌ Error: {e}")
+        score = min(
+            10.0, opportunities_count * 2 + community_focus * 2 + scaling_guidance * 2
+        )
 
-        return routing_tests
-
-    async def test_knowledge_resources_access(self) -> Dict[str, Any]:
-        """Test knowledge resources access across all agents"""
-        print("\n📚 Testing Knowledge Resources Access")
-
-        knowledge_tests = {}
-
-        # Test each agent's knowledge access
-        for agent_name, agent in self.agents.items():
-            if hasattr(agent, "search_knowledge_resources") or hasattr(
-                agent, "access_knowledge_base"
-            ):
-                print(f"   Testing {agent_name} knowledge access...")
-
-                try:
-                    # Test knowledge search capability
-                    if hasattr(agent, "search_knowledge_resources"):
-                        result = await agent.search_knowledge_resources(
-                            "renewable energy training"
-                        )
-                        knowledge_tests[f"{agent_name}_search"] = {
-                            "method": "search_knowledge_resources",
-                            "success": True,
-                            "result_length": len(str(result)),
-                        }
-
-                    # Test knowledge base access
-                    if hasattr(agent, "access_knowledge_base"):
-                        result = await agent.access_knowledge_base("climate_policy")
-                        knowledge_tests[f"{agent_name}_access"] = {
-                            "method": "access_knowledge_base",
-                            "success": True,
-                            "result_length": len(str(result)),
-                        }
-
-                except Exception as e:
-                    knowledge_tests[f"{agent_name}_error"] = {
-                        "success": False,
-                        "error": str(e),
-                    }
-
-        return knowledge_tests
-
-    async def run_comprehensive_test(self):
-        """Run comprehensive test of all agents"""
-        print("🚀 Starting Comprehensive Agent Testing")
-        print("=" * 60)
-
-        # Initialize
-        await self.initialize()
-
-        # Get user context
-        user_context = await self.get_user_context()
-
-        # Test supervisor routing
-        routing_results = await self.test_supervisor_routing(user_context)
-
-        # Test knowledge resources access
-        knowledge_results = await self.test_knowledge_resources_access()
-
-        # Test each agent with multiple queries
-        agent_results = {}
-
-        for agent_name, agent in self.agents.items():
-            print(f"\n{'='*20} {agent_name.upper()} AGENT TESTING {'='*20}")
-
-            agent_tests = {}
-
-            # Get relevant queries for this agent
-            relevant_queries = []
-            if agent_name == "pendo":
-                relevant_queries = [TEST_QUERIES["supervisor_general"]]
-            elif agent_name == "jasmine":
-                relevant_queries = [
-                    TEST_QUERIES["jasmine_direct"],
-                    TEST_QUERIES["jasmine_skills"],
-                    TEST_QUERIES["jasmine_training"],
-                ]
-            elif agent_name == "marcus":
-                relevant_queries = [
-                    TEST_QUERIES["marcus_direct"],
-                    TEST_QUERIES["marcus_skills"],
-                    TEST_QUERIES["marcus_programs"],
-                ]
-            elif agent_name == "liv":
-                relevant_queries = [
-                    TEST_QUERIES["liv_direct"],
-                    TEST_QUERIES["liv_credentials"],
-                    TEST_QUERIES["liv_visa"],
-                ]
-            elif agent_name == "miguel":
-                relevant_queries = [
-                    TEST_QUERIES["miguel_direct"],
-                    TEST_QUERIES["miguel_community"],
-                    TEST_QUERIES["miguel_policy"],
-                ]
-
-            # Test each query
-            for i, query in enumerate(relevant_queries):
-                test_result = await self.test_agent(
-                    agent_name, agent, query, user_context
-                )
-                agent_tests[f"test_{i+1}"] = test_result
-
-            agent_results[agent_name] = agent_tests
-
-        # Compile comprehensive results
-        comprehensive_results = {
-            "test_metadata": {
-                "test_user_id": TEST_USER_ID,
-                "test_conversation_id": TEST_CONVERSATION_ID,
-                "test_timestamp": datetime.now().isoformat(),
-                "total_agents_tested": len(self.agents),
-                "total_queries_tested": sum(
-                    len(tests) for tests in agent_results.values()
-                ),
-            },
-            "user_context": user_context,
-            "supervisor_routing": routing_results,
-            "knowledge_resources": knowledge_results,
-            "agent_results": agent_results,
+        return {
+            "score": score,
+            "opportunities_count": opportunities_count,
+            "community_focus": community_focus,
+            "scaling_guidance": scaling_guidance,
         }
 
-        # Save results
-        results_file = f"comprehensive_test_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
-        with open(results_file, "w") as f:
-            json.dump(comprehensive_results, f, indent=2, default=str)
+    def assess_climate_relevance(self, response: Dict[str, Any]) -> float:
+        """Assess how well the response addresses climate career aspects."""
 
-        # Print summary
-        self.print_test_summary(comprehensive_results)
+        response_text = response.get("response", "").lower()
+        climate_terms = [
+            "climate",
+            "clean energy",
+            "renewable",
+            "solar",
+            "wind",
+            "sustainability",
+            "environmental",
+            "green",
+            "carbon",
+            "emissions",
+        ]
 
-        print(f"\n📄 Detailed results saved to: {results_file}")
+        relevance_score = sum(1 for term in climate_terms if term in response_text)
+        return min(relevance_score / 5, 1.0)  # Normalize to 0-1
 
-        return comprehensive_results
+    def count_actionable_items(self, response: Dict[str, Any]) -> int:
+        """Count actionable recommendations in the response."""
 
-    def print_test_summary(self, results: Dict[str, Any]):
-        """Print comprehensive test summary"""
-        print("\n" + "=" * 60)
-        print("📊 COMPREHENSIVE TEST SUMMARY")
-        print("=" * 60)
+        response_text = response.get("response", "").lower()
+        action_patterns = [
+            "you should",
+            "i recommend",
+            "consider",
+            "try",
+            "apply to",
+            "contact",
+            "visit",
+            "explore",
+            "look into",
+            "pursue",
+        ]
 
-        metadata = results["test_metadata"]
-        print(f"🔍 Test Overview:")
-        print(f"   User ID: {metadata['test_user_id']}")
-        print(f"   Agents Tested: {metadata['total_agents_tested']}")
-        print(f"   Total Queries: {metadata['total_queries_tested']}")
-
-        # Supervisor routing summary
-        routing = results["supervisor_routing"]
-        print(f"\n🎯 Supervisor Routing:")
-        for query_type, result in routing.items():
-            status = "✅" if result.get("success") else "❌"
-            specialist = result.get("specialist_assigned", "None")
-            print(f"   {status} {query_type}: → {specialist}")
-
-        # Agent performance summary
-        print(f"\n🤖 Agent Performance:")
-        for agent_name, tests in results["agent_results"].items():
-            successful_tests = sum(1 for test in tests.values() if test.get("success"))
-            total_tests = len(tests)
-            avg_response_time = (
-                sum(test.get("response_time_seconds", 0) for test in tests.values())
-                / total_tests
-            )
-            avg_personalization = (
-                sum(test.get("personalization_score", 0) for test in tests.values())
-                / total_tests
-            )
-
-            print(f"   {agent_name.upper()}:")
-            print(f"      Success Rate: {successful_tests}/{total_tests}")
-            print(f"      Avg Response Time: {avg_response_time:.2f}s")
-            print(f"      Avg Personalization: {avg_personalization:.1f}/10")
-
-        # Knowledge resources summary
-        knowledge = results["knowledge_resources"]
-        print(f"\n📚 Knowledge Resources Access:")
-        successful_access = sum(1 for test in knowledge.values() if test.get("success"))
-        total_access_tests = len(knowledge)
-        print(f"   Success Rate: {successful_access}/{total_access_tests}")
-
-        print("\n" + "=" * 60)
+        return sum(1 for pattern in action_patterns if pattern in response_text)
 
 
 async def main():
     """Main test execution"""
-    tester = ComprehensiveAgentTester()
+    tester = ComprehensiveClimateAgentTester()
     await tester.run_comprehensive_test()
 
 

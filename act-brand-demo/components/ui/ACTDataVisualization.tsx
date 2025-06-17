@@ -1,10 +1,10 @@
+"use client";
+
 /**
  * ACT Data Visualization Component - Alliance for Climate Transition
  * Interactive charts and data displays for climate metrics and analytics
  * Location: act-brand-demo/components/ui/ACTDataVisualization.tsx
  */
-
-"use client";
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';

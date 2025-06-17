@@ -85,7 +85,7 @@ def format_agent_response(content: str, agent_name: str = None) -> str:
 
 
 def convert_to_langchain_messages(
-    conversation_history: List[Dict[str, Any]]
+    conversation_history: List[Dict[str, Any]],
 ) -> List[Any]:
     """Convert conversation history to LangChain message objects"""
     langchain_messages = []

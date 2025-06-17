@@ -1,10 +1,10 @@
+"use client";
+
 /**
  * Climate Metrics Dashboard Component
  * Modern analytics dashboard for climate data visualization
  * Location: components/dashboards/ClimateMetricsDashboard.tsx
  */
-
-"use client";
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';

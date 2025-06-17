@@ -47,83 +47,53 @@ interface AIInsightsDashboardProps {
   showVisualizer?: boolean;
 }
 
-// Sample prediction data
-const getPredictionData = () => [
-  { month: 'Jan', predicted: 1.08, actual: 1.10, lower: 1.05, upper: 1.15 },
-  { month: 'Feb', predicted: 1.09, actual: 1.08, lower: 1.06, upper: 1.16 },
-  { month: 'Mar', predicted: 1.10, actual: 1.12, lower: 1.07, upper: 1.17 },
-  { month: 'Apr', predicted: 1.12, actual: 1.13, lower: 1.09, upper: 1.19 },
-  { month: 'May', predicted: 1.14, actual: 1.15, lower: 1.11, upper: 1.21 },
-  { month: 'Jun', predicted: 1.16, actual: 1.18, lower: 1.13, upper: 1.23 },
-  { month: 'Jul', predicted: 1.17, actual: 1.21, lower: 1.14, upper: 1.24 },
-  { month: 'Aug', predicted: 1.19, actual: 1.18, lower: 1.16, upper: 1.26 },
-  { month: 'Sep', predicted: 1.20, actual: null, lower: 1.17, upper: 1.27 },
-  { month: 'Oct', predicted: 1.22, actual: null, lower: 1.19, upper: 1.29 },
-  { month: 'Nov', predicted: 1.23, actual: null, lower: 1.20, upper: 1.30 },
-  { month: 'Dec', predicted: 1.25, actual: null, lower: 1.22, upper: 1.32 },
-];
-
-// Sample climate insights
-const getInsights = () => [
-  {
-    id: 1,
-    title: "Temperature Anomaly Prediction",
-    content: "Based on current trends, global temperature anomaly is predicted to reach 1.25°C by December, with 87% confidence interval.",
-    category: "prediction",
-    confidence: 87,
-    timestamp: new Date(Date.now() - 1000 * 60 * 30), // 30 minutes ago
-    source: "Neural Climate Model v4.2"
-  },
-  {
-    id: 2,
-    title: "Emissions Pattern Detected",
-    content: "Unusual methane emissions pattern detected in Northern Hemisphere. Correlation with Arctic permafrost thaw suggests acceleration of positive feedback loop.",
-    category: "alert",
-    confidence: 76,
-    timestamp: new Date(Date.now() - 1000 * 60 * 120), // 2 hours ago
-    source: "Anomaly Detection System"
-  },
-  {
-    id: 3,
-    title: "Renewable Integration Analysis",
-    content: "Machine learning analysis suggests current renewable energy growth rate of 8.3% is sufficient to reach 50% global energy mix by 2035, ahead of previously projected 2040 target.",
-    category: "analysis",
-    confidence: 91,
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 8), // 8 hours ago
-    source: "Energy Transition Model"
-  },
-  {
-    id: 4,
-    title: "Policy Impact Assessment",
-    content: "Sentiment analysis of recent climate policies indicates 23% increase in positive media coverage, correlating with 15% increase in public support for climate action.",
-    category: "sentiment",
-    confidence: 82,
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24), // 1 day ago
-    source: "PolicyScan NLP Engine"
+// Real prediction data structure
+const getPredictionData = (realData?: any[]) => {
+  if (!realData || realData.length === 0) {
+    // Return empty state if no real data
+    return [];
   }
-];
+  
+  // Process real data into chart format
+  return realData.map(item => ({
+    month: item.month || 'Unknown',
+    predicted: item.predicted || 0,
+    actual: item.actual || null,
+    lower: item.lower_bound || 0,
+    upper: item.upper_bound || 0
+  }));
+};
 
-// Sample AI conversations
-const getConversations = () => [
-  {
-    id: 1,
-    question: "What are the main drivers of the temperature anomaly increase?",
-    answer: "The primary drivers are: 1) Continued CO₂ emissions from fossil fuels (61% contribution), 2) Methane release from agriculture and natural sources (22%), 3) Reduced carbon sink efficiency (11%), and 4) Industrial processes (6%). Recent data shows accelerating permafrost methane release as an emerging concern.",
-    timestamp: new Date(Date.now() - 1000 * 60 * 45) // 45 minutes ago
-  },
-  {
-    id: 2,
-    question: "How will the renewable energy transition affect global economy?",
-    answer: "Economic modeling shows the renewable transition will likely create a net positive of 12-14 million jobs globally by 2030, primarily in installation, manufacturing and maintenance. However, certain regions dependent on fossil fuel extraction may experience 2-3% GDP contraction without proper transition planning.",
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 3) // 3 hours ago
-  },
-  {
-    id: 3,
-    question: "What adaptation measures should coastal cities prioritize?",
-    answer: "For coastal cities, AI risk assessment recommends prioritizing: 1) Upgraded stormwater systems to handle 1.5x current capacity, 2) Natural coastal barriers with bioengineered solutions, 3) Revised building codes for 1m sea level rise by 2050, and 4) Managed retreat planning for most vulnerable areas with social equity considerations.",
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 12) // 12 hours ago
+// Real insights data structure
+const getInsights = (realInsights?: any[]) => {
+  if (!realInsights || realInsights.length === 0) {
+    return [];
   }
-];
+  
+  return realInsights.map(insight => ({
+    id: insight.id,
+    title: insight.title || 'Untitled Insight',
+    content: insight.content || 'No content available',
+    category: insight.category || 'analysis',
+    confidence: insight.confidence || 0,
+    timestamp: new Date(insight.created_at || Date.now()),
+    source: insight.source || 'AI Analysis'
+  }));
+};
+
+// Real conversations data structure
+const getConversations = (realConversations?: any[]) => {
+  if (!realConversations || realConversations.length === 0) {
+    return [];
+  }
+  
+  return realConversations.map(conv => ({
+    id: conv.id,
+    question: conv.question || 'No question',
+    answer: conv.answer || 'No answer available',
+    timestamp: new Date(conv.created_at || Date.now())
+  }));
+};
 
 export const AIInsightsDashboard = ({
   className,

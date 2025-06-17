@@ -4,7 +4,7 @@
  * Location: act-brand-demo/components/ui/BottomCTA.tsx
  */
 
-'use client';
+"use client";
 
 import React from 'react';
 import { motion } from 'framer-motion';

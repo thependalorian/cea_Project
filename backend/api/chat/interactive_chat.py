@@ -18,9 +18,6 @@ from langgraph.graph import StateGraph, END, START
 from api.workflows.climate_supervisor_workflow import (
     ClimateAgentState,
     create_climate_supervisor_workflow,
-    UserIdentityProfile,
-    RoutingDecision,
-    QualityMetrics
 )
 
 
@@ -49,7 +46,7 @@ def climate_assistant_node(state: ChatState) -> Dict[str, Any]:
     """
     messages = state.get("messages", [])
     use_supervisor = state.get("use_supervisor", False)
-    
+
     if use_supervisor:
         # Route through supervisor workflow for enhanced capabilities
         return supervisor_enhanced_response(state)
@@ -107,12 +104,12 @@ async def supervisor_enhanced_response(state: ChatState) -> Dict[str, Any]:
     try:
         # Get the supervisor workflow
         supervisor_graph = create_climate_supervisor_workflow()
-        
+
         # Convert chat state to supervisor state
         user_id = state.get("user_id", str(uuid.uuid4()))
         session_id = state.get("session_id", str(uuid.uuid4()))
         messages = state.get("messages", [])
-        
+
         # Get the latest user message
         user_message = ""
         if messages:
@@ -121,7 +118,7 @@ async def supervisor_enhanced_response(state: ChatState) -> Dict[str, Any]:
                 user_message = last_message.content
             elif isinstance(last_message, dict) and last_message.get("type") == "human":
                 user_message = last_message.get("content", "")
-        
+
         # Create supervisor state
         supervisor_state = ClimateAgentState(
             messages=[{"role": "human", "content": user_message}],
@@ -134,24 +131,24 @@ async def supervisor_enhanced_response(state: ChatState) -> Dict[str, Any]:
             next_actions=[],
             error_recovery_log=[],
             reflection_history=[],
-            case_recommendations=[]
+            case_recommendations=[],
         )
-        
+
         # Execute supervisor workflow
         result = await supervisor_graph.ainvoke(supervisor_state)
-        
+
         # Extract response from supervisor result
         response_content = ""
         if result.get("messages"):
             last_message = result["messages"][-1]
-            if hasattr(last_message, 'content'):
+            if hasattr(last_message, "content"):
                 response_content = last_message.content
             elif isinstance(last_message, dict):
-                response_content = last_message.get('content', '')
-        
+                response_content = last_message.get("content", "")
+
         # Create AI message with supervisor response
         ai_message = AIMessage(content=response_content)
-        
+
         # Update state with supervisor insights
         updated_state = {
             "messages": [ai_message],
@@ -161,12 +158,12 @@ async def supervisor_enhanced_response(state: ChatState) -> Dict[str, Any]:
                 "tools_used": result.get("tools_used", []),
                 "specialist": result.get("current_specialist"),
                 "quality_metrics": result.get("quality_metrics"),
-                "intelligence_level": result.get("intelligence_level")
-            }
+                "intelligence_level": result.get("intelligence_level"),
+            },
         }
-        
+
         return updated_state
-        
+
     except Exception as e:
         # Fallback to simple response if supervisor fails
         print(f"Supervisor workflow error, falling back to simple chat: {e}")
@@ -179,36 +176,47 @@ def routing_node(state: ChatState) -> str:
     """
     messages = state.get("messages", [])
     context = state.get("context", {})
-    
+
     # Check if supervisor is explicitly requested
     if state.get("use_supervisor", False):
         return "supervisor_chat"
-    
+
     # Analyze message complexity to determine routing
     if messages:
         last_message = messages[-1]
         message_content = ""
-        
+
         if isinstance(last_message, HumanMessage):
             message_content = last_message.content.lower()
         elif isinstance(last_message, dict):
             message_content = last_message.get("content", "").lower()
-        
+
         # Keywords that suggest need for supervisor workflow
         supervisor_keywords = [
-            "resume", "career transition", "military", "veteran", "international",
-            "credentials", "job search", "training", "education", "environmental justice",
-            "gateway cities", "skills translation", "barrier", "certification"
+            "resume",
+            "career transition",
+            "military",
+            "veteran",
+            "international",
+            "credentials",
+            "job search",
+            "training",
+            "education",
+            "environmental justice",
+            "gateway cities",
+            "skills translation",
+            "barrier",
+            "certification",
         ]
-        
+
         # Check for complex queries that benefit from supervisor
         if any(keyword in message_content for keyword in supervisor_keywords):
             return "supervisor_chat"
-        
+
         # Check for follow-up questions that might need specialist routing
         if len(messages) > 2:  # Multi-turn conversation
             return "supervisor_chat"
-    
+
     return "simple_chat"
 
 
@@ -219,7 +227,7 @@ def should_continue(state: ChatState) -> str:
     # Check for conversation completion indicators
     if state.get("conversation_complete", False):
         return END
-    
+
     # Always continue for now - in practice, you might check for:
     # - User saying goodbye
     # - Task completion
@@ -258,7 +266,7 @@ def create_simple_chat_graph():
     workflow.add_node("climate_assistant", simple_chat_response)
     workflow.add_edge(START, "climate_assistant")
     workflow.add_edge("climate_assistant", END)
-    
+
     return workflow.compile()
 
 
@@ -268,7 +276,7 @@ def create_supervisor_chat_graph():
     workflow.add_node("supervisor_assistant", supervisor_enhanced_response)
     workflow.add_edge(START, "supervisor_assistant")
     workflow.add_edge("supervisor_assistant", END)
-    
+
     return workflow.compile()
 
 
@@ -284,7 +292,7 @@ def create_chat_request(
     user_id: Optional[str] = None,
     session_id: Optional[str] = None,
     use_supervisor: bool = False,
-    context: Optional[Dict[str, Any]] = None
+    context: Optional[Dict[str, Any]] = None,
 ) -> ChatState:
     """
     Create a chat request state for workflow execution
@@ -297,7 +305,7 @@ def create_chat_request(
         use_supervisor=use_supervisor,
         specialist_routing=None,
         user_profile=None,
-        conversation_complete=False
+        conversation_complete=False,
     )
 
 
@@ -306,7 +314,7 @@ async def process_chat_message(
     user_id: Optional[str] = None,
     session_id: Optional[str] = None,
     use_supervisor: bool = False,
-    context: Optional[Dict[str, Any]] = None
+    context: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     """
     Process a chat message and return the response
@@ -317,31 +325,31 @@ async def process_chat_message(
         user_id=user_id,
         session_id=session_id,
         use_supervisor=use_supervisor,
-        context=context
+        context=context,
     )
-    
+
     # Select appropriate graph
     if use_supervisor:
         graph = supervisor_chat_graph
     else:
         graph = simple_chat_graph
-    
+
     # Execute the workflow
     result = await graph.ainvoke(initial_state)
-    
+
     # Extract response
     response_message = ""
     if result.get("messages"):
         last_message = result["messages"][-1]
-        if hasattr(last_message, 'content'):
+        if hasattr(last_message, "content"):
             response_message = last_message.content
         elif isinstance(last_message, dict):
-            response_message = last_message.get('content', '')
-    
+            response_message = last_message.get("content", "")
+
     return {
         "response": response_message,
         "session_id": result.get("session_id"),
         "specialist": result.get("specialist_routing"),
         "context": result.get("context", {}),
-        "use_supervisor": use_supervisor
+        "use_supervisor": use_supervisor,
     }
