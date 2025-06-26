@@ -20,6 +20,7 @@ from backend.api.routes.langgraph import router as langgraph_router
 from backend.api.routes.memory import router as memory_router
 from backend.api.routes.tools import router as tools_router
 from backend.api.routes.agents import router as agents_router
+from backend.api.routes.optimized_agents import router as optimized_agents_router
 from backend.database.supabase_client import supabase
 from backend.database.redis_client import redis_client
 from .routes import router as api_router
@@ -132,6 +133,7 @@ async def root():
             "memory": "/api/memory/*",
             "tools": "/api/tools/*",
             "agents": "/api/v1/agents/*",
+            "optimized_agents": "/api/agents/optimized/*",
             "jobs": "/api/v1/jobs/*",
             "education": "/api/v1/education/*",
             "profiles": "/api/v1/profiles/*",
@@ -159,6 +161,7 @@ app.include_router(langgraph_router, prefix="/api/langgraph", tags=["langgraph"]
 app.include_router(memory_router, prefix="/api/memory", tags=["memory"])
 app.include_router(tools_router, prefix="/api/tools", tags=["tools"])
 app.include_router(agents_router, prefix="/api/v1/agents", tags=["agents"])
+app.include_router(optimized_agents_router, tags=["optimized-agents"])
 app.include_router(awareness_router, prefix="/api/awareness", tags=["awareness"])
 app.include_router(
     coordination_router, prefix="/api/coordination", tags=["coordination"]
