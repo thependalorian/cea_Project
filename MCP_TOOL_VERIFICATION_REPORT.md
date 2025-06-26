@@ -6,7 +6,7 @@ This report documents the comprehensive verification of Climate Economy Assistan
 
 **Verification Date:** January 26, 2025  
 **MCP Testing Status:** ✅ Active and Operational  
-**Database Connection:** ✅ Verified (Supabase Project: `zugdojmdktxalqflxbbh`)  
+**Database Connection:** ✅ Verified (Supabase Project: `your-project-id`)  
 **Tool Implementation Progress:** 5/47 tools verified (11% complete)
 
 ---

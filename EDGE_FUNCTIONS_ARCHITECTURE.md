@@ -35,7 +35,7 @@ Our edge functions implement the **latest 2025 patterns**:
 
 **API Usage**:
 ```bash
-curl -X POST "https://zugdojmdktxalqflxbbh.supabase.co/functions/v1/agent-router" \
+curl -X POST "https://your-supabase-url.supabase.co/functions/v1/agent-router" \
   -H "Content-Type: application/json" \
   -d '{
     "message": "I need help with my resume for climate jobs",
@@ -81,7 +81,7 @@ curl -X POST "https://zugdojmdktxalqflxbbh.supabase.co/functions/v1/agent-router
 
 **API Usage**:
 ```bash
-curl -X POST "https://zugdojmdktxalqflxbbh.supabase.co/functions/v1/resume-processor" \
+curl -X POST "https://your-supabase-url.supabase.co/functions/v1/resume-processor" \
   -H "Content-Type: application/json" \
   -d '{
     "resume_id": "resume_456",
@@ -135,7 +135,7 @@ curl -X POST "https://zugdojmdktxalqflxbbh.supabase.co/functions/v1/resume-proce
 
 **API Usage**:
 ```bash
-curl -X POST "https://zugdojmdktxalqflxbbh.supabase.co/functions/v1/recommendation-engine" \
+curl -X POST "https://your-supabase-url.supabase.co/functions/v1/recommendation-engine" \
   -H "Content-Type: application/json" \
   -d '{
     "user_id": "user_123",
@@ -189,7 +189,7 @@ curl -X POST "https://zugdojmdktxalqflxbbh.supabase.co/functions/v1/recommendati
 
 **API Usage**:
 ```bash
-curl -X POST "https://zugdojmdktxalqflxbbh.supabase.co/functions/v1/realtime-analytics" \
+curl -X POST "https://your-supabase-url.supabase.co/functions/v1/realtime-analytics" \
   -H "Content-Type: application/json" \
   -d '{
     "event_type": "job_search",
@@ -243,7 +243,7 @@ curl -X POST "https://zugdojmdktxalqflxbbh.supabase.co/functions/v1/realtime-ana
 **API Usage**:
 ```bash
 # Get cached data
-curl -X POST "https://zugdojmdktxalqflxbbh.supabase.co/functions/v1/intelligent-caching" \
+curl -X POST "https://your-supabase-url.supabase.co/functions/v1/intelligent-caching" \
   -H "Content-Type: application/json" \
   -d '{
     "cache_key": "job_recommendations",
@@ -256,7 +256,7 @@ curl -X POST "https://zugdojmdktxalqflxbbh.supabase.co/functions/v1/intelligent-
   }'
 
 # Set cache data
-curl -X POST "https://zugdojmdktxalqflxbbh.supabase.co/functions/v1/intelligent-caching" \
+curl -X POST "https://your-supabase-url.supabase.co/functions/v1/intelligent-caching" \
   -H "Content-Type: application/json" \
   -d '{
     "cache_key": "job_recommendations",
@@ -315,7 +315,7 @@ export async function POST(request: Request) {
   const body = await request.json();
   
   const response = await fetch(
-    'https://zugdojmdktxalqflxbbh.supabase.co/functions/v1/agent-router',
+    'https://your-supabase-url.supabase.co/functions/v1/agent-router',
     {
       method: 'POST',
       headers: {
@@ -371,7 +371,7 @@ Following 2025 edge security standards:
 
 ### **Current Status**
 ✅ **All 5 edge functions deployed and active**
-✅ **Supabase project: `zugdojmdktxalqflxbbh`**
+✅ **Supabase project: `your-project-id`**
 ✅ **Global edge distribution enabled**
 
 ### **Next Steps**
@@ -426,7 +426,7 @@ Following 2025 edge security standards:
 ### **Health Checks**
 Monitor edge function status:
 ```bash
-curl "https://zugdojmdktxalqflxbbh.supabase.co/functions/v1/intelligent-caching" \
+curl "https://your-supabase-url.supabase.co/functions/v1/intelligent-caching" \
   -X POST \
   -d '{"operation": "stats", "cache_key": "health"}'
 ```

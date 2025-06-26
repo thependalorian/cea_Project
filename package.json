@@ -19,7 +19,7 @@
     "docker:build": "docker build -t cea-frontend .",
     "docker:run": "docker run -p 3000:3000 cea-frontend",
     "security:audit": "npm audit --audit-level=high",
-    "supabase:types": "supabase gen types typescript --project-id zugdojmdktxalqflxbbh --schema public > types/supabase.ts"
+    "supabase:types": "supabase gen types typescript --project-id your-project-id --schema public > types/supabase.ts"
   },
   "dependencies": {
     "@langchain/core": "^0.3.61",

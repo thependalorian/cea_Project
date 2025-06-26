@@ -12,7 +12,7 @@ from ..utils.logger import get_logger
 logger = get_logger(__name__)
 
 # Supabase configuration
-SUPABASE_URL = os.getenv("SUPABASE_URL") or os.getenv("NEXT_PUBLIC_SUPABASE_URL", "https://zugdojmdktxalqflxbbh.supabase.co")
+SUPABASE_URL = os.getenv("SUPABASE_URL") or os.getenv("NEXT_PUBLIC_SUPABASE_URL", "")
 
 # Use service key for backend operations to bypass RLS
 SUPABASE_KEY = (

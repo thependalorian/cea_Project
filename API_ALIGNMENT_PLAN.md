@@ -621,7 +621,7 @@ const nextConfig = {
 # .env.local
 NEXT_PUBLIC_APP_URL=https://cea-app.vercel.app
 BACKEND_URL=https://cea-app.vercel.app
-SUPABASE_URL=https://zugdojmdktxalqflxbbh.supabase.co
+SUPABASE_URL=your_supabase_url_here
 DEEPSEEK_API_KEY=sk-***
 ```
 
@@ -1378,7 +1378,7 @@ async def detailed_health_check():
 ### **✅ SYSTEM VERIFICATION COMPLETED (December 26, 2024 - Updated)**
 
 #### **🔍 MCP Supabase Database Verification:**
-- **✅ Project ID:** `zugdojmdktxalqflxbbh` - Connected and accessible
+- **✅ Project ID:** `your-project-id` - Connected and accessible
 - **✅ Table Structure:** Verified correct table name `job_listings` (not `jobs`)
 - **✅ Data Integrity:** 18 job listings confirmed in database
 - **✅ Foreign Keys:** `conversation_interrupts.job_id` and `partner_match_results.job_id` correctly reference `job_listings.id`

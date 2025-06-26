@@ -35,7 +35,7 @@ First, you need to get the OAuth callback URL from your Supabase project:
 node scripts/check-oauth-providers.js
 ```
 
-The callback URL should look like: `https://zugdojmdktxalqflxbbh.supabase.co/auth/v1/callback`
+The callback URL should look like: `https://your-supabase-url.supabase.co/auth/v1/callback`
 
 ### 2. Set Up Google OAuth
 
