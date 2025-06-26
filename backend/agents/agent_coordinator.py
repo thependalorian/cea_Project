@@ -1153,3 +1153,7 @@ def get_available_agents() -> Dict[str, Dict[str, Any]]:
 async def semantic_route_message(message: str) -> Dict[str, Any]:
     """Expose semantic routing functionality"""
     return await coordinator.semantic_route_message(message)
+
+
+# Coordinator graph for LangGraph Platform deployment (already compiled)
+coordinator_graph = get_climate_assistant_graph()

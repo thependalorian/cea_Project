@@ -1656,3 +1656,6 @@ def enhanced_coordination_tool(state: ConversationState) -> ConversationState:
 enhanced_builder = StateGraph(ConversationState)
 enhanced_builder.add_node("enhanced_coordination_tool", enhanced_coordination_tool)
 enhanced_builder.set_entry_point("enhanced_coordination_tool")
+
+# Main application graph for LangGraph Platform deployment (already compiled)
+app_graph = create_enhanced_climate_assistant_graph()
