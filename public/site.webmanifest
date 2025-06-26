@@ -1,0 +1,16 @@
+{
+  "name": "Climate Economy Assistant",
+  "short_name": "CEA", 
+  "description": "Your AI-powered climate career assistant",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#B2DE26",
+  "icons": [
+    {
+      "src": "/favicon-16x16.png",
+      "sizes": "16x16", 
+      "type": "image/png"
+    }
+  ]
+}

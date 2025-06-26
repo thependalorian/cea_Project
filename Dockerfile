@@ -1,121 +1,52 @@
-# Multi-stage Dockerfile for Climate Economy Assistant FastAPI BackendV1
-# Enhanced for LangGraph Supervisor Workflow + Multi-Agent System
-# Optimized for LangGraph/LangChain + Supabase + OpenAI + Redis + Enhanced Intelligence
+# Climate Economy Assistant - Next.js Dockerfile
+# Multi-stage build for optimization
 
-# Build stage
-FROM python:3.11-slim as builder
-
+# Stage 1: Dependencies
+FROM node:18-alpine AS deps
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Install system dependencies for LangChain, compilation, and GPU support
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    curl \
-    git \
-    wget \
-    ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
+# Copy package files
+COPY package.json package-lock.json* ./
+RUN npm ci --only=production
 
-# Copy requirements first for better Docker layer caching
-COPY backendv1/requirements.txt .
+# Stage 2: Builder  
+FROM node:18-alpine AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
 
-# Install Python dependencies with enhanced caching
-RUN pip install --no-cache-dir --user -r requirements.txt
+# Set environment variables for build
+ENV NEXT_TELEMETRY_DISABLED 1
+ENV NODE_ENV production
 
-# Production stage
-FROM python:3.11-slim
+# Build the application
+RUN npm run build
 
+# Stage 3: Runner
+FROM node:18-alpine AS runner
 WORKDIR /app
 
-# Install runtime dependencies for production
-RUN apt-get update && apt-get install -y \
-    curl \
-    git \
-    ca-certificates \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
+ENV NODE_ENV production
+ENV NEXT_TELEMETRY_DISABLED 1
 
-# Copy Python packages from builder stage
-COPY --from=builder /root/.local /root/.local
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
 
-# Create non-root user for security
-RUN useradd --create-home --shell /bin/bash --user-group cea
+# Copy necessary files
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
 
-# Copy application code and configuration
-COPY backendv1/ .
-COPY langgraph.json ./langgraph.json
+# Create directories and set permissions
+RUN mkdir -p /app/.next/cache
+RUN chown -R nextjs:nodejs /app
 
-# Create necessary directories with proper permissions
-RUN mkdir -p logs .langgraph_api && \
-    chown -R cea:cea /app
+USER nextjs
 
-# Switch to non-root user
-USER cea
+EXPOSE 3000
 
-# Configure environment for enhanced functionality
-ENV PATH=/root/.local/bin:$PATH
-ENV PYTHONPATH=/app
-ENV PYTHONUNBUFFERED=1
-ENV LANGCHAIN_TRACING_V2=false
-ENV LANGCHAIN_PROJECT=climate-economy-assistant-v1
+ENV PORT 3000
+ENV HOSTNAME "0.0.0.0"
 
-# Configure LangGraph specific settings
-ENV LANGGRAPH_CONFIG_PATH=/app/langgraph.json
-ENV LANGGRAPH_API_PORT=8123
-ENV LANGGRAPH_API_HOST=0.0.0.0
-
-# Health check for container monitoring with enhanced endpoints
-HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
-    CMD curl -f http://localhost:8000/health || \
-        curl -f http://localhost:8000/ || \
-        curl -f http://localhost:8123/health || exit 1
-
-# Expose ports for FastAPI and LangGraph
-EXPOSE 8000 8123
-
-# Create entrypoint script for multi-service startup
-COPY <<EOF /app/entrypoint.sh
-#!/bin/bash
-set -e
-
-echo "🚀 Starting Climate Economy Assistant V1 with Supervisor Workflow..."
-
-# Function to start services based on mode
-start_service() {
-    case "\$1" in
-        "supervisor")
-            echo "🎯 Starting in Supervisor Workflow mode..."
-            # Start LangGraph API server for supervisor workflow
-            langgraph serve --host 0.0.0.0 --port 8123 --config ./langgraph.json &
-            LANGGRAPH_PID=\$!
-            echo "📡 LangGraph API started with PID \$LANGGRAPH_PID"
-            
-            # Start FastAPI with supervisor integration
-            uvicorn webapp:cea_app_v1 --host 0.0.0.0 --port 8000 --workers 1 --access-log
-            ;;
-        "api"|*)
-            echo "🌐 Starting in FastAPI mode..."
-            # Start FastAPI backend with enhanced features
-            uvicorn webapp:cea_app_v1 --host 0.0.0.0 --port 8000 --workers \${WORKERS:-4} --access-log
-            ;;
-    esac
-}
-
-# Check for startup mode
-MODE=\${STARTUP_MODE:-supervisor}
-echo "🔧 Startup mode: \$MODE"
-
-# Start the appropriate service
-start_service \$MODE
-EOF
-
-# Make entrypoint executable
-USER root
-RUN chmod +x /app/entrypoint.sh
-USER cea
-
-# Default entrypoint with supervisor workflow support
-ENTRYPOINT ["/app/entrypoint.sh"]
-
-# Default command - can be overridden in compose or run commands
-CMD ["supervisor"] 
+CMD ["node", "server.js"] 

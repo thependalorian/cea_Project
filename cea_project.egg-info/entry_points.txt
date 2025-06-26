@@ -1,3 +1,0 @@
-[console_scripts]
-climate-agent = backendv1.workflows.climate_supervisor:main
-pendo-agent = backendv1.workflows.pendo_supervisor:main

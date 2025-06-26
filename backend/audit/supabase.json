@@ -1,0 +1,1286 @@
+[
+    {
+      "output": "📁 TABLE: admin_permissions"
+    },
+    {
+      "output": "   ├─ created_at | TYPE: timestamp without time zone | NULLABLE: YES | DEFAULT: now()"
+    },
+    {
+      "output": "   ├─ granted_by | TYPE: uuid | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ id | TYPE: uuid | NULLABLE: NO | DEFAULT: gen_random_uuid()"
+    },
+    {
+      "output": "   ├─ permission_level | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ resource_type | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "📁 TABLE: admin_profiles"
+    },
+    {
+      "output": "   ├─ admin_notes | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ can_manage_content | TYPE: boolean | NULLABLE: YES | DEFAULT: false"
+    },
+    {
+      "output": "   ├─ can_manage_partners | TYPE: boolean | NULLABLE: YES | DEFAULT: false"
+    },
+    {
+      "output": "   ├─ can_manage_system | TYPE: boolean | NULLABLE: YES | DEFAULT: false"
+    },
+    {
+      "output": "   ├─ can_manage_users | TYPE: boolean | NULLABLE: YES | DEFAULT: false"
+    },
+    {
+      "output": "   ├─ can_view_analytics | TYPE: boolean | NULLABLE: YES | DEFAULT: false"
+    },
+    {
+      "output": "   ├─ created_at | TYPE: timestamp with time zone | NULLABLE: NO | DEFAULT: now()"
+    },
+    {
+      "output": "   ├─ department | TYPE: character varying(100) | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ direct_phone | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ email | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ emergency_contact | TYPE: jsonb | NULLABLE: YES | DEFAULT: '{}'::jsonb"
+    },
+    {
+      "output": "   ├─ full_name | TYPE: character varying(200) | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ id | TYPE: uuid | NULLABLE: NO | DEFAULT: gen_random_uuid()"
+    },
+    {
+      "output": "   ├─ last_admin_action | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ last_login | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ permissions | TYPE: jsonb | NULLABLE: YES | DEFAULT: '{}'::jsonb"
+    },
+    {
+      "output": "   ├─ phone | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ profile_completed | TYPE: boolean | NULLABLE: YES | DEFAULT: false"
+    },
+    {
+      "output": "   ├─ total_admin_actions | TYPE: integer | NULLABLE: YES | DEFAULT: 0"
+    },
+    {
+      "output": "   ├─ updated_at | TYPE: timestamp with time zone | NULLABLE: NO | DEFAULT: now()"
+    },
+    {
+      "output": "   ├─ user_id | TYPE: uuid | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "📁 TABLE: audit_logs"
+    },
+    {
+      "output": "   ├─ created_at | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: now()"
+    },
+    {
+      "output": "   ├─ details | TYPE: jsonb | NULLABLE: YES | DEFAULT: '{}'::jsonb"
+    },
+    {
+      "output": "   ├─ id | TYPE: uuid | NULLABLE: NO | DEFAULT: gen_random_uuid()"
+    },
+    {
+      "output": "   ├─ ip_address | TYPE: inet | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ new_values | TYPE: jsonb | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ old_values | TYPE: jsonb | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ record_id | TYPE: uuid | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ table_name | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ user_agent | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ user_id | TYPE: uuid | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "📁 TABLE: content_flags"
+    },
+    {
+      "output": "   ├─ admin_reviewed | TYPE: boolean | NULLABLE: YES | DEFAULT: false"
+    },
+    {
+      "output": "   ├─ content_id | TYPE: uuid | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ content_type | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ created_at | TYPE: timestamp without time zone | NULLABLE: YES | DEFAULT: now()"
+    },
+    {
+      "output": "   ├─ flag_reason | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ flagged_by | TYPE: uuid | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ id | TYPE: uuid | NULLABLE: NO | DEFAULT: gen_random_uuid()"
+    },
+    {
+      "output": "📁 TABLE: conversation_analytics"
+    },
+    {
+      "output": "   ├─ analyzed_at | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: now()"
+    },
+    {
+      "output": "   ├─ average_response_time_ms | TYPE: real | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ conversation_id | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ conversation_outcome | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ created_at | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: now()"
+    },
+    {
+      "output": "   ├─ follow_up_actions_taken | TYPE: integer | NULLABLE: YES | DEFAULT: 0"
+    },
+    {
+      "output": "   ├─ goals_achieved | TYPE: boolean | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ id | TYPE: uuid | NULLABLE: NO | DEFAULT: uuid_generate_v4()"
+    },
+    {
+      "output": "   ├─ jobs_viewed | TYPE: ARRAY | NULLABLE: YES | DEFAULT: '{}'::text[]"
+    },
+    {
+      "output": "   ├─ messages_received | TYPE: integer | NULLABLE: YES | DEFAULT: 0"
+    },
+    {
+      "output": "   ├─ messages_sent | TYPE: integer | NULLABLE: YES | DEFAULT: 0"
+    },
+    {
+      "output": "   ├─ next_steps | TYPE: jsonb | NULLABLE: YES | DEFAULT: '[]'::jsonb"
+    },
+    {
+      "output": "   ├─ partners_contacted | TYPE: ARRAY | NULLABLE: YES | DEFAULT: '{}'::text[]"
+    },
+    {
+      "output": "   ├─ resources_accessed | TYPE: ARRAY | NULLABLE: YES | DEFAULT: '{}'::text[]"
+    },
+    {
+      "output": "   ├─ session_duration_seconds | TYPE: integer | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ topics_discussed | TYPE: ARRAY | NULLABLE: YES | DEFAULT: '{}'::text[]"
+    },
+    {
+      "output": "   ├─ total_tokens_consumed | TYPE: integer | NULLABLE: YES | DEFAULT: 0"
+    },
+    {
+      "output": "   ├─ updated_at | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: now()"
+    },
+    {
+      "output": "   ├─ user_id | TYPE: uuid | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ user_satisfaction_score | TYPE: integer | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "📁 TABLE: conversation_feedback"
+    },
+    {
+      "output": "   ├─ conversation_id | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ correction | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ created_at | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ feedback_type | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ flag_reason | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ id | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ message_id | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ metadata | TYPE: jsonb | NULLABLE: YES | DEFAULT: '{}'::jsonb"
+    },
+    {
+      "output": "   ├─ rating | TYPE: integer | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ user_id | TYPE: uuid | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "📁 TABLE: conversation_interrupts"
+    },
+    {
+      "output": "   ├─ context | TYPE: jsonb | NULLABLE: YES | DEFAULT: '{}'::jsonb"
+    },
+    {
+      "output": "   ├─ conversation_id | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ created_at | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ escalation_reason | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ id | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ job_id | TYPE: uuid | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ match_score | TYPE: numeric | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ priority | TYPE: text | NULLABLE: NO | DEFAULT: 'medium'::text"
+    },
+    {
+      "output": "   ├─ resolution | TYPE: jsonb | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ resolved_at | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ review_notes | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ reviewer_id | TYPE: uuid | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ status | TYPE: text | NULLABLE: NO | DEFAULT: 'pending'::text"
+    },
+    {
+      "output": "   ├─ supervisor_approval_required | TYPE: boolean | NULLABLE: YES | DEFAULT: false"
+    },
+    {
+      "output": "   ├─ type | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "📁 TABLE: conversation_messages"
+    },
+    {
+      "output": "   ├─ content_type | TYPE: text | NULLABLE: YES | DEFAULT: 'text'::text"
+    },
+    {
+      "output": "   ├─ conversation_id | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ created_at | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ embedding | TYPE: USER-DEFINED | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ error_message | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ id | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ metadata | TYPE: jsonb | NULLABLE: YES | DEFAULT: '{}'::jsonb"
+    },
+    {
+      "output": "   ├─ processed | TYPE: boolean | NULLABLE: YES | DEFAULT: false"
+    },
+    {
+      "output": "   ├─ role | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ specialist_type | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ updated_at | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "📁 TABLE: conversations"
+    },
+    {
+      "output": "   ├─ conversation_type | TYPE: text | NULLABLE: YES | DEFAULT: 'general'::text"
+    },
+    {
+      "output": "   ├─ created_at | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ description | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ ended_at | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ id | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ initial_query | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ last_activity | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ message_count | TYPE: integer | NULLABLE: YES | DEFAULT: 0"
+    },
+    {
+      "output": "   ├─ session_metadata | TYPE: jsonb | NULLABLE: YES | DEFAULT: '{}'::jsonb"
+    },
+    {
+      "output": "   ├─ status | TYPE: text | NULLABLE: YES | DEFAULT: 'active'::text"
+    },
+    {
+      "output": "   ├─ thread_id | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ title | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ total_tokens_used | TYPE: integer | NULLABLE: YES | DEFAULT: 0"
+    },
+    {
+      "output": "   ├─ updated_at | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ user_id | TYPE: uuid | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "📁 TABLE: credential_evaluation"
+    },
+    {
+      "output": "   ├─ credential_type | TYPE: character varying(100) | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ evaluation_status | TYPE: character varying(20) | NULLABLE: YES | DEFAULT: 'pending'::character varying"
+    },
+    {
+      "output": "   ├─ id | TYPE: uuid | NULLABLE: NO | DEFAULT: gen_random_uuid()"
+    },
+    {
+      "output": "   ├─ issuing_country | TYPE: character varying(3) | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ updated_at | TYPE: timestamp with time zone | NULLABLE: NO | DEFAULT: now()"
+    },
+    {
+      "output": "   ├─ us_equivalent | TYPE: character varying(200) | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ user_id | TYPE: uuid | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "📁 TABLE: education_programs"
+    },
+    {
+      "output": "   ├─ application_url | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ certification_offered | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ climate_focus | TYPE: ARRAY | NULLABLE: YES | DEFAULT: '{}'::text[]"
+    },
+    {
+      "output": "   ├─ contact_info | TYPE: jsonb | NULLABLE: YES | DEFAULT: '{}'::jsonb"
+    },
+    {
+      "output": "   ├─ cost | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ created_at | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: now()"
+    },
+    {
+      "output": "   ├─ description | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ duration | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ end_date | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ format | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ id | TYPE: uuid | NULLABLE: NO | DEFAULT: uuid_generate_v4()"
+    },
+    {
+      "output": "   ├─ is_active | TYPE: boolean | NULLABLE: YES | DEFAULT: true"
+    },
+    {
+      "output": "   ├─ partner_id | TYPE: uuid | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ prerequisites | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ program_name | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ program_type | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ skills_taught | TYPE: ARRAY | NULLABLE: YES | DEFAULT: '{}'::text[]"
+    },
+    {
+      "output": "   ├─ start_date | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ updated_at | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: now()"
+    },
+    {
+      "output": "📁 TABLE: job_listings"
+    },
+    {
+      "output": "   ├─ application_url | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ benefits | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ climate_focus | TYPE: ARRAY | NULLABLE: YES | DEFAULT: '{}'::text[]"
+    },
+    {
+      "output": "   ├─ created_at | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: now()"
+    },
+    {
+      "output": "   ├─ description | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ employment_type | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ experience_level | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ expires_at | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ id | TYPE: uuid | NULLABLE: NO | DEFAULT: uuid_generate_v4()"
+    },
+    {
+      "output": "   ├─ is_active | TYPE: boolean | NULLABLE: YES | DEFAULT: true"
+    },
+    {
+      "output": "   ├─ location | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ partner_id | TYPE: uuid | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ requirements | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ responsibilities | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ salary_range | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ skills_required | TYPE: ARRAY | NULLABLE: YES | DEFAULT: '{}'::text[]"
+    },
+    {
+      "output": "   ├─ title | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ updated_at | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: now()"
+    },
+    {
+      "output": "📁 TABLE: job_seeker_profiles"
+    },
+    {
+      "output": "   ├─ climate_focus | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ climate_focus_areas | TYPE: jsonb | NULLABLE: YES | DEFAULT: '[]'::jsonb"
+    },
+    {
+      "output": "   ├─ climate_interests | TYPE: jsonb | NULLABLE: YES | DEFAULT: '[]'::jsonb"
+    },
+    {
+      "output": "   ├─ created_at | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: now()"
+    },
+    {
+      "output": "   ├─ current_title | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ desired_roles | TYPE: jsonb | NULLABLE: YES | DEFAULT: '[]'::jsonb"
+    },
+    {
+      "output": "   ├─ email | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ employment_types | TYPE: jsonb | NULLABLE: YES | DEFAULT: '[]'::jsonb"
+    },
+    {
+      "output": "   ├─ experience_level | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ full_name | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ id | TYPE: uuid | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ last_login | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ location | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ organization_name | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ organization_type | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ phone | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ preferences_updated_at | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ preferred_locations | TYPE: jsonb | NULLABLE: YES | DEFAULT: '[]'::jsonb"
+    },
+    {
+      "output": "   ├─ profile_completed | TYPE: boolean | NULLABLE: YES | DEFAULT: false"
+    },
+    {
+      "output": "   ├─ remote_work_preference | TYPE: text | NULLABLE: YES | DEFAULT: 'hybrid'::text"
+    },
+    {
+      "output": "   ├─ resume_filename | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ resume_storage_path | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ resume_uploaded_at | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ salary_range_max | TYPE: integer | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ salary_range_min | TYPE: integer | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ updated_at | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: now()"
+    },
+    {
+      "output": "   ├─ user_id | TYPE: uuid | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ verified | TYPE: boolean | NULLABLE: YES | DEFAULT: false"
+    },
+    {
+      "output": "📁 TABLE: knowledge_resources"
+    },
+    {
+      "output": "   ├─ categories | TYPE: ARRAY | NULLABLE: YES | DEFAULT: '{}'::text[]"
+    },
+    {
+      "output": "   ├─ climate_sectors | TYPE: ARRAY | NULLABLE: YES | DEFAULT: '{}'::text[]"
+    },
+    {
+      "output": "   ├─ content | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ content_difficulty | TYPE: text | NULLABLE: YES | DEFAULT: 'intermediate'::text"
+    },
+    {
+      "output": "   ├─ content_type | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ created_at | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: now()"
+    },
+    {
+      "output": "   ├─ description | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ domain | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ embedding | TYPE: USER-DEFINED | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ file_path | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ id | TYPE: uuid | NULLABLE: NO | DEFAULT: uuid_generate_v4()"
+    },
+    {
+      "output": "   ├─ is_published | TYPE: boolean | NULLABLE: YES | DEFAULT: true"
+    },
+    {
+      "output": "   ├─ metadata | TYPE: jsonb | NULLABLE: YES | DEFAULT: '{}'::jsonb"
+    },
+    {
+      "output": "   ├─ partner_id | TYPE: uuid | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ skill_categories | TYPE: ARRAY | NULLABLE: YES | DEFAULT: '{}'::text[]"
+    },
+    {
+      "output": "   ├─ source_url | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ tags | TYPE: ARRAY | NULLABLE: YES | DEFAULT: '{}'::text[]"
+    },
+    {
+      "output": "   ├─ target_audience | TYPE: ARRAY | NULLABLE: YES | DEFAULT: '{}'::text[]"
+    },
+    {
+      "output": "   ├─ title | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ topics | TYPE: ARRAY | NULLABLE: YES | DEFAULT: '{}'::text[]"
+    },
+    {
+      "output": "   ├─ updated_at | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: now()"
+    },
+    {
+      "output": "📁 TABLE: message_feedback"
+    },
+    {
+      "output": "   ├─ conversation_id | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ correction | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ created_at | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ feedback_type | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ id | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ message_id | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ rating | TYPE: integer | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ user_id | TYPE: uuid | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "📁 TABLE: mos_translation"
+    },
+    {
+      "output": "   ├─ civilian_equivalents | TYPE: ARRAY | NULLABLE: YES | DEFAULT: '{}'::text[]"
+    },
+    {
+      "output": "   ├─ created_at | TYPE: timestamp with time zone | NULLABLE: NO | DEFAULT: now()"
+    },
+    {
+      "output": "   ├─ id | TYPE: uuid | NULLABLE: NO | DEFAULT: gen_random_uuid()"
+    },
+    {
+      "output": "   ├─ mos_code | TYPE: character varying(10) | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ mos_title | TYPE: character varying(300) | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ transferable_skills | TYPE: ARRAY | NULLABLE: YES | DEFAULT: '{}'::text[]"
+    },
+    {
+      "output": "   ├─ updated_at | TYPE: timestamp with time zone | NULLABLE: NO | DEFAULT: now()"
+    },
+    {
+      "output": "📁 TABLE: partner_match_results"
+    },
+    {
+      "output": "   ├─ approved_at | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ approved_by | TYPE: uuid | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ auto_approved | TYPE: boolean | NULLABLE: YES | DEFAULT: false"
+    },
+    {
+      "output": "   ├─ candidate_id | TYPE: uuid | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ created_at | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: now()"
+    },
+    {
+      "output": "   ├─ id | TYPE: uuid | NULLABLE: NO | DEFAULT: gen_random_uuid()"
+    },
+    {
+      "output": "   ├─ job_id | TYPE: uuid | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ match_score | TYPE: numeric | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ matching_skills | TYPE: ARRAY | NULLABLE: YES | DEFAULT: '{}'::text[]"
+    },
+    {
+      "output": "   ├─ recommendations | TYPE: jsonb | NULLABLE: YES | DEFAULT: '[]'::jsonb"
+    },
+    {
+      "output": "   ├─ requires_human_review | TYPE: boolean | NULLABLE: YES | DEFAULT: false"
+    },
+    {
+      "output": "   ├─ reviewed_at | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ reviewer_id | TYPE: uuid | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ skill_gaps | TYPE: ARRAY | NULLABLE: YES | DEFAULT: '{}'::text[]"
+    },
+    {
+      "output": "   ├─ status | TYPE: text | NULLABLE: YES | DEFAULT: 'pending'::text"
+    },
+    {
+      "output": "   ├─ threshold_met | TYPE: boolean | NULLABLE: NO | DEFAULT: false"
+    },
+    {
+      "output": "   ├─ updated_at | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: now()"
+    },
+    {
+      "output": "📁 TABLE: partner_profiles"
+    },
+    {
+      "output": "   ├─ careers_page_url | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ climate_focus | TYPE: ARRAY | NULLABLE: YES | DEFAULT: '{}'::text[]"
+    },
+    {
+      "output": "   ├─ created_at | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: now()"
+    },
+    {
+      "output": "   ├─ description | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ email | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ employee_count | TYPE: integer | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ events_calendar_url | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ facebook_url | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ founded_year | TYPE: integer | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ full_name | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ has_job_board | TYPE: boolean | NULLABLE: YES | DEFAULT: false"
+    },
+    {
+      "output": "   ├─ has_mobile_app | TYPE: boolean | NULLABLE: YES | DEFAULT: false"
+    },
+    {
+      "output": "   ├─ has_podcast | TYPE: boolean | NULLABLE: YES | DEFAULT: false"
+    },
+    {
+      "output": "   ├─ has_resource_library | TYPE: boolean | NULLABLE: YES | DEFAULT: false"
+    },
+    {
+      "output": "   ├─ headquarters | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ headquarters_location | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ hiring_actively | TYPE: boolean | NULLABLE: YES | DEFAULT: false"
+    },
+    {
+      "output": "   ├─ hosts_events | TYPE: boolean | NULLABLE: YES | DEFAULT: false"
+    },
+    {
+      "output": "   ├─ id | TYPE: uuid | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ industries | TYPE: jsonb | NULLABLE: YES | DEFAULT: '[]'::jsonb"
+    },
+    {
+      "output": "   ├─ instagram_handle | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ internship_programs | TYPE: boolean | NULLABLE: YES | DEFAULT: false"
+    },
+    {
+      "output": "   ├─ last_login | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ linkedin_url | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ mission_statement | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ newsletter_signup_url | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ offers_certification | TYPE: boolean | NULLABLE: YES | DEFAULT: false"
+    },
+    {
+      "output": "   ├─ offers_funding | TYPE: boolean | NULLABLE: YES | DEFAULT: false"
+    },
+    {
+      "output": "   ├─ offers_mentorship | TYPE: boolean | NULLABLE: YES | DEFAULT: false"
+    },
+    {
+      "output": "   ├─ offers_virtual_tours | TYPE: boolean | NULLABLE: YES | DEFAULT: false"
+    },
+    {
+      "output": "   ├─ offers_webinars | TYPE: boolean | NULLABLE: YES | DEFAULT: false"
+    },
+    {
+      "output": "   ├─ organization_name | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ organization_size | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ organization_type | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ partnership_level | TYPE: text | NULLABLE: YES | DEFAULT: 'standard'::text"
+    },
+    {
+      "output": "   ├─ partnership_start_date | TYPE: date | NULLABLE: YES | DEFAULT: CURRENT_DATE"
+    },
+    {
+      "output": "   ├─ phone | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ platform_login_url | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ podcast_url | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ profile_completed | TYPE: boolean | NULLABLE: YES | DEFAULT: false"
+    },
+    {
+      "output": "   ├─ services_offered | TYPE: jsonb | NULLABLE: YES | DEFAULT: '[]'::jsonb"
+    },
+    {
+      "output": "   ├─ student_portal_url | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ training_programs | TYPE: jsonb | NULLABLE: YES | DEFAULT: '[]'::jsonb"
+    },
+    {
+      "output": "   ├─ twitter_handle | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ updated_at | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: now()"
+    },
+    {
+      "output": "   ├─ verification_date | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ verified | TYPE: boolean | NULLABLE: YES | DEFAULT: false"
+    },
+    {
+      "output": "   ├─ website | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ workforce_portal_url | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ youtube_url | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "📁 TABLE: profiles"
+    },
+    {
+      "output": "   ├─ contact_info | TYPE: jsonb | NULLABLE: YES | DEFAULT: '{}'::jsonb"
+    },
+    {
+      "output": "   ├─ created_at | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: now()"
+    },
+    {
+      "output": "   ├─ description | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ email | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ first_name | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ id | TYPE: uuid | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ last_name | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ organization_name | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ organization_type | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ partnership_level | TYPE: text | NULLABLE: YES | DEFAULT: 'standard'::text"
+    },
+    {
+      "output": "   ├─ role | TYPE: text | NULLABLE: YES | DEFAULT: 'user'::text"
+    },
+    {
+      "output": "   ├─ updated_at | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: now()"
+    },
+    {
+      "output": "   ├─ user_type | TYPE: text | NULLABLE: YES | DEFAULT: 'user'::text"
+    },
+    {
+      "output": "   ├─ verified | TYPE: boolean | NULLABLE: YES | DEFAULT: false"
+    },
+    {
+      "output": "   ├─ website | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "📁 TABLE: resource_views"
+    },
+    {
+      "output": "   ├─ interaction_metadata | TYPE: jsonb | NULLABLE: YES | DEFAULT: '{}'::jsonb"
+    },
+    {
+      "output": "   ├─ referrer | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ resource_id | TYPE: uuid | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ resource_type | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ session_id | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ user_id | TYPE: uuid | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ viewed_at | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: now()"
+    },
+    {
+      "output": "📁 TABLE: resume_chunks"
+    },
+    {
+      "output": "   ├─ chunk_type | TYPE: text | NULLABLE: YES | DEFAULT: 'content'::text"
+    },
+    {
+      "output": "   ├─ content | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ created_at | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: now()"
+    },
+    {
+      "output": "   ├─ embedding | TYPE: USER-DEFINED | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ id | TYPE: uuid | NULLABLE: NO | DEFAULT: gen_random_uuid()"
+    },
+    {
+      "output": "   ├─ metadata | TYPE: jsonb | NULLABLE: YES | DEFAULT: '{}'::jsonb"
+    },
+    {
+      "output": "   ├─ page_number | TYPE: integer | NULLABLE: YES | DEFAULT: 0"
+    },
+    {
+      "output": "   ├─ resume_id | TYPE: uuid | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ updated_at | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: now()"
+    },
+    {
+      "output": "📁 TABLE: resumes"
+    },
+    {
+      "output": "   ├─ climate_relevance_score | TYPE: numeric | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ content | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ content_embedding | TYPE: USER-DEFINED | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ content_type | TYPE: character varying(100) | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ created_at | TYPE: timestamp with time zone | NULLABLE: NO | DEFAULT: now()"
+    },
+    {
+      "output": "   ├─ education_level | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ embedding | TYPE: USER-DEFINED | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ experience_years | TYPE: integer | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ file_name | TYPE: character varying(255) | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ file_path | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ file_size | TYPE: bigint | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ github_url | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ id | TYPE: uuid | NULLABLE: NO | DEFAULT: gen_random_uuid()"
+    },
+    {
+      "output": "   ├─ industry_background | TYPE: ARRAY | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ linkedin_url | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ personal_website | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ processed | TYPE: boolean | NULLABLE: YES | DEFAULT: false"
+    },
+    {
+      "output": "   ├─ processing_error | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ processing_metadata | TYPE: jsonb | NULLABLE: YES | DEFAULT: '{}'::jsonb"
+    },
+    {
+      "output": "   ├─ processing_status | TYPE: text | NULLABLE: YES | DEFAULT: 'pending'::text"
+    },
+    {
+      "output": "   ├─ skills_extracted | TYPE: jsonb | NULLABLE: YES | DEFAULT: '[]'::jsonb"
+    },
+    {
+      "output": "   ├─ updated_at | TYPE: timestamp with time zone | NULLABLE: NO | DEFAULT: now()"
+    },
+    {
+      "output": "   ├─ user_id | TYPE: uuid | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "📁 TABLE: role_requirements"
+    },
+    {
+      "output": "   ├─ created_at | TYPE: timestamp with time zone | NULLABLE: NO | DEFAULT: now()"
+    },
+    {
+      "output": "   ├─ experience_level | TYPE: character varying(50) | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ id | TYPE: uuid | NULLABLE: NO | DEFAULT: gen_random_uuid()"
+    },
+    {
+      "output": "   ├─ minimum_years | TYPE: integer | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ preferred_skills | TYPE: ARRAY | NULLABLE: YES | DEFAULT: '{}'::text[]"
+    },
+    {
+      "output": "   ├─ required_skills | TYPE: ARRAY | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ role_title | TYPE: character varying(200) | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ salary_range | TYPE: jsonb | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ updated_at | TYPE: timestamp with time zone | NULLABLE: NO | DEFAULT: now()"
+    },
+    {
+      "output": "📁 TABLE: security_audit_logs"
+    },
+    {
+      "output": "   ├─ details | TYPE: jsonb | NULLABLE: YES | DEFAULT: '{}'::jsonb"
+    },
+    {
+      "output": "   ├─ endpoint | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ event_type | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ id | TYPE: uuid | NULLABLE: NO | DEFAULT: gen_random_uuid()"
+    },
+    {
+      "output": "   ├─ ip_address | TYPE: inet | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ request_method | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ status_code | TYPE: integer | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ timestamp | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: now()"
+    },
+    {
+      "output": "   ├─ user_agent | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ user_id | TYPE: uuid | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "📁 TABLE: skills_mapping"
+    },
+    {
+      "output": "   ├─ category | TYPE: character varying(100) | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ climate_relevance | TYPE: numeric | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ created_at | TYPE: timestamp with time zone | NULLABLE: NO | DEFAULT: now()"
+    },
+    {
+      "output": "   ├─ id | TYPE: uuid | NULLABLE: NO | DEFAULT: gen_random_uuid()"
+    },
+    {
+      "output": "   ├─ keywords | TYPE: ARRAY | NULLABLE: YES | DEFAULT: '{}'::text[]"
+    },
+    {
+      "output": "   ├─ mapped_roles | TYPE: ARRAY | NULLABLE: YES | DEFAULT: '{}'::text[]"
+    },
+    {
+      "output": "   ├─ skill_name | TYPE: character varying(200) | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ updated_at | TYPE: timestamp with time zone | NULLABLE: NO | DEFAULT: now()"
+    },
+    {
+      "output": "📁 TABLE: user_interests"
+    },
+    {
+      "output": "   ├─ climate_focus | TYPE: ARRAY | NULLABLE: YES | DEFAULT: '{}'::text[]"
+    },
+    {
+      "output": "   ├─ created_at | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: now()"
+    },
+    {
+      "output": "   ├─ data_sharing_enabled | TYPE: boolean | NULLABLE: YES | DEFAULT: false"
+    },
+    {
+      "output": "   ├─ email_notifications | TYPE: boolean | NULLABLE: YES | DEFAULT: true"
+    },
+    {
+      "output": "   ├─ employment_preferences | TYPE: jsonb | NULLABLE: YES | DEFAULT: '{}'::jsonb"
+    },
+    {
+      "output": "   ├─ id | TYPE: uuid | NULLABLE: NO | DEFAULT: uuid_generate_v4()"
+    },
+    {
+      "output": "   ├─ job_alerts_enabled | TYPE: boolean | NULLABLE: YES | DEFAULT: true"
+    },
+    {
+      "output": "   ├─ language_preference | TYPE: text | NULLABLE: YES | DEFAULT: 'en'::text"
+    },
+    {
+      "output": "   ├─ marketing_emails_enabled | TYPE: boolean | NULLABLE: YES | DEFAULT: true"
+    },
+    {
+      "output": "   ├─ newsletter_enabled | TYPE: boolean | NULLABLE: YES | DEFAULT: true"
+    },
+    {
+      "output": "   ├─ partner_updates_enabled | TYPE: boolean | NULLABLE: YES | DEFAULT: true"
+    },
+    {
+      "output": "   ├─ preferred_location | TYPE: text | NULLABLE: YES | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ skills_to_develop | TYPE: ARRAY | NULLABLE: YES | DEFAULT: '{}'::text[]"
+    },
+    {
+      "output": "   ├─ social_profile_analysis_enabled | TYPE: boolean | NULLABLE: YES | DEFAULT: true"
+    },
+    {
+      "output": "   ├─ target_roles | TYPE: ARRAY | NULLABLE: YES | DEFAULT: '{}'::text[]"
+    },
+    {
+      "output": "   ├─ theme_preference | TYPE: text | NULLABLE: YES | DEFAULT: 'system'::text"
+    },
+    {
+      "output": "   ├─ timezone | TYPE: text | NULLABLE: YES | DEFAULT: 'UTC'::text"
+    },
+    {
+      "output": "   ├─ updated_at | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: now()"
+    },
+    {
+      "output": "   ├─ user_id | TYPE: uuid | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "📁 TABLE: users"
+    },
+    {
+      "output": "   ├─ email | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ id | TYPE: uuid | NULLABLE: NO | DEFAULT: gen_random_uuid()"
+    },
+    {
+      "output": "   ├─ password_hash | TYPE: text | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ updated_at | TYPE: timestamp with time zone | NULLABLE: YES | DEFAULT: now()"
+    },
+    {
+      "output": "📁 TABLE: workflow_sessions"
+    },
+    {
+      "output": "   ├─ data | TYPE: jsonb | NULLABLE: YES | DEFAULT: '{}'::jsonb"
+    },
+    {
+      "output": "   ├─ id | TYPE: uuid | NULLABLE: NO | DEFAULT: gen_random_uuid()"
+    },
+    {
+      "output": "   ├─ session_id | TYPE: uuid | NULLABLE: NO | DEFAULT: gen_random_uuid()"
+    },
+    {
+      "output": "   ├─ status | TYPE: character varying(20) | NULLABLE: YES | DEFAULT: 'active'::character varying"
+    },
+    {
+      "output": "   ├─ updated_at | TYPE: timestamp with time zone | NULLABLE: NO | DEFAULT: now()"
+    },
+    {
+      "output": "   ├─ user_id | TYPE: uuid | NULLABLE: NO | DEFAULT: NULL"
+    },
+    {
+      "output": "   ├─ workflow_type | TYPE: character varying(50) | NULLABLE: NO | DEFAULT: NULL"
+    }
+  ]

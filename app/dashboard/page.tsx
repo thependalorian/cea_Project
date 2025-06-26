@@ -1,316 +1,289 @@
 /**
- * Dashboard Page - Climate Economy Assistant
- * 2025 Modern Design Standards with iOS-Inspired Elements and WCAG Compliance
- * Location: app/dashboard/page.tsx
+ * Dashboard Page Component - ACT Brand Compliant
+ * Purpose: Main dashboard implementing ACT brand guidelines
+ * Location: /app/dashboard/page.tsx
+ * 
+ * Brand Compliance:
+ * - Uses ACT navigation component
+ * - Implements proper typography hierarchy
+ * - Follows ACT spacing system (base units)
+ * - Uses exact color palette
+ * - Responsive design with mobile-first approach
+ * - Accessibility compliant
  */
 
-'use client';
+'use client'
 
-import { AuthGuard } from '@/components/auth/AuthGuard';
-import { useAuth } from '@/contexts/auth-context';
-import { ACTButton } from '@/components/ACTButton';
-import { ACTCard } from '@/components/ACTCard';
-import { ACTFrameElement } from '@/components/ACTFrameElement';
-import { SimpleLayout } from '@/components/SimpleLayout';
-import { useDashboardData } from '@/hooks/use-dashboard-data';
-import { LoadingDashboard } from '@/components/ui/LoadingStates';
-import { 
-  User, 
-  Briefcase, 
-  Users, 
-  TrendingUp, 
-  MessageSquare,
-  FileText,
-  Settings,
-  Bell,
-  Calendar,
-  Target,
-  Zap,
-  Globe,
-  ArrowRight,
-  Plus,
-  Search,
-  Filter,
-  BarChart3,
-  Clock,
-  CheckCircle2,
-  Star,
-  Award,
-  Activity,
-  Bookmark,
-  Eye,
-  Send,
-  Download,
-  ChevronRight
-} from 'lucide-react';
+import { useState } from 'react'
+import Navigation from '@/components/shared/Navigation'
+import { AgentSelector } from '@/components/AgentSelector'
+import { ChatInterface } from '@/components/ChatInterface'
+import { useAgents, useAgentTeams } from '@/hooks/useAgents'
+import { LoadingSpinner } from '@/components/LoadingSpinner'
+import { BrandFrame } from '@/components/brand/BrandFrame'
 
-// Mock component for auth status display
-function AuthStatusDisplay() {
-  const { user } = useAuth();
-  
-  if (!user) return null;
-  
-  return (
-    <div className="mt-8 p-4 bg-spring-green/5 rounded-xl border border-spring-green/20">
-      <p className="text-sm text-midnight-forest/70">
-        Welcome back! You're logged in as <span className="font-semibold capitalize text-spring-green">{user.email}</span>
-      </p>
-    </div>
-  );
-}
+export default function Dashboard() {
+  const [selectedAgent, setSelectedAgent] = useState<string>('')
+  const [view, setView] = useState<'agents' | 'chat'>('agents')
+  const { agents, loading, error } = useAgents()
+  const { teams } = useAgentTeams()
 
-function DashboardContent() {
-  const { user } = useAuth();
-  console.log('DashboardContent rendered, user:', user?.email);
-
-  // Real data from API - no more mock data
-  const { data: dashboardStats, loading, error } = useDashboardData('job_seeker');
-  console.log('Dashboard data:', { loading, error, hasData: !!dashboardStats });
-
-  // Handle loading state
   if (loading) {
-    console.log('DashboardContent showing loading state');
     return (
-      <SimpleLayout>
-        <div className="min-h-screen bg-gradient-to-br from-sand-gray/30 via-white to-seafoam-blue/20">
-          <div className="max-w-7xl mx-auto py-16 px-6">
-            <LoadingDashboard />
+      <div className="min-h-screen bg-white">
+        <Navigation />
+        <div className="act-loading">
+          <div className="text-center animate-on-scroll">
+            <LoadingSpinner />
+            <p className="act-body text-moss-green mt-act-1">Loading your climate career specialists...</p>
           </div>
         </div>
-      </SimpleLayout>
-    );
+      </div>
+    )
   }
 
-  // Handle error state
   if (error) {
-    console.log('DashboardContent showing error state:', error);
     return (
-      <SimpleLayout>
-        <div className="min-h-screen bg-gradient-to-br from-sand-gray/30 via-white to-seafoam-blue/20">
-          <div className="max-w-7xl mx-auto py-16 px-6">
-            <div className="text-center">
-              <div className="text-red-600 mb-4">Error loading dashboard data</div>
-              <p className="text-midnight-forest/70">{error}</p>
-              <ACTButton 
-                variant="outline" 
-                onClick={() => window.location.reload()}
-                className="mt-4"
-              >
-                Retry
-              </ACTButton>
+      <div className="min-h-screen bg-white">
+        <Navigation />
+        <div className="act-section">
+          <div className="act-content">
+            <div className="max-w-md mx-auto text-center">
+              <div className="act-card border-2 border-moss-green-60">
+                <div className="flex items-center gap-act-1 mb-act-1">
+                  <svg 
+                    className="w-6 h-6 text-moss-green-60 flex-shrink-0" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      strokeWidth="2" 
+                      d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" 
+                    />
+                  </svg>
+                  <span className="act-h4">Error Loading Agents</span>
+                </div>
+                <p className="act-body text-moss-green">{error}</p>
+              </div>
             </div>
           </div>
         </div>
-      </SimpleLayout>
-    );
+      </div>
+    )
   }
 
-  // Use real data or fallback to zeros
-  const currentStats = dashboardStats || {
-    applications: 0,
-    interviews: 0,
-    saved_jobs: 0,
-    profile_views: 0,
-    response_rate: 0,
-    active_searches: 0
-  };
+  const handleAgentSelect = (agentId: string) => {
+    setSelectedAgent(agentId)
+    setView('chat')
+  }
 
-  console.log('DashboardContent rendering main content');
+  const handleBackToAgents = () => {
+    setView('agents')
+    setSelectedAgent('')
+  }
+
   return (
-    <SimpleLayout>
-      <div className="min-h-screen bg-gradient-to-br from-sand-gray/30 via-white to-seafoam-blue/20">
-        
-        {/* Enhanced Hero Section with Better Visual Hierarchy */}
-        <section className="relative py-16 px-6 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-midnight-forest/5 via-transparent to-spring-green/5"></div>
-          <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-spring-green/10 to-transparent rounded-full -translate-y-48 translate-x-48"></div>
-          
-          <div className="relative max-w-7xl mx-auto">
-            <div className="flex flex-col lg:flex-row items-start justify-between gap-8">
-              <div className="flex-1">
-                <div className="flex items-center space-x-4 mb-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-spring-green to-moss-green rounded-2xl flex items-center justify-center shadow-ios-normal">
-                    <Target className="w-8 h-8 text-white" />
-                  </div>
-                  <div>
-                    <h1 className="text-4xl lg:text-5xl font-helvetica font-bold text-midnight-forest leading-tight">
-                      Welcome Back!
-                    </h1>
-                    <p className="text-lg font-inter text-midnight-forest/70">
-                      Dashboard • Track your climate economy progress
-                    </p>
-                  </div>
-                </div>
-                
-                <p className="text-xl font-inter text-midnight-forest/60 mb-8 max-w-2xl leading-relaxed">
-                  Your personalized climate economy dashboard. Track progress, discover opportunities, and accelerate your impact in the clean energy transition.
+    <div className="min-h-screen bg-white">
+      {/* ACT Brand Navigation */}
+      <Navigation />
+
+      {/* Page Header */}
+      <section className="act-section bg-gradient-seafoam">
+        <div className="act-content">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-act-2 animate-on-scroll">
+            <div className="text-center lg:text-left">
+              <h1 className="act-h1 mb-act-1">
+                Climate Career Dashboard
+              </h1>
+              <p className="act-body-large text-moss-green">
+                Connect with specialized AI agents for your climate career journey
+              </p>
+            </div>
+            {view === 'chat' && (
+              <button
+                onClick={handleBackToAgents}
+                className="act-btn act-btn-secondary"
+                aria-label="Return to agent selection"
+              >
+                ← Back to Agents
+              </button>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Statistics Banner */}
+      {agents && view === 'agents' && (
+        <section className="act-section bg-sand-gray-10" aria-label="Dashboard statistics">
+          <div className="act-content">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-act-2 animate-on-scroll">
+              <div className="act-card text-center">
+                <div className="act-caption text-moss-green mb-act-0.5">Total Agents</div>
+                <div className="act-h1 text-spring-green mb-act-0.5">{agents.total_agents}</div>
+                <div className="act-body-small text-moss-green">Ready to assist you</div>
+              </div>
+              <div className="act-card text-center">
+                <div className="act-caption text-moss-green mb-act-0.5">Specialized Teams</div>
+                <div className="act-h1 text-spring-green mb-act-0.5">{agents.total_teams}</div>
+                <div className="act-body-small text-moss-green">Different expertise areas</div>
+              </div>
+              <div className="act-card text-center">
+                <div className="act-caption text-moss-green mb-act-0.5">Most Popular</div>
+                <div className="act-h1 text-spring-green mb-act-0.5">Pendo</div>
+                <div className="act-body-small text-moss-green">Climate policy coordinator</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Main Content */}
+      <section className="act-section">
+        <div className="act-content">
+          {view === 'agents' ? (
+            <div className="space-y-act-4">
+              {/* Welcome Section */}
+              <div className="text-center max-w-4xl mx-auto animate-on-scroll">
+                <h2 className="act-h2 mb-act-1">
+                  Choose Your Climate Career Specialist
+                </h2>
+                <p className="act-body text-moss-green mb-act-2">
+                  Our team of {agents?.total_agents} AI specialists are organized into {agents?.total_teams} teams, 
+                  each with unique expertise to help you navigate the Massachusetts climate economy.
                 </p>
                 
-                <div className="flex flex-wrap gap-4">
-                  <ACTButton 
-                    variant="primary" 
-                    size="lg"
-                    icon={<ArrowRight className="w-5 h-5" />}
-                    iconPosition="right"
-                    href="/chat"
-                    className="shadow-ios-normal hover:shadow-ios-prominent"
-                  >
-                    Start AI Chat
-                  </ACTButton>
-                  <ACTButton 
-                    variant="outline" 
-                    size="lg"
-                    icon={<MessageSquare className="w-5 h-5" />}
-                    href="/chat"
-                    className="border-spring-green/30 hover:border-spring-green"
-                  >
-                    AI Assistant
-                  </ACTButton>
-                </div>
-              </div>
-              
-              <div className="flex-shrink-0">
-                <ACTFrameElement variant="brackets" className="p-8">
-                  <div className="text-center">
-                    <div className="text-4xl font-helvetica font-bold text-midnight-forest mb-2">
-                      {currentStats.applications}
+                {/* Team Overview */}
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-act-1 mb-act-4">
+                  {teams.map((team) => (
+                    <div key={team.id} className="act-card text-center p-act-1">
+                      <div className="text-2xl mb-act-0.5" aria-hidden="true">
+                        {team.id === 'specialists' && '🎯'}
+                        {team.id === 'veterans' && '🇺🇸'}
+                        {team.id === 'environmental_justice' && '⚖️'}
+                        {team.id === 'international' && '🌍'}
+                        {team.id === 'support' && '🛠️'}
+                      </div>
+                      <h3 className="act-h4 text-sm mb-act-0.5">{team.name}</h3>
+                      <p className="act-caption text-moss-green">{team.agent_count} agents</p>
                     </div>
-                    <p className="text-sm font-inter text-midnight-forest/60">
-                      Applications Sent
-                    </p>
+                  ))}
+                </div>
+              </div>
+
+              {/* Agent Selector */}
+              <div className="animate-on-scroll">
+                <AgentSelector
+                  selectedAgent={selectedAgent}
+                  onSelectAgent={handleAgentSelect}
+                  showTeamFilter={true}
+                />
+              </div>
+
+              {/* How It Works Section */}
+              <div className="animate-on-scroll">
+                <BrandFrame size="lg" color="spring-green" className="p-act-2">
+                  <h3 className="act-h3 mb-act-2 text-center">How It Works</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-act-2">
+                    <div className="flex flex-col items-center text-center">
+                      <div className="w-12 h-12 bg-spring-green text-midnight-forest rounded-full flex items-center justify-center text-lg font-bold mb-act-1">
+                        1
+                      </div>
+                      <h4 className="act-h4 mb-act-0.5">Choose Your Agent</h4>
+                      <p className="act-body-small text-moss-green">
+                        Select an agent based on your specific needs and background
+                      </p>
+                    </div>
+                    <div className="flex flex-col items-center text-center">
+                      <div className="w-12 h-12 bg-spring-green text-midnight-forest rounded-full flex items-center justify-center text-lg font-bold mb-act-1">
+                        2
+                      </div>
+                      <h4 className="act-h4 mb-act-0.5">Start Conversation</h4>
+                      <p className="act-body-small text-moss-green">
+                        Begin chatting about your climate career goals and challenges
+                      </p>
+                    </div>
+                    <div className="flex flex-col items-center text-center">
+                      <div className="w-12 h-12 bg-spring-green text-midnight-forest rounded-full flex items-center justify-center text-lg font-bold mb-act-1">
+                        3
+                      </div>
+                      <h4 className="act-h4 mb-act-0.5">Get Personalized Guidance</h4>
+                      <p className="act-body-small text-moss-green">
+                        Receive tailored advice, resources, and action plans
+                      </p>
+                    </div>
                   </div>
-                </ACTFrameElement>
+                </BrandFrame>
+              </div>
+
+              {/* Quick Actions */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-act-2 animate-on-scroll">
+                <QuickActionCard
+                  title="Upload Resume"
+                  description="Get AI-powered analysis of your transferable skills"
+                  icon="📄"
+                  href="/dashboard/resume"
+                />
+                <QuickActionCard
+                  title="View Conversations"
+                  description="Access your previous chats and advice history"
+                  icon="💬"
+                  href="/dashboard/conversations"
+                />
+                <QuickActionCard
+                  title="Explore Resources"
+                  description="Browse training programs and funding opportunities"
+                  icon="📚"
+                  href="/resources"
+                />
+                <QuickActionCard
+                  title="Profile Settings"
+                  description="Update your preferences and career goals"
+                  icon="⚙️"
+                  href="/profile"
+                />
               </div>
             </div>
-          </div>
-        </section>
-
-        {/* Enhanced Statistics Grid */}
-        <section className="py-12 px-6">
-          <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
-              <ACTCard 
-                variant="glass" 
-                className="p-6 bg-white/80 backdrop-blur-sm border border-white/40 hover:shadow-ios-normal transition-all duration-300"
-                hover={true}
-              >
-                <div className="flex flex-col items-center text-center">
-                  <div className="w-14 h-14 bg-spring-green/10 rounded-2xl flex items-center justify-center mb-4">
-                    <Send className="w-7 h-7 text-spring-green" />
-                  </div>
-                  <div className="text-3xl font-helvetica font-bold text-midnight-forest mb-1">
-                    {currentStats.applications}
-                  </div>
-                  <div className="text-sm font-inter text-midnight-forest/70 font-medium">
-                    Applications Sent
-                  </div>
-                </div>
-              </ACTCard>
-
-              <ACTCard 
-                variant="glass" 
-                className="p-6 bg-white/80 backdrop-blur-sm border border-white/40 hover:shadow-ios-normal transition-all duration-300"
-                hover={true}
-              >
-                <div className="flex flex-col items-center text-center">
-                  <div className="w-14 h-14 bg-moss-green/10 rounded-2xl flex items-center justify-center mb-4">
-                    <Calendar className="w-7 h-7 text-moss-green" />
-                  </div>
-                  <div className="text-3xl font-helvetica font-bold text-midnight-forest mb-1">
-                    {currentStats.interviews}
-                  </div>
-                  <div className="text-sm font-inter text-midnight-forest/70 font-medium">
-                    Interviews Scheduled
-                  </div>
-                </div>
-              </ACTCard>
-
-              <ACTCard 
-                variant="glass" 
-                className="p-6 bg-white/80 backdrop-blur-sm border border-white/40 hover:shadow-ios-normal transition-all duration-300"
-                hover={true}
-              >
-                <div className="flex flex-col items-center text-center">
-                  <div className="w-14 h-14 bg-seafoam-blue/10 rounded-2xl flex items-center justify-center mb-4">
-                    <Bookmark className="w-7 h-7 text-seafoam-blue" />
-                  </div>
-                  <div className="text-3xl font-helvetica font-bold text-midnight-forest mb-1">
-                    {currentStats.saved_jobs}
-                  </div>
-                  <div className="text-sm font-inter text-midnight-forest/70 font-medium">
-                    Saved Jobs
-                  </div>
-                </div>
-              </ACTCard>
-
-              <ACTCard 
-                variant="glass" 
-                className="p-6 bg-white/80 backdrop-blur-sm border border-white/40 hover:shadow-ios-normal transition-all duration-300"
-                hover={true}
-              >
-                <div className="flex flex-col items-center text-center">
-                  <div className="w-14 h-14 bg-amber-500/10 rounded-2xl flex items-center justify-center mb-4">
-                    <Eye className="w-7 h-7 text-amber-600" />
-                  </div>
-                  <div className="text-3xl font-helvetica font-bold text-midnight-forest mb-1">
-                    {currentStats.profile_views}
-                  </div>
-                  <div className="text-sm font-inter text-midnight-forest/70 font-medium">
-                    Profile Views
-                  </div>
-                </div>
-              </ACTCard>
-
-              <ACTCard 
-                variant="glass" 
-                className="p-6 bg-white/80 backdrop-blur-sm border border-white/40 hover:shadow-ios-normal transition-all duration-300"
-                hover={true}
-              >
-                <div className="flex flex-col items-center text-center">
-                  <div className="w-14 h-14 bg-emerald-500/10 rounded-2xl flex items-center justify-center mb-4">
-                    <TrendingUp className="w-7 h-7 text-emerald-600" />
-                  </div>
-                  <div className="text-3xl font-helvetica font-bold text-midnight-forest mb-1">
-                    {currentStats.response_rate}%
-                  </div>
-                  <div className="text-sm font-inter text-midnight-forest/70 font-medium">
-                    Response Rate
-                  </div>
-                </div>
-              </ACTCard>
-
-              <ACTCard 
-                variant="glass" 
-                className="p-6 bg-white/80 backdrop-blur-sm border border-white/40 hover:shadow-ios-normal transition-all duration-300"
-                hover={true}
-              >
-                <div className="flex flex-col items-center text-center">
-                  <div className="w-14 h-14 bg-purple-500/10 rounded-2xl flex items-center justify-center mb-4">
-                    <Search className="w-7 h-7 text-purple-600" />
-                  </div>
-                  <div className="text-3xl font-helvetica font-bold text-midnight-forest mb-1">
-                    {currentStats.active_searches}
-                  </div>
-                  <div className="text-sm font-inter text-midnight-forest/70 font-medium">
-                    Active Searches
-                  </div>
-                </div>
-              </ACTCard>
+          ) : (
+            <div className="max-w-6xl mx-auto animate-on-scroll">
+              <BrandFrame size="lg" color="seafoam-blue" className="min-h-[70vh] p-act-2">
+                <ChatInterface agentId="marcus" />
+              </BrandFrame>
             </div>
-          </div>
-        </section>
-
-        <AuthStatusDisplay />
-      </div>
-    </SimpleLayout>
-  );
+          )}
+        </div>
+      </section>
+    </div>
+  )
 }
 
-export default function DashboardPage() {
-  console.log('DashboardPage rendered');
+interface QuickActionCardProps {
+  title: string
+  description: string
+  icon: string
+  href: string
+}
+
+function QuickActionCard({ title, description, icon, href }: QuickActionCardProps) {
   return (
-    <AuthGuard>
-      <DashboardContent />
-    </AuthGuard>
-  );
+    <a 
+      href={href}
+      className="act-card hover:shadow-act-card-hover transition-all duration-300 block"
+    >
+      <div className="text-center">
+        <div className="text-3xl mb-act-1" aria-hidden="true">
+          {icon}
+        </div>
+        <h3 className="act-h4 mb-act-0.5">
+          {title}
+        </h3>
+        <p className="act-body-small text-moss-green">
+          {description}
+        </p>
+      </div>
+    </a>
+  )
 } 

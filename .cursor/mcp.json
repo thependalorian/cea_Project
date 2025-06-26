@@ -1,0 +1,34 @@
+{
+    "mcpServers": {
+      "supabase": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@supabase/mcp-server-supabase@latest",
+          "--access-token",
+          "sbp_355d1e1246fb26e06617755df909180b8b162ded"
+        ]
+      },
+      "nextjs-dev-assistant": {
+        "command": "python",
+        "args": [
+          "stack_mcp.py"
+        ],
+        "env": {
+          "PYTHONPATH": "/Users/georgenekwaya/Downloads/climate-economy-assistant-clean/cea_project/mcp"
+        }
+      },
+      "comprehensive-mcp-server": {
+        "command": "python",
+        "args": [
+          "-m",
+          "uvicorn",
+          "mcp.comprehensive_mcp_server:app",
+          "--reload",
+          "--port",
+          "8003"
+        ],
+        "cwd": "/Users/georgenekwaya/Downloads/climate-economy-assistant-clean/cea_project"
+      }
+    }
+  } 

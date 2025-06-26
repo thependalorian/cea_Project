@@ -1,328 +1,219 @@
 /**
- * Homepage - Climate Economy Assistant
- * Modern landing page with enhanced authentication integration
- * Location: app/page.tsx
+ * Home Page Component - ACT Brand Compliant
+ * Purpose: Landing page implementing complete ACT brand guidelines
+ * Location: /app/page.tsx
+ * 
+ * Brand Compliance:
+ * - Uses ACT navigation component
+ * - Implements proper typography hierarchy
+ * - Follows ACT spacing system (base units)
+ * - Uses exact color palette
+ * - Responsive design with mobile-first approach
+ * - Accessibility compliant
  */
 
-'use client';
+import Link from 'next/link'
+import Navigation from '@/components/shared/Navigation'
+import { BrandFrame } from '@/components/brand/BrandFrame'
+import { BadgeGrid } from '@/components/brand/MemberBadges'
 
-import { useAuth } from '@/contexts/auth-context';
-import { ACTButton } from '@/components/ACTButton';
-import { ACTCard } from '@/components/ACTCard';
-import { ACTFrameElement } from '@/components/ACTFrameElement';
-import { SimpleLayout } from '@/components/SimpleLayout';
-import { 
-  ArrowRight, 
-  Users, 
-  Building2, 
-  Briefcase, 
-  BookOpen,
-  Target,
-  Zap,
-  Globe,
-  TrendingUp,
-  MessageSquare,
-  CheckCircle2,
-  Star
-} from 'lucide-react';
-
-export default function HomePage() {
-  const { user } = useAuth();
-
+export default function Home() {
   return (
-    <SimpleLayout>
-      <div className="min-h-screen bg-gradient-to-br from-sand-gray/30 via-white to-seafoam-blue/20">
-        
-        {/* Enhanced Hero Section with Better Visual Hierarchy */}
-        <section className="relative py-20 px-6 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-midnight-forest/5 via-transparent to-spring-green/5"></div>
-          <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-spring-green/10 to-transparent rounded-full -translate-y-48 translate-x-48"></div>
+    <div className="min-h-screen bg-white">
+      {/* ACT Brand Navigation */}
+      <Navigation />
+      
+      {/* Hero Section - ACT Brand Compliant */}
+      <section className="act-hero relative" role="banner" aria-label="Hero section">
+        {/* Background Image with Overlay */}
+        <div 
+          className="act-hero-background bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(/images/massachusetts-clean-energy.jpg)` }}
+          aria-hidden="true"
+        />
+        <div className="act-hero-overlay" aria-hidden="true" />
+
+        {/* Hero Content */}
+        <div className="act-hero-content act-hero-text-white animate-on-scroll">
+          <p className="act-body-large mb-act-1 opacity-90">
+            Alliance for Climate Transition
+          </p>
           
-          <div className="relative max-w-7xl mx-auto">
-            <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
-              <div className="flex-1 text-center lg:text-left">
-                <div className="flex items-center justify-center lg:justify-start space-x-4 mb-8">
-                  <div className="w-20 h-20 bg-gradient-to-br from-spring-green to-moss-green rounded-3xl flex items-center justify-center shadow-ios-normal">
-                    <Target className="w-10 h-10 text-white" />
-                  </div>
-                  <div className="text-left">
-                    <h1 className="text-5xl lg:text-6xl font-helvetica font-bold text-midnight-forest leading-tight">
-                      Climate Economy
-                    </h1>
-                    <h2 className="text-4xl lg:text-5xl font-helvetica font-bold text-spring-green leading-tight">
-                      Assistant
-                    </h2>
-                  </div>
-                </div>
-                
-                <p className="text-2xl font-inter text-midnight-forest/70 mb-8 max-w-3xl leading-relaxed">
-                  Navigate your career transition to Massachusetts' clean energy economy with AI-powered guidance, 
-                  personalized job matching, and comprehensive training resources.
-                </p>
-                
-                <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8">
-                  <ACTButton 
-                    variant="primary" 
-                    size="xl"
-                    icon={<ArrowRight className="w-6 h-6" />}
-                    iconPosition="right"
-                    href={user ? "/dashboard" : "/login"}
-                    className="shadow-ios-normal hover:shadow-ios-prominent"
-                  >
-                    {user ? "Go to Dashboard" : "Get Started"}
-                  </ACTButton>
-                  <ACTButton 
-                    variant="outline" 
-                    size="xl"
-                    icon={<MessageSquare className="w-6 h-6" />}
-                    href="/chat"
-                    className="border-spring-green/30 hover:border-spring-green"
-                  >
-                    Try AI Assistant
-                  </ACTButton>
-                </div>
+          {/* Desktop Title */}
+          <h1 className="act-hero-desktop hidden sm:block mb-act-1-5">
+            Your Guide to Climate Economy Careers
+          </h1>
+          {/* Mobile Title */}
+          <h1 className="act-hero-mobile block sm:hidden mb-act-1-5">
+            Your Guide to Climate Economy Careers
+          </h1>
+          
+          <div className="act-body-large mb-act-2 max-w-3xl mx-auto">
+            <p>
+              Connect with personalized AI specialists to navigate the clean energy transition,
+              find opportunities, and build a meaningful career in Massachusetts' growing climate economy.
+            </p>
+          </div>
 
-                {user && (
-                  <div className="bg-spring-green/10 border border-spring-green/20 rounded-2xl p-4 max-w-md mx-auto lg:mx-0">
-                    <p className="text-sm font-inter text-midnight-forest">
-                      Welcome back! You're logged in as <span className="font-semibold text-spring-green">{user.email}</span>
-                    </p>
-                  </div>
-                )}
-              </div>
-              
-              <div className="flex-shrink-0">
-                <ACTFrameElement variant="brackets" className="p-8">
-                  <div className="text-center space-y-6">
-                    <div>
-                      <div className="text-5xl font-helvetica font-bold text-midnight-forest mb-2">
-                        2,847
-                      </div>
-                      <p className="text-sm font-inter text-midnight-forest/60">
-                        Job Seekers Connected
-                      </p>
-                    </div>
-                    <div>
-                      <div className="text-5xl font-helvetica font-bold text-spring-green mb-2">
-                        67
-                      </div>
-                      <p className="text-sm font-inter text-midnight-forest/60">
-                        Partner Organizations
-                      </p>
-                    </div>
-                    <div>
-                      <div className="text-5xl font-helvetica font-bold text-moss-green mb-2">
-                        234
-                      </div>
-                      <p className="text-sm font-inter text-midnight-forest/60">
-                        Active Job Listings
-                      </p>
-                    </div>
-                  </div>
-                </ACTFrameElement>
-              </div>
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-act-1-5 justify-center items-center">
+            <Link 
+              href="/auth/signup"
+              className="act-btn act-btn-primary act-btn-large"
+              role="button"
+            >
+              Get Started
+            </Link>
+            <Link 
+              href="/about"
+              className="act-btn act-btn-secondary act-btn-large"
+              role="button"
+            >
+              Learn More
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section - ACT Brand Layout */}
+      <section className="act-section bg-sand-gray-10" aria-label="How we can help">
+        <div className="act-content">
+          <div className="text-center mb-act-4 animate-on-scroll">
+            <h2 className="act-h1 mb-act-1">
+              How We Can Help
+            </h2>
+            <p className="act-body-large text-moss-green max-w-2xl mx-auto">
+              Our AI-powered platform connects you with specialized guidance for your unique journey
+              into the Massachusetts climate economy.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-act-2 animate-on-scroll">
+            <FeatureCard
+              title="Career Guidance"
+              description="Get matched with climate jobs that fit your background and goals through personalized conversations with our AI specialists."
+              icon="🎯"
+            />
+            <FeatureCard
+              title="Resume Analysis"
+              description="Upload your resume for AI-powered analysis that identifies transferable skills and suggests climate economy opportunities."
+              icon="📄"
+            />
+            <FeatureCard
+              title="Veterans Support"
+              description="Military veterans receive specialized guidance to translate skills and access VA resources for climate careers."
+              icon="🎖️"
+            />
+            <FeatureCard
+              title="Environmental Justice"
+              description="Connect with opportunities in environmental justice and community-focused climate work across Massachusetts."
+              icon="⚖️"
+            />
+            <FeatureCard
+              title="Training Programs"
+              description="Discover training programs, certifications, and educational pathways into the clean energy sector."
+              icon="🎓"
+            />
+            <FeatureCard
+              title="Local Resources"
+              description="Access Massachusetts-specific funding, networking opportunities, and support services for your climate career."
+              icon="🏛️"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Mission Statement Section */}
+      <section className="act-section" aria-label="Our mission">
+        <div className="act-content text-center animate-on-scroll">
+          <BrandFrame size="lg" color="spring-green" className="max-w-4xl mx-auto">
+            <blockquote className="act-mission-statement act-h2 italic text-center">
+              Leading the just, equitable and rapid transition to a clean energy future and diverse climate economy.
+            </blockquote>
+            <cite className="act-body text-moss-green mt-act-1 block">
+              — Alliance for Climate Transition Mission
+            </cite>
+          </BrandFrame>
+        </div>
+      </section>
+
+      {/* Statistics Section */}
+      <section className="act-section bg-gradient-seafoam" aria-label="Impact statistics">
+        <div className="act-content animate-on-scroll">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-act-2">
+            <div className="text-center">
+              <div className="act-h1 text-spring-green mb-act-0.5">500+</div>
+              <div className="act-h4 mb-act-0.5">Career Transitions</div>
+              <div className="act-body-small text-moss-green">Professionals successfully transitioned to climate careers</div>
+            </div>
+            <div className="text-center">
+              <div className="act-h1 text-spring-green mb-act-0.5">50+</div>
+              <div className="act-h4 mb-act-0.5">Partner Organizations</div>
+              <div className="act-body-small text-moss-green">Clean energy companies and training providers</div>
+            </div>
+            <div className="text-center">
+              <div className="act-h1 text-spring-green mb-act-0.5">95%</div>
+              <div className="act-h4 mb-act-0.5">Satisfaction Rate</div>
+              <div className="act-body-small text-moss-green">Users report valuable career guidance and support</div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Enhanced Features Section */}
-        <section className="py-20 px-6">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl lg:text-5xl font-helvetica font-bold text-midnight-forest mb-6">
-                Your Gateway to Clean Energy Careers
-              </h2>
-              <p className="text-xl font-inter text-midnight-forest/70 max-w-3xl mx-auto leading-relaxed">
-                Comprehensive tools and resources designed to accelerate your transition into Massachusetts' 
-                thriving clean energy sector.
-              </p>
-            </div>
+      {/* Member Badges Section */}
+      <section className="act-section" aria-label="Membership levels">
+        <div className="act-content text-center animate-on-scroll">
+          <h2 className="act-h2 mb-act-2">Join Our Community</h2>
+          <BadgeGrid showDescriptions={false} className="max-w-4xl mx-auto" />
+          <p className="act-body text-moss-green mt-act-2 max-w-2xl mx-auto">
+            Choose your membership level and join organizations leading the transition to a clean energy economy.
+          </p>
+        </div>
+      </section>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              <ACTCard 
-                variant="glass" 
-                className="p-8 bg-white/80 backdrop-blur-sm border border-white/40 hover:shadow-ios-normal transition-all duration-300"
-                hover={true}
-              >
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-spring-green/10 rounded-3xl flex items-center justify-center mx-auto mb-6">
-                    <Users className="w-8 h-8 text-spring-green" />
-                  </div>
-                  <h3 className="text-2xl font-helvetica font-bold text-midnight-forest mb-4">
-                    For Job Seekers
-                  </h3>
-                  <p className="text-midnight-forest/70 font-inter leading-relaxed mb-6">
-                    Discover personalized career pathways, upload your resume for AI analysis, 
-                    and connect with clean energy opportunities.
-                  </p>
-                  <ACTButton 
-                    variant="outline" 
-                    size="sm"
-                    href="/job-seekers"
-                    className="border-spring-green/30 hover:border-spring-green"
-                  >
-                    Explore Opportunities
-                  </ACTButton>
-                </div>
-              </ACTCard>
-
-              <ACTCard 
-                variant="glass" 
-                className="p-8 bg-white/80 backdrop-blur-sm border border-white/40 hover:shadow-ios-normal transition-all duration-300"
-                hover={true}
-              >
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-moss-green/10 rounded-3xl flex items-center justify-center mx-auto mb-6">
-                    <Building2 className="w-8 h-8 text-moss-green" />
-                  </div>
-                  <h3 className="text-2xl font-helvetica font-bold text-midnight-forest mb-4">
-                    For Partners
-                  </h3>
-                  <p className="text-midnight-forest/70 font-inter leading-relaxed mb-6">
-                    Post job listings, access qualified candidates, and contribute to 
-                    Massachusetts' clean energy workforce development.
-                  </p>
-                  <ACTButton 
-                    variant="outline" 
-                    size="sm"
-                    href="/partners"
-                    className="border-moss-green/30 hover:border-moss-green"
-                  >
-                    Partner With Us
-                  </ACTButton>
-                </div>
-              </ACTCard>
-
-              <ACTCard 
-                variant="glass" 
-                className="p-8 bg-white/80 backdrop-blur-sm border border-white/40 hover:shadow-ios-normal transition-all duration-300"
-                hover={true}
-              >
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-seafoam-blue/10 rounded-3xl flex items-center justify-center mx-auto mb-6">
-                    <Zap className="w-8 h-8 text-seafoam-blue" />
-                  </div>
-                  <h3 className="text-2xl font-helvetica font-bold text-midnight-forest mb-4">
-                    AI-Powered Guidance
-                  </h3>
-                  <p className="text-midnight-forest/70 font-inter leading-relaxed mb-6">
-                    Get personalized career advice, skill assessments, and job recommendations 
-                    powered by advanced AI technology.
-                  </p>
-                  <ACTButton 
-                    variant="outline" 
-                    size="sm"
-                    href="/chat"
-                    className="border-seafoam-blue/30 hover:border-seafoam-blue"
-                  >
-                    Try AI Assistant
-                  </ACTButton>
-                </div>
-              </ACTCard>
-            </div>
-          </div>
-        </section>
-
-        {/* Enhanced Statistics Section */}
-        <section className="py-20 px-6 bg-gradient-to-r from-spring-green/5 to-seafoam-blue/5">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl lg:text-5xl font-helvetica font-bold text-midnight-forest mb-6">
-                Driving Massachusetts' Clean Energy Future
-              </h2>
-              <p className="text-xl font-inter text-midnight-forest/70 max-w-3xl mx-auto leading-relaxed">
-                Real impact, measurable results, and growing opportunities in the clean energy sector.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-              <div className="text-center">
-                <div className="text-5xl lg:text-6xl font-helvetica font-bold text-spring-green mb-4">
-                  89%
-                </div>
-                <p className="text-lg font-inter text-midnight-forest font-medium mb-2">
-                  Job Placement Rate
-                </p>
-                <p className="text-sm font-inter text-midnight-forest/60">
-                  Successful career transitions
-                </p>
-              </div>
-              
-              <div className="text-center">
-                <div className="text-5xl lg:text-6xl font-helvetica font-bold text-moss-green mb-4">
-                  $78K
-                </div>
-                <p className="text-lg font-inter text-midnight-forest font-medium mb-2">
-                  Average Salary
-                </p>
-                <p className="text-sm font-inter text-midnight-forest/60">
-                  Clean energy positions
-                </p>
-              </div>
-              
-              <div className="text-center">
-                <div className="text-5xl lg:text-6xl font-helvetica font-bold text-seafoam-blue mb-4">
-                  156
-                </div>
-                <p className="text-lg font-inter text-midnight-forest font-medium mb-2">
-                  Training Programs
-                </p>
-                <p className="text-sm font-inter text-midnight-forest/60">
-                  Available statewide
-                </p>
-              </div>
-              
-              <div className="text-center">
-                <div className="text-5xl lg:text-6xl font-helvetica font-bold text-midnight-forest mb-4">
-                  24/7
-                </div>
-                <p className="text-lg font-inter text-midnight-forest font-medium mb-2">
-                  AI Support
-                </p>
-                <p className="text-sm font-inter text-midnight-forest/60">
-                  Always available guidance
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Enhanced CTA Section */}
-        <section className="py-20 px-6">
-          <div className="max-w-4xl mx-auto text-center">
-            <ACTFrameElement variant="brackets" className="p-12">
-              <h2 className="text-4xl lg:text-5xl font-helvetica font-bold text-midnight-forest mb-6">
-                Ready to Transform Your Career?
-              </h2>
-              <p className="text-xl font-inter text-midnight-forest/70 mb-8 leading-relaxed">
-                Join thousands of professionals building Massachusetts' clean energy future. 
-                Start your journey today with personalized AI guidance.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <ACTButton 
-                  variant="primary" 
-                  size="xl"
-                  icon={<ArrowRight className="w-6 h-6" />}
-                  iconPosition="right"
-                  href={user ? "/dashboard" : "/login"}
-                  className="shadow-ios-normal hover:shadow-ios-prominent"
-                >
-                  {user ? "Continue Your Journey" : "Start Your Journey"}
-                </ACTButton>
-                <ACTButton 
-                  variant="outline" 
-                  size="xl"
-                  icon={<MessageSquare className="w-6 h-6" />}
-                  href="/chat"
-                  className="border-spring-green/30 hover:border-spring-green"
-                >
-                  Chat with AI Assistant
-                </ACTButton>
-              </div>
-            </ACTFrameElement>
-          </div>
-        </section>
-      </div>
-    </SimpleLayout>
-  );
+      {/* Bottom CTA Section */}
+      <section className="act-bottom-cta" aria-label="Call to action">
+        <div className="act-bottom-cta-content animate-on-scroll">
+          <h2 className="act-h1 mb-act-1">
+            Ready to Start Your Climate Career Journey?
+          </h2>
+          <p className="act-body-large mb-act-2">
+            Create your free account today and get personalized guidance from our AI specialists.
+            We'll help you navigate the transition to a meaningful career in the climate economy.
+          </p>
+          <Link 
+            href="/auth/signup"
+            className="act-btn act-btn-primary act-btn-large"
+            role="button"
+          >
+            Sign Up Now
+          </Link>
+        </div>
+      </section>
+    </div>
+  )
 }
+
+interface FeatureCardProps {
+  title: string
+  description: string
+  icon: string
+}
+
+function FeatureCard({ title, description, icon }: FeatureCardProps) {
+  return (
+    <div className="act-card hover:shadow-act-card-hover transition-all duration-300">
+      <div className="text-center">
+        <div className="text-4xl mb-act-1" aria-hidden="true">
+          {icon}
+        </div>
+        <h3 className="act-h4 mb-act-1">
+          {title}
+        </h3>
+        <p className="act-body text-moss-green">
+          {description}
+        </p>
+      </div>
+    </div>
+  )
+} 

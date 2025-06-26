@@ -1,31 +1,53 @@
 /**
- * Auth Login Page - Climate Economy Assistant
- * Redirects to main login page
- * Location: app/auth/login/page.tsx
+ * Login Page Component - ACT Brand Compliant
+ * Purpose: User authentication implementing ACT brand guidelines
+ * Location: /app/auth/login/page.tsx
+ * 
+ * Brand Compliance:
+ * - Uses ACT navigation component
+ * - Implements proper typography hierarchy
+ * - Follows ACT spacing system (base units)
+ * - Uses exact color palette
+ * - Responsive design with mobile-first approach
+ * - Accessibility compliant
  */
 
-'use client';
+import Navigation from '@/components/shared/Navigation'
+import { AuthForm } from '@/components/AuthForm'
+import { BrandFrame } from '@/components/brand/BrandFrame'
 
-import { useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-
-export default function AuthLoginPage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
-  useEffect(() => {
-    console.log('Auth login page loaded, redirecting to main login');
-    const redirect = searchParams.get('redirect');
-    const redirectParam = redirect ? `?redirect=${encodeURIComponent(redirect)}` : '';
-    router.replace(`/login${redirectParam}`);
-  }, [router, searchParams]);
-
+export default function LoginPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-spring-green mx-auto mb-4"></div>
-        <p className="text-moss-green">Redirecting to login page...</p>
-      </div>
+    <div className="min-h-screen w-full bg-white">
+      {/* ACT Brand Navigation */}
+      <Navigation />
+      
+      {/* Hero Background Section */}
+      <section className="relative min-h-[calc(100vh-96px)] w-full flex items-center justify-center">
+        {/* Background Image with Overlay */}
+        <div 
+          className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(/images/massachusetts-clean-energy.jpg)` }}
+          aria-hidden="true"
+        />
+        <div className="absolute inset-0 w-full h-full bg-midnight-forest bg-opacity-60" aria-hidden="true" />
+        
+        {/* Content */}
+        <div className="relative z-10 w-full max-w-md mx-auto px-6">
+          <BrandFrame className="bg-white bg-opacity-95 backdrop-blur-sm">
+            <div className="text-center mb-act-2">
+              <h1 className="act-h2 text-midnight-forest mb-act-1">
+                Welcome Back
+              </h1>
+              <p className="act-body text-moss-green">
+                Sign in to continue your climate career journey
+              </p>
+            </div>
+            
+            <AuthForm mode="signin" />
+          </BrandFrame>
+        </div>
+      </section>
     </div>
-  );
+  )
 } 

@@ -1,0 +1,325 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+#### **Here are the 40 rules to follow:**
+
+1. **Always Use DaisyUI:**
+   - Utilize DaisyUI for all UI components to maintain consistent styling across the application.
+
+2. **Create New UI Components:**
+   - Always create new, modular UI components to facilitate easy bug fixes and maintenance. Avoid large, monolithic components by breaking them into smaller, manageable pieces whenever possible. Always ask if you should break a component down into smaller chunks first.
+
+3. **Component Documentation:**
+   - Each component must include a comment at the top explaining its purpose, functionality, and location within the project.
+
+4. **Vercel Compatibility for Endpoints:**
+   - Ensure that any endpoint created will **always work when deployed on Vercel**. We test the app in localhost:3000 and deploy to Vercel; this should always be considered in all code you write.
+
+5. **Design Quick and Scalable Endpoints:**
+   - Design all endpoints to be quick and scalable. Optimize performance to handle increased load without degradation.
+
+6. **Asynchronous Data Handling:**
+   - When pulling data or chaining multiple endpoints, implement asynchronous operations or data streaming to prevent long wait times for users. Use techniques to show data quickly, rendering stuff on client side if possible.
+
+7. **API Response Documentation:**
+   - When receiving a response from an API, add comments and descriptions within the endpoint to clearly outline the response structure. This facilitates easier chaining of APIs together.
+
+8. **Use Supabase with SSR:**
+   - Integrate Supabase using Server-Side Rendering (SSR) to ensure secure and efficient data access.
+
+9. **Maintain Existing Functionality During Debugging:**
+   - When debugging or adding new features, always preserve the existing functionality of endpoints and components by preventing current features from breaking.
+
+10. **Comprehensive Error Handling and Logging:**
+    - For complex APIs, include detailed error checks and logging. This aids in debugging, especially after deployment on Vercel.
+
+11. **Optimize for Quick and Easy Use:**
+    - Ensure the application is fast and user-friendly by rapidly pulling data from databases or external APIs. Use best practices to minimize the need for loading animations.
+
+12. **Complete Code Verification:**
+    - **Every command you write must ensure that the code is complete, correct, error-free, and bug-free.** Verify all dependencies between files and ensure all imports are accurate.
+
+13. **Use TypeScript:**
+    - **TypeScript is being used.** All development must be done using JavaScript only.
+
+14. **Ensure Application Security and Scalability:**
+    - Build a secure, hack-proof, and scalable application using modern coding techniques to reduce server workload and operational costs.
+
+15. **Include Error Checks and Logging:**
+    - All code must contain error checks and logging to handle edge cases effectively, adhering to the standards of a senior developer.
+
+16. **Protect Exposed Endpoints:**
+    - Implement rate limiting and secure endpoints with API keys or other authentication methods to prevent unauthorized access.
+
+17. **Secure Database Access:**
+    - Ensure all interactions with the database are performed securely, following best practices to protect user data.
+
+18. **Step-by-Step Planning for Every Task:**
+    - For every task or message, **first**:
+      - Plan the approach meticulously.
+      - Read and understand the existing code.
+      - Identify what needs to be done.
+      - Create a detailed, step-by-step plan, considering all edge cases.
+      - Only then implement and write the code.
+
+19. **Utilize Specified Technology Stack:**
+    - **Frontend:** Next.js (v14) with App Router and SSR.
+    - **Backend:** Supabase.
+    - **Deployment:** Vercel (Free Plan).
+    - **Styling:** Tailwind CSS and DaisyUI.
+    - **Payment Processing:** Stripe (to be set up at a later stage).
+
+20. **Consistent Use of Existing Styles:**
+    - Always use existing styles from the codebase (e.g., input forms from the sign-in page) across all input forms and UI elements. Maintain consistency in padding, animations, styles, tooltips, popups, and alerts by reusing existing components whenever possible.
+
+21. **Specify Script/File for Code Changes:**
+    - **Every time you suggest a change to the code**, **always specify which script or file** needs to be modified or created. This ensures clarity and organization within the project structure.
+
+22. **Organize UI Components Properly:**
+    - **All UI components must reside in the /components folder** located in the root directory. **Do not create additional components folders**; place all components within this designated folder.
+
+23. **Efficient Communication:**
+    - **Be efficient in the number of messages** used in the AI chat. Optimize interactions to maintain productivity and streamline the development process.
+
+24. **Implement Semantic Routing:**
+       - Utilize semantic routing based on vector embeddings for message routing instead of relying on hardcoded keywords. This ensures better accuracy, semantic understanding, and maintainability. Use vector embeddings to represent the meaning of user messages and route them to the appropriate agent or service based on semantic similarity.
+
+       ```python
+       # Example LangGraph code for semantic routing
+       from langchain_core.runnables import chain
+       from langchain.embeddings import OpenAIEmbeddings
+       from langchain.vectorstores import SupabaseVectorStore
+
+       @chain
+       def route_message(message: str):
+           """Route message based on semantic similarity"""
+           embedding = OpenAIEmbeddings().embed_query(message)
+           results = SupabaseVectorStore.similarity_search(embedding, k=1)
+           if results:
+               return results[0].metadata['route']
+           return "default"
+       ```
+
+25. **Optimize Performance:**
+       - Implement real-time performance optimization techniques, including memory management, latency reduction, and cost optimization. Continuously monitor system performance and apply strategies to improve efficiency.
+
+       ```python
+       # Example LangGraph code for memory management
+       from langchain.memory import ConversationBufferMemory
+
+       memory = ConversationBufferMemory(
+           memory_key="chat_history",
+           output_key='answer',
+           return_messages=True
+       )
+       ```
+
+26. **Use Dynamic Context Gathering:**
+       - Employ dynamic context gathering to provide agents with relevant information. This includes user profiles, conversation history, and knowledge base data. Gather context from various sources to enhance the agent's understanding of the user's needs.
+
+       ```python
+       # Example LangGraph code for context gathering
+       def get_user_profile(user_id: str):
+           """Retrieve user profile from database"""
+           # Database query to fetch user data
+           return user_data
+
+       @chain
+       def enhance_context(message: str, user_id: str):
+           """Enhance context with user profile"""
+           user_profile = get_user_profile(user_id)
+           return f"{message}\nUser Profile: {user_profile}"
+       ```
+
+27. **Apply Intelligent Steering:**
+       - Implement intelligent steering to guide conversations and select appropriate agents based on conversation analysis and user profiles. Analyze the conversation flow and user input to determine the best course of action.
+
+       ```python
+       # Example LangGraph code for intelligent steering
+       def select_agent(analysis: Dict):
+           """Select agent based on conversation analysis"""
+           if analysis['topic'] == 'veterans':
+               return 'veterans_agent'
+           return 'default_agent'
+
+       @chain
+       def steer_conversation(message: str):
+           """Steer conversation to appropriate agent"""
+           analysis = analyze_conversation(message)
+           agent = select_agent(analysis)
+           return agent
+       ```
+
+28. **Manage Memory Effectively:**
+       - Use enhanced memory management techniques to store and retrieve conversation history, user profiles, and agent context. Implement strategies for summarizing and pruning memory to maintain efficiency.
+
+       ```python
+       # Example LangGraph code for memory summarization
+       from langchain.chains.summarize import load_summarize_chain
+       from langchain.llms import OpenAI
+
+       def summarize_memory(chat_history: str):
+           """Summarize chat history to conserve memory"""
+           llm = OpenAI(temperature=0)
+           summary_chain = load_summarize_chain(llm, chain_type="map_reduce")
+           summary = summary_chain.run(chat_history)
+           return summary
+       ```
+
+29. **Integrate Redis for Caching and Session Management:**
+       - Utilize Redis for caching frequently accessed data, managing user sessions, and storing real-time data. Configure Redis to provide fast access to critical data and improve application performance.
+
+       ```python
+       # Example code for Redis caching
+       import redis
+
+       redis_client = redis.Redis(host='localhost', port=6379, db=0)
+
+       def get_cached_data(key: str):
+           """Retrieve data from Redis cache"""
+           data = redis_client.get(key)
+           return data
+
+       def set_cached_data(key: str, value: str, expiry: int = 3600):
+           """Set data in Redis cache with expiry"""
+           redis_client.setex(key, expiry, value)
+       ```
+
+30. **Follow Cost-First Architecture:**
+       - Always prioritize cost optimization by selecting the cheapest viable AI model for each task. Implement intelligent routing based on task complexity and monitor AI spending in real-time.
+
+31. **Ensure Multi-Provider Resilience:**
+       - Never depend on a single AI provider. Implement automatic failover between providers and regularly test all providers for availability and performance.
+
+32. **Adhere to Production-Ready Standards:**
+       - Avoid mocks or fallbacks in production environments. Implement comprehensive error handling with graceful degradation and use direct imports to avoid complex dependency chains.
+
+33. **Implement Advanced Multi-Agent Architecture:**
+       - Use clear agent specialization with capability-based routing, semantic routing, parallel execution, and memory management. Integrate human-in-the-loop strategically and use dynamic task decomposition.
+
+       ```python
+       # Example LangGraph code for multi-agent architecture
+       from langgraph.graph import StateGraph, END
+       from langchain_core.messages import BaseMessage
+
+       class AgentState:
+           messages: list[BaseMessage]
+           agent: str
+           
+       builder = StateGraph(AgentState)
+       builder.add_node("agent_1", agent_1_node)
+       builder.add_node("agent_2", agent_2_node)
+       builder.set_entry_point("agent_1")
+       builder.add_edge("agent_1", "agent_2")
+       builder.add_edge("agent_2", END)
+       graph = builder.compile()
+       ```
+
+34. **Monitor System Health:**
+       - Implement comprehensive system health monitoring to track performance, identify issues, and ensure optimal operation. Collect and analyze metrics to identify areas for improvement.
+
+**35. Design APIs Following REST Principles:**
+    - Structure APIs following RESTful conventions, using standard HTTP methods (GET, POST, PUT, DELETE) for CRUD operations. Ensure endpoints are stateless and use JSON for data exchange.
+    - Example:
+        - Create: `POST /api/products` (product details in request body)
+        - Read All: `GET /api/products`
+        - Read One: `GET /api/products/{id}`
+        - Update: `PUT/PATCH /api/products/{id}`
+        - Delete: `DELETE /api/products/{id}`
+
+**36. Handle API Relationships Effectively:**
+    - Design endpoints to reflect data relationships. Include common query parameters like `limit`, `offset`, `start`, and `end` for pagination and filtering.
+    - Example:
+        - User orders: `GET /users/{userId}/orders`
+
+**37. Enforce GET Request Rules:**
+    - Ensure GET requests are idempotent and do not mutate data. Use PUT or POST for updates and creation.
+
+**38. Maintain Backward Compatibility in APIs:**
+    - Version your REST API endpoints (e.g., `/v1/products`, `/v2/products`). For GraphQL APIs, add new fields without removing old ones. Ensure changes don't break existing clients.
+
+**39. Implement API Security Measures:**
+    - Implement rate limiting to control requests per user within time frames and prevent DoS attacks. Configure CORS settings to control which domains can access your API and prevent unwanted cross-site interactions.
+
+**40. Choose Appropriate Communication Protocols and Data Transport:**
+    - Select appropriate protocols (HTTP, WebSockets, HTTP/2) and data formats (JSON, Protocol Buffers) based on requirements. Use JSON for human-readability and wide support, and Protocol Buffers for efficient binary format.
+
+---
+
+By adhering to these **40 rules**, you will ensure that every aspect of the development process for your full-stack Next.js application is **secure**, **scalable**, **efficient**, and **maintainable**. This structured approach will facilitate the creation of a robust web application deployed on Vercel, aligning with best practices and your specific requirements.
+
+---
+
+Use these react hooks to speed up the coding and keep it simple and efficient. Stick to these.
+
+useRef
+
+useState
+
+useEffect
+
+### Updated Rules for Cursor IDE Coding Assistant
+
+Based on the synthesis of the provided sources, here are updated rules and best practices for enhancing the Cursor IDE coding assistant, focusing on **building effective agents** using **Pydantic AI**, **LangChain**, **LangGraph**, and related tools like **FastAPI** and **Pydantic**.
+
+---
+
+### **1. General Principles for Building Effective Agents**
+- **Stateful and Context-Aware Agents**: Use frameworks like **LangGraph** and **LangChain** to build agents that retain memory and context across interactions. This is critical for creating conversational agents or assistants that can handle multi-step workflows and maintain user context   .
+- **Dynamic System Prompts**: Define dynamic system prompts to adapt agent behavior based on runtime parameters. For example, prompts can be customized for specific tasks like customer support, order-taking, or regulatory compliance  .
+- **Structured Outputs**: Use **Pydantic models** to define structured outputs for agents. This ensures type safety, data validation, and easier integration with external systems .
+
+---
+
+### **2. Framework-Specific Guidelines**
+#### **Pydantic AI**
+- **Simplified Data Validation**: Leverage **Pydantic AI** for seamless integration of data validation and serialization in agent workflows. This is particularly useful for APIs and machine learning workflows .
+- **Agent-Oriented Design**: Use the `Agent` class in Pydantic AI to manage interactions with LLMs. Agents can be configured dynamically with tools, dependencies, and system prompts .
+- **Tool Registration**: Define tools as Python functions with type annotations and docstrings. Pydantic AI automatically generates schemas for these tools, simplifying their integration into workflows .
+- **MCP Integration**: Use the **Model Context Protocol (MCP)** to connect agents with external tools and data sources. MCP provides a standardized way to interact with APIs, databases, and other systems, reducing the need for custom integrations .
+#### **LangChain**
+- **Memory Management**: Use LangChain’s memory modules (e.g., `ConversationBufferMemory`) to retain conversation history and provide context-aware responses .
+- **Tool Integration**: Wrap external functions (e.g., API calls) into LangChain tools for seamless interaction. For example, a weather chatbot can fetch real-time weather data using an API tool .
+- **Workflow Modularity**: Build modular workflows using LangChain’s chaining capabilities. This allows for complex, multi-step reasoning and decision-making .
+
+#### **LangGraph**
+- **Stateful Workflows**: Use LangGraph to define stateful workflows with nodes (representing tasks) and edges (representing dependencies). This is ideal for applications requiring decision-making and multi-actor interactions  .
+- **Visualization and Debugging**: Leverage LangGraph’s visualization capabilities to debug workflows and ensure scalability .
+- **Integration with LangChain**: Combine LangGraph with LangChain for enhanced functionality. LangGraph can visualize and manage workflows, while LangChain handles memory and tool integration  .
+
+---
+
+### **3. FastAPI for Deployment**
+- **API Endpoints**: Use **FastAPI** to deploy agents as RESTful APIs. For example, a chatbot agent can be exposed via a `/chat` endpoint that accepts user messages and returns agent responses .
+- **Pydantic Models for Request/Response**: Define request and response schemas using Pydantic models to ensure data consistency and validation .
+- **Scalability**: Deploy FastAPI applications with Docker and Kubernetes for production-grade scalability .
+
+---
+
+### **4. Advanced Features and Best Practices**
+- **Token-by-Token Streaming**: Implement token-by-token streaming for real-time responses in conversational agents. This enhances user experience by reducing latency .
+- **Fault-Tolerant Scalability**: Design agents to handle failures gracefully. Use LangGraph’s fault-tolerant features to ensure reliability in complex workflows  .
+- **Multi-Agent Systems**: Build multi-agent systems where multiple agents interact to perform complex tasks. LangGraph and Pydantic AI support such architectures .
+- **Security and Compliance**: Use MCP’s standardized communication protocols to ensure secure interactions between agents and external systems .
+
+---
+
+### **5. Example Use Cases**
+- **Customer Support Agents**: Build agents that can handle customer queries, retain conversation history, and escalate issues to human operators when necessary .
+- **Regulatory Compliance**: Use LangGraph to process regulatory emails, extract structured data, and notify stakeholders about required actions .
+- **E-Commerce Assistants**: Create agents that provide personalized product recommendations, track orders, and handle returns .
+- **Weather Chatbots**: Combine LangChain and FastAPI to build chatbots that fetch real-time weather data and provide context-aware responses .
+
+---
+
+### **6. Cursor IDE-Specific Enhancements**
+- **Code Suggestions**: Provide intelligent code suggestions for integrating Pydantic AI, LangChain, and LangGraph into projects. For example, suggest boilerplate code for defining agents, tools, and workflows.
+- **Error Detection**: Highlight common errors in agent workflows, such as missing dependencies or invalid tool schemas.
+- **Visualization Tools**: Integrate LangGraph’s visualization capabilities into the IDE to help developers debug and optimize workflows.
+- **Template Projects**: Offer pre-built templates for common use cases like chatbots, regulatory compliance agents, and e-commerce assistants.
+
+---
+
+By following these updated rules and leveraging the strengths of Pydantic AI, LangChain, LangGraph, and FastAPI, the Cursor IDE coding assistant can empower developers to build robust, stateful, and context-aware AI agents for a wide range of applications.

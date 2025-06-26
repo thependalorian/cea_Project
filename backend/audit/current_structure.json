@@ -1,0 +1,83 @@
+{
+  "backend": {
+    "agents": {
+      "base": {
+        "agent_base.py": "Base agent class with core functionality",
+        "semantic_analyzer.py": "Semantic analysis utilities for agents"
+      },
+      "implementations": {
+        "pendo.py": "General support agent implementation",
+        "marcus.py": "Veterans support agent implementation",
+        "liv.py": "International credentials agent implementation",
+        "miguel.py": "Environmental justice agent implementation",
+        "jasmine.py": "Massachusetts resources agent implementation",
+        "lauren.py": "Climate career specialist agent implementation"
+      },
+      "utils": {
+        "semantic_analyzer.py": "Semantic analysis utilities",
+        "semantic_router.py": "Semantic routing logic"
+      },
+      "coordinator.py": "Agent coordination and routing logic"
+    },
+    "api": {
+      "routes": {
+        "conversations.py": "Conversation management endpoints",
+        "auth.py": "Authentication endpoints",
+        "agents.py": "Agent interaction endpoints"
+      },
+      "middleware": {
+        "auth.py": "Authentication middleware"
+      },
+      "main.py": "FastAPI application setup and configuration",
+      "routes.py": "API route definitions and handlers",
+      "rate_limiting.py": "Rate limiting middleware and configuration",
+      "auth.py": "Authentication and authorization logic"
+    },
+    "audit": {
+      "agents.json": "Agent implementation status tracking",
+      "directory_structure.json": "Project structure documentation",
+      "summary.json": "Project implementation summary",
+      "supabase.json": "Supabase configuration and schema",
+      "tools.json": "Tools implementation status"
+    },
+    "database": {
+      "migrations": {},
+      "redis_client.py": "Redis database client implementation",
+      "supabase_client.py": "Supabase database client implementation"
+    },
+    "models": {
+      "base.py": "Base data models and schemas",
+      "conversation.py": "Conversation data models"
+    },
+    "teams": {
+      "adapters": {},
+      "agents": {},
+      "api": {},
+      "base": {},
+      "core": {},
+      "langgraph": {}
+    },
+    "tests": {
+      "unit": {},
+      "integration": {},
+      "e2e": {}
+    },
+    "tools": {
+      "job_matching": {
+        "match_jobs.py": "Job matching and recommendation tool"
+      },
+      "specialized": {
+        "environmental_justice.py": "Environmental justice analysis tool",
+        "international_credentials.py": "International credentials evaluation tool",
+        "ma_resources.py": "Massachusetts resources and programs tool",
+        "climate_careers.py": "Climate and sustainability careers analysis tool"
+      },
+      "base_tool.py": "Base tool class with shared functionality"
+    },
+    "utils": {},
+    "config": {},
+    "main.py": "Main application entry point",
+    "requirements.txt": "Python package dependencies",
+    "vercel.json": "Vercel deployment configuration"
+  }
+}

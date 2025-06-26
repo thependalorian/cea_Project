@@ -1,13 +1,46 @@
 {
-    "mcpServers": {
-      "supabase": {
-        "command": "npx",
-        "args": [
-          "-y",
-          "@supabase/mcp-server-supabase@latest",
-          "--access-token",
-          "sbp_355d1e1246fb26e06617755df909180b8b162ded"
-        ]
+  "mcpServers": {
+    "supabase": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--access-token",
+        "sbp_355d1e1246fb26e06617755df909180b8b162ded"
+      ]
+    },
+    "nextjs-dev-assistant": {
+      "command": "python",
+      "args": [
+        "stack_mcp.py"
+      ],
+      "env": {
+        "PYTHONPATH": "/Users/georgenekwaya/Downloads/climate-economy-assistant-clean/cea_project/mcp"
       }
+    },
+    "comprehensive-mcp-server": {
+      "command": "python",
+      "args": [
+        "-m",
+        "uvicorn",
+        "mcp.comprehensive_mcp_server:app",
+        "--reload",
+        "--port",
+        "8001"
+      ],
+      "cwd": "/Users/georgenekwaya/Downloads/climate-economy-assistant-clean/cea_project/mcp"
+    },
+    "@21st-dev/magic": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@21st-dev/magic@latest",
+        "API_KEY=\"43ea7efb633f4294c26916cbc1bdd1825002093fee68108b1f2bec4d0ece9d35\""
+      ]
+    },
+    "Framelink Figma MCP": {
+      "command": "npx",
+      "args": ["-y", "figma-developer-mcp", "--figma-api-key=YOUR-KEY", "--stdio"]
     }
   }
+} 

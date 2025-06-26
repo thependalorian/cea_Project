@@ -1,0 +1,4 @@
+# Free AI Model Dependencies
+sentence-transformers==2.2.2
+transformers==4.36.0
+torch==2.1.0

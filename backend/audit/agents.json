@@ -1,0 +1,65 @@
+{
+  "agents": {
+    "pendo": {
+      "name": "Pendo",
+      "role": "General Support Lead",
+      "specialization": "General user support and guidance",
+      "status": "completed",
+      "implementation_file": "backend/agents/implementations/pendo.py",
+      "tools": ["general_support", "job_matching"],
+      "intelligence_level": "8.0/10"
+    },
+    "liv": {
+      "name": "Liv",
+      "role": "International Credentials Lead",
+      "specialization": "International credentials evaluation and guidance",
+      "status": "completed",
+      "implementation_file": "backend/agents/implementations/liv.py",
+      "tools": ["international_credentials", "job_matching"],
+      "intelligence_level": "8.5/10"
+    },
+    "marcus": {
+      "name": "Marcus",
+      "role": "Veterans Support Lead",
+      "specialization": "Veterans career transition and support",
+      "status": "completed",
+      "implementation_file": "backend/agents/implementations/marcus.py",
+      "tools": ["veterans_support", "job_matching"],
+      "intelligence_level": "8.5/10"
+    },
+    "miguel": {
+      "name": "Miguel",
+      "role": "Environmental Justice Lead",
+      "specialization": "Environmental justice and community impact",
+      "status": "completed",
+      "implementation_file": "backend/agents/implementations/miguel.py",
+      "tools": ["environmental_justice", "job_matching"],
+      "intelligence_level": "8.5/10"
+    },
+    "jasmine": {
+      "name": "Jasmine",
+      "role": "Massachusetts Resources Lead",
+      "specialization": "Massachusetts-specific programs and resources",
+      "status": "completed",
+      "implementation_file": "backend/agents/implementations/jasmine.py",
+      "tools": ["ma_resources", "job_matching"],
+      "intelligence_level": "8.5/10"
+    },
+    "lauren": {
+      "name": "Lauren",
+      "role": "Climate Career Lead",
+      "specialization": "Green economy jobs, sustainability careers, climate tech",
+      "status": "completed",
+      "implementation_file": "backend/agents/implementations/lauren.py",
+      "tools": ["climate_careers", "job_matching"],
+      "intelligence_level": "8.5/10"
+    }
+  },
+  "last_updated": "2024-03-22",
+  "implementation_status": {
+    "total_agents": 6,
+    "completed": 6,
+    "in_progress": 0,
+    "pending": 0
+  }
+} 
